@@ -332,18 +332,28 @@ Die Aufnahme von Diagrammen ist für dieses Projekt sehr sinnvoll, insbesondere 
 
 ### [Diagramm-Platzhalter 1] Systemkontextdiagramm
 
-Inhalt später:
+Dateien:
 
-- App im Nutzungskontext
-- Akteure (Nutzer, Teamrollen)
-- externe bzw. plattformnahe Abhängigkeiten
+- [Systemkontextdiagramm_v1.drawio](../diagramme/Systemkontextdiagramm_v1.drawio)
+- [Systemkontextdiagramm_v1.svg](../diagramme/Systemkontextdiagramm_v1.svg)
+
+Kurzbeschreibung:
+
+- App im Nutzungskontext mit Nutzer als Primärakteur
+- lokale SQLite-Datenhaltung als zentrale Persistenzgrenze
+- OS-Notification-Service als externe plattformnahe Abhängigkeit
 
 ### [Diagramm-Platzhalter 2] Anwendungsfall-Diagramm (Use Cases)
 
-Inhalt später:
+Dateien:
+
+- [UseCase_Diagramm_MVP_v1.drawio](../diagramme/UseCase_Diagramm_MVP_v1.drawio)
+- [UseCase_Diagramm_MVP_v1.svg](../diagramme/UseCase_Diagramm_MVP_v1.svg)
+
+Kurzbeschreibung:
 
 - Kern-Use-Cases der 3 End-to-End-Workflows
-- Beziehung zwischen Nutzerzielen und Funktionen
+- Beziehung zwischen Nutzer und Zeitlimit-, Schlafenszeit- und Bewegungsflow
 
 ### [Diagramm-Platzhalter 3] Fachliches Datenmodell (ER-Skizze)
 
@@ -372,9 +382,15 @@ Inhalt später:
 
 ### [Diagramm-Platzhalter 7] Modulübersicht (Architektur-Sicht)
 
-Inhalt später:
+Dateien:
+
+- [Moduluebersicht_MVP_v1.drawio](../diagramme/Moduluebersicht_MVP_v1.drawio)
+- [Moduluebersicht_MVP_v1.svg](../diagramme/Moduluebersicht_MVP_v1.svg)
+
+Kurzbeschreibung:
 
 - Modularer Monolith mit fachlichen Komponenten und Verantwortlichkeiten
+- Fokus auf die in Lastenheft/PRD beschriebenen Kernmodule für den MVP-Start
 
 ## 17. Zusammenfassung
 
