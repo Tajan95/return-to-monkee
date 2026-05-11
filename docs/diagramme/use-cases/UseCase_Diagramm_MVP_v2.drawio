@@ -1,75 +1,187 @@
-<mxfile host="app.diagrams.net" modified="2026-05-11T00:00:00.000Z" agent="ChatGPT" version="24.7.17" type="device">
-  <diagram id="usecase-mvp-v2" name="Use Cases MVP v2">
-    <mxGraphModel dx="1900" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1200" math="0" shadow="0">
+<mxfile host="app.diagrams.net">
+  <diagram name="Use Cases MVP v2" id="L1VouC-1FWPFuKz-6p_j">
+    <mxGraphModel dx="2544" dy="991" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="1">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" value="Use-Case-Diagramm: Return to Monkee MVP" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=26;fontStyle=1" vertex="1" parent="1"><mxGeometry x="520" y="30" width="860" height="40" as="geometry" /></mxCell>
-        <mxCell id="actorUser" value="Nutzer" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=16;" vertex="1" parent="1"><mxGeometry x="70" y="480" width="80" height="150" as="geometry" /></mxCell>
-        <mxCell id="actorNotif" value="OS Notification Service" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;" vertex="1" parent="1"><mxGeometry x="1720" y="470" width="80" height="150" as="geometry" /></mxCell>
-        <mxCell id="boundary" value="Return to Monkee MVP" style="swimlane;whiteSpace=wrap;html=1;startSize=40;rounded=0;strokeWidth=2;fontSize=18;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="220" y="100" width="1420" height="1000" as="geometry" /></mxCell>
-
-        <mxCell id="grpSetup" value="Setup / Onboarding" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="boundary"><mxGeometry x="30" y="60" width="400" height="290" as="geometry" /></mxCell>
-        <mxCell id="ucOnboarding" value="Onboarding durchführen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" vertex="1" parent="grpSetup"><mxGeometry x="90" y="45" width="220" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucGoal" value="Zielausrichtung wählen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpSetup"><mxGeometry x="35" y="125" width="160" height="50" as="geometry" /></mxCell>
-        <mxCell id="ucBedInit" value="Schlafenszeit initial setzen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpSetup"><mxGeometry x="205" y="125" width="170" height="50" as="geometry" /></mxCell>
-        <mxCell id="ucBreakInit" value="Bewegungsintervall festlegen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpSetup"><mxGeometry x="35" y="200" width="170" height="50" as="geometry" /></mxCell>
-        <mxCell id="ucFirstRule" value="erste Zeitlimit-Regel erstellen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpSetup"><mxGeometry x="215" y="200" width="170" height="50" as="geometry" /></mxCell>
-
-        <mxCell id="grpRules" value="Regeln &amp; Zeitlimits" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="boundary"><mxGeometry x="480" y="60" width="420" height="290" as="geometry" /></mxCell>
-        <mxCell id="ucCreateRule" value="Zeitlimit-Regel erstellen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpRules"><mxGeometry x="30" y="45" width="170" height="50" as="geometry" /></mxCell>
-        <mxCell id="ucEditRule" value="Zeitlimit-Regel bearbeiten" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpRules"><mxGeometry x="220" y="45" width="170" height="50" as="geometry" /></mxCell>
-        <mxCell id="ucToggleRule" value="Regel aktivieren / deaktivieren" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpRules"><mxGeometry x="30" y="120" width="180" height="50" as="geometry" /></mxCell>
-        <mxCell id="ucViewRules" value="aktive Regeln ansehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpRules"><mxGeometry x="230" y="120" width="160" height="50" as="geometry" /></mxCell>
-        <mxCell id="ucMarkLimit" value="simulierte Limitüberschreitung markieren" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpRules"><mxGeometry x="30" y="195" width="205" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucLimitStatus" value="Zeitlimit-Status erfassen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpRules"><mxGeometry x="250" y="195" width="160" height="55" as="geometry" /></mxCell>
-
-        <mxCell id="grpReminder" value="Reminder: Schlafenszeit &amp; Bewegung" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" vertex="1" parent="boundary"><mxGeometry x="950" y="60" width="430" height="380" as="geometry" /></mxCell>
-        <mxCell id="ucSetBed" value="Schlafenszeit setzen / ändern" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpReminder"><mxGeometry x="30" y="50" width="180" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucBedReminder" value="Schlafenszeit-Reminder erhalten" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpReminder"><mxGeometry x="220" y="50" width="185" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucBedConfirm" value="Schlafenszeit-Reminder bestätigen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpReminder"><mxGeometry x="120" y="120" width="210" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucMoveConfig" value="Bewegungsintervall konfigurieren" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpReminder"><mxGeometry x="30" y="205" width="190" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucMoveReminder" value="Bewegungs-Reminder erhalten" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpReminder"><mxGeometry x="230" y="205" width="180" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucMoveConfirm" value="Bewegungs-Reminder bestätigen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpReminder"><mxGeometry x="30" y="285" width="185" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucMoveIgnore" value="Bewegungs-Reminder ignorieren" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpReminder"><mxGeometry x="225" y="285" width="185" height="55" as="geometry" /></mxCell>
-
-        <mxCell id="grpIntervention" value="Soft-Interventionen" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="boundary"><mxGeometry x="30" y="400" width="400" height="250" as="geometry" /></mxCell>
-        <mxCell id="ucSoftWarning" value="Soft-Warning erhalten" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" vertex="1" parent="grpIntervention"><mxGeometry x="100" y="50" width="200" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucReflect" value="Reflexionsfrage ansehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpIntervention"><mxGeometry x="30" y="140" width="165" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucAlt" value="Alternativhandlung auswählen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpIntervention"><mxGeometry x="215" y="140" width="170" height="55" as="geometry" /></mxCell>
-
-        <mxCell id="grpEval" value="Dashboard &amp; Statistik" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="boundary"><mxGeometry x="480" y="400" width="420" height="330" as="geometry" /></mxCell>
-        <mxCell id="ucDashboard" value="Dashboard ansehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" vertex="1" parent="grpEval"><mxGeometry x="110" y="45" width="200" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucToday" value="heutigen Zielstatus ansehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpEval"><mxGeometry x="30" y="120" width="170" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucNext" value="nächste Reminder ansehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpEval"><mxGeometry x="220" y="120" width="170" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucProgress" value="Tagesfortschritt ansehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpEval"><mxGeometry x="30" y="195" width="170" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucStats" value="Statistik ansehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" vertex="1" parent="grpEval"><mxGeometry x="220" y="195" width="170" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucTrend" value="7-Tage-Trend ansehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpEval"><mxGeometry x="125" y="260" width="170" height="50" as="geometry" /></mxCell>
-
-        <mxCell id="grpPrivacy" value="Datenschutz / Kontrolle" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="boundary"><mxGeometry x="950" y="480" width="430" height="250" as="geometry" /></mxCell>
-        <mxCell id="ucLocalInfo" value="lokale Datenspeicherung einsehen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="grpPrivacy"><mxGeometry x="65" y="65" width="205" height="55" as="geometry" /></mxCell>
-        <mxCell id="ucDelete" value="alle lokalen Daten löschen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" vertex="1" parent="grpPrivacy"><mxGeometry x="130" y="155" width="190" height="55" as="geometry" /></mxCell>
-
-        <mxCell id="assoc1" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="actorUser" target="ucOnboarding"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="assoc2" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="actorUser" target="ucCreateRule"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="assoc3" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="actorUser" target="ucMarkLimit"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="assoc4" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="actorUser" target="ucBedConfirm"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="assoc5" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="actorUser" target="ucDashboard"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="assoc6" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="actorUser" target="ucDelete"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="assocNotif1" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="actorNotif" target="ucBedReminder"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="assocNotif2" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="actorNotif" target="ucMoveReminder"><mxGeometry relative="1" as="geometry" /></mxCell>
-
-        <mxCell id="inc1" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucOnboarding" target="ucGoal"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc2" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucOnboarding" target="ucBedInit"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc3" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucOnboarding" target="ucBreakInit"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc4" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucOnboarding" target="ucFirstRule"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="ext1" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucMarkLimit" target="ucSoftWarning"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="390" y="470" /></Array></mxGeometry></mxCell>
-        <mxCell id="inc5" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucSoftWarning" target="ucReflect"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc6" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucSoftWarning" target="ucAlt"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc7" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucDashboard" target="ucToday"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc8" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucDashboard" target="ucNext"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc9" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucDashboard" target="ucProgress"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="inc10" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" edge="1" parent="boundary" source="ucStats" target="ucTrend"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-1" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=26;fontStyle=1" value="Use-Case-Diagramm: Return to Monkee MVP" vertex="1">
+          <mxGeometry height="40" width="1040" x="480" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-2" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=16;" value="Nutzer" vertex="1">
+          <mxGeometry height="150" width="80" x="250" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-3" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=14;" value="OS Notification Service" vertex="1">
+          <mxGeometry height="150" width="80" x="1600" y="522.5" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-4" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=40;rounded=0;strokeWidth=2;fontSize=18;fontStyle=1;" value="Return to Monkee MVP" vertex="1">
+          <mxGeometry height="1240" width="1040" x="480" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-5" parent="bVnUGd-mNvLyy6wCLFak-4" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" value="Setup / Onboarding" vertex="1">
+          <mxGeometry height="280" width="440" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-6" parent="bVnUGd-mNvLyy6wCLFak-5" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" value="Onboarding durchführen" vertex="1">
+          <mxGeometry height="55" width="220" x="90" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-7" parent="bVnUGd-mNvLyy6wCLFak-5" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Zielausrichtung wählen" vertex="1">
+          <mxGeometry height="50" width="160" x="35" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-8" parent="bVnUGd-mNvLyy6wCLFak-5" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Schlafenszeit initial setzen" vertex="1">
+          <mxGeometry height="50" width="170" x="205" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-9" parent="bVnUGd-mNvLyy6wCLFak-5" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Bewegungsintervall festlegen" vertex="1">
+          <mxGeometry height="50" width="170" x="35" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-10" parent="bVnUGd-mNvLyy6wCLFak-5" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="erste Zeitlimit-Regel erstellen" vertex="1">
+          <mxGeometry height="50" width="170" x="215" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-40" edge="1" parent="bVnUGd-mNvLyy6wCLFak-5" source="bVnUGd-mNvLyy6wCLFak-6" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-7" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-41" edge="1" parent="bVnUGd-mNvLyy6wCLFak-5" source="bVnUGd-mNvLyy6wCLFak-6" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-8" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-42" edge="1" parent="bVnUGd-mNvLyy6wCLFak-5" source="bVnUGd-mNvLyy6wCLFak-6" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-9" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-43" edge="1" parent="bVnUGd-mNvLyy6wCLFak-5" source="bVnUGd-mNvLyy6wCLFak-6" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-10" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-11" parent="bVnUGd-mNvLyy6wCLFak-4" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" value="Regeln &amp; Zeitlimits" vertex="1">
+          <mxGeometry height="280" width="440" x="40" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-12" parent="bVnUGd-mNvLyy6wCLFak-11" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Zeitlimit-Regel erstellen" vertex="1">
+          <mxGeometry height="50" width="170" x="30" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-13" parent="bVnUGd-mNvLyy6wCLFak-11" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Zeitlimit-Regel bearbeiten" vertex="1">
+          <mxGeometry height="50" width="170" x="220" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-14" parent="bVnUGd-mNvLyy6wCLFak-11" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Regel aktivieren / deaktivieren" vertex="1">
+          <mxGeometry height="50" width="180" x="30" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-15" parent="bVnUGd-mNvLyy6wCLFak-11" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="aktive Regeln ansehen" vertex="1">
+          <mxGeometry height="50" width="160" x="230" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-16" parent="bVnUGd-mNvLyy6wCLFak-11" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="simulierte Limitüberschreitung markieren" vertex="1">
+          <mxGeometry height="55" width="205" x="30" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-17" parent="bVnUGd-mNvLyy6wCLFak-11" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Zeitlimit-Status erfassen" vertex="1">
+          <mxGeometry height="55" width="160" x="250" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-18" parent="bVnUGd-mNvLyy6wCLFak-4" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" value="Reminder: Schlafenszeit &amp; Bewegung" vertex="1">
+          <mxGeometry height="400" width="440" x="560" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-19" parent="bVnUGd-mNvLyy6wCLFak-18" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Schlafenszeit setzen / ändern" vertex="1">
+          <mxGeometry height="55" width="180" x="30" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-20" parent="bVnUGd-mNvLyy6wCLFak-18" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Schlafenszeit-Reminder erhalten" vertex="1">
+          <mxGeometry height="55" width="185" x="220" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-21" parent="bVnUGd-mNvLyy6wCLFak-18" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Schlafenszeit-Reminder bestätigen" vertex="1">
+          <mxGeometry height="55" width="210" x="120" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-22" parent="bVnUGd-mNvLyy6wCLFak-18" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Bewegungsintervall konfigurieren" vertex="1">
+          <mxGeometry height="55" width="190" x="30" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-23" parent="bVnUGd-mNvLyy6wCLFak-18" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Bewegungs-Reminder erhalten" vertex="1">
+          <mxGeometry height="55" width="180" x="230" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-24" parent="bVnUGd-mNvLyy6wCLFak-18" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Bewegungs-Reminder bestätigen" vertex="1">
+          <mxGeometry height="55" width="185" x="30" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-25" parent="bVnUGd-mNvLyy6wCLFak-18" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Bewegungs-Reminder ignorieren" vertex="1">
+          <mxGeometry height="55" width="185" x="225" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-26" parent="bVnUGd-mNvLyy6wCLFak-4" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" value="Soft-Interventionen" vertex="1">
+          <mxGeometry height="252" width="440" x="560" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-27" parent="bVnUGd-mNvLyy6wCLFak-26" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" value="Soft-Warning erhalten" vertex="1">
+          <mxGeometry height="55" width="200" x="100" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-28" parent="bVnUGd-mNvLyy6wCLFak-26" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Reflexionsfrage ansehen" vertex="1">
+          <mxGeometry height="55" width="165" x="30" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-29" parent="bVnUGd-mNvLyy6wCLFak-26" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Alternativhandlung auswählen" vertex="1">
+          <mxGeometry height="55" width="170" x="215" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-45" edge="1" parent="bVnUGd-mNvLyy6wCLFak-26" source="bVnUGd-mNvLyy6wCLFak-27" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-28" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-46" edge="1" parent="bVnUGd-mNvLyy6wCLFak-26" source="bVnUGd-mNvLyy6wCLFak-27" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-29" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-30" parent="bVnUGd-mNvLyy6wCLFak-4" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" value="Dashboard &amp; Statistik" vertex="1">
+          <mxGeometry height="320" width="440" x="40" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-31" parent="bVnUGd-mNvLyy6wCLFak-30" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" value="Dashboard ansehen" vertex="1">
+          <mxGeometry height="55" width="200" x="110" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-32" parent="bVnUGd-mNvLyy6wCLFak-30" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="heutigen Zielstatus ansehen" vertex="1">
+          <mxGeometry height="55" width="170" x="30" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-33" parent="bVnUGd-mNvLyy6wCLFak-30" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="nächste Reminder ansehen" vertex="1">
+          <mxGeometry height="55" width="170" x="220" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-34" parent="bVnUGd-mNvLyy6wCLFak-30" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="Tagesfortschritt ansehen" vertex="1">
+          <mxGeometry height="55" width="170" x="30" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-35" parent="bVnUGd-mNvLyy6wCLFak-30" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" value="Statistik ansehen" vertex="1">
+          <mxGeometry height="55" width="170" x="220" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-36" parent="bVnUGd-mNvLyy6wCLFak-30" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="7-Tage-Trend ansehen" vertex="1">
+          <mxGeometry height="50" width="170" x="125" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-47" edge="1" parent="bVnUGd-mNvLyy6wCLFak-30" source="bVnUGd-mNvLyy6wCLFak-31" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-32" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-48" edge="1" parent="bVnUGd-mNvLyy6wCLFak-30" source="bVnUGd-mNvLyy6wCLFak-31" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-33" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-49" edge="1" parent="bVnUGd-mNvLyy6wCLFak-30" source="bVnUGd-mNvLyy6wCLFak-31" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-34" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-50" edge="1" parent="bVnUGd-mNvLyy6wCLFak-30" source="bVnUGd-mNvLyy6wCLFak-35" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-36" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-37" parent="bVnUGd-mNvLyy6wCLFak-4" style="swimlane;whiteSpace=wrap;html=1;startSize=28;rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" value="Datenschutz / Kontrolle" vertex="1">
+          <mxGeometry height="121" width="440" x="40" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-38" parent="bVnUGd-mNvLyy6wCLFak-37" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;" value="lokale Datenspeicherung einsehen" vertex="1">
+          <mxGeometry height="55" width="205" x="230" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-39" parent="bVnUGd-mNvLyy6wCLFak-37" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#333333;fontStyle=1;" value="alle lokalen Daten löschen" vertex="1">
+          <mxGeometry height="55" width="190" x="24" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-44" edge="1" parent="bVnUGd-mNvLyy6wCLFak-4" source="bVnUGd-mNvLyy6wCLFak-16" style="endArrow=open;dashed=1;html=1;rounded=0;fontSize=11;" target="bVnUGd-mNvLyy6wCLFak-27" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-51" edge="1" parent="1" source="bVnUGd-mNvLyy6wCLFak-2" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="bVnUGd-mNvLyy6wCLFak-6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-52" edge="1" parent="1" source="bVnUGd-mNvLyy6wCLFak-2" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="bVnUGd-mNvLyy6wCLFak-12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-53" edge="1" parent="1" source="bVnUGd-mNvLyy6wCLFak-2" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="bVnUGd-mNvLyy6wCLFak-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-54" edge="1" parent="1" source="bVnUGd-mNvLyy6wCLFak-2" style="endArrow=none;html=1;rounded=0;" target="bVnUGd-mNvLyy6wCLFak-21" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-55" edge="1" parent="1" source="bVnUGd-mNvLyy6wCLFak-2" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="bVnUGd-mNvLyy6wCLFak-31" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="708" y="1366" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-56" edge="1" parent="1" source="bVnUGd-mNvLyy6wCLFak-2" style="endArrow=none;html=1;rounded=0;" target="bVnUGd-mNvLyy6wCLFak-39" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-57" edge="1" parent="1" source="bVnUGd-mNvLyy6wCLFak-3" style="endArrow=none;html=1;rounded=0;" target="bVnUGd-mNvLyy6wCLFak-20" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bVnUGd-mNvLyy6wCLFak-58" edge="1" parent="1" source="bVnUGd-mNvLyy6wCLFak-3" style="endArrow=none;html=1;rounded=0;" target="bVnUGd-mNvLyy6wCLFak-23" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
