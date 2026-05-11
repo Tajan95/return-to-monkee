@@ -18,7 +18,10 @@ Starte mit dem Quickstart:
 
 - [PRD MVP Digital Health](docs/prd/PRD_MVP_Digital_Health_v1.md)
 - [Lastenheft Return to Monkee v1](docs/lastenheft/Lastenheft_Return_to_Monkee_v1.md)
-- [Architekturdiagramm (drawio)](docs/diagramme/ReturnToMonkee_mockup_v1.drawio)
+- [Diagrammuebersicht](docs/diagramme/README.md)
+- [Systemkontextdiagramm v2](docs/diagramme/systemkontext/Systemkontextdiagramm_v2.drawio)
+- [Use-Case-Diagramm MVP v2](docs/diagramme/use-cases/UseCase_Diagramm_MVP_v2.drawio)
+- [Moduluebersicht MVP v2](docs/diagramme/moduluebersicht/Moduluebersicht_MVP_v2.drawio)
 
 ## Projektkonventionen
 
