@@ -1,0 +1,19 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="700" viewBox="0 0 1300 700">
+  <style>text{font-family:Arial,sans-serif;font-size:16px;} .small{font-size:13px;} .box{rx:10;ry:10;stroke-width:2;} </style>
+  <defs><marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#333"/></marker></defs>
+  <rect x="50" y="70" width="230" height="70" fill="#dae8fc" stroke="#6c8ebf" class="box"/><text x="165" y="112" text-anchor="middle">UI / Presentation</text>
+  <rect x="340" y="70" width="230" height="70" fill="#d5e8d4" stroke="#82b366" class="box"/><text x="455" y="112" text-anchor="middle">Rule Management</text>
+  <rect x="630" y="70" width="230" height="70" fill="#d5e8d4" stroke="#82b366" class="box"/><text x="745" y="112" text-anchor="middle">Timer / Scheduler</text>
+  <rect x="920" y="70" width="290" height="70" fill="#ffe6cc" stroke="#d79b00" class="box"/><text x="1065" y="112" text-anchor="middle">Notification Adapter</text>
+  <rect x="340" y="220" width="230" height="70" fill="#d5e8d4" stroke="#82b366" class="box"/><text x="455" y="262" text-anchor="middle">Intervention Engine</text>
+  <rect x="630" y="220" width="230" height="70" fill="#d5e8d4" stroke="#82b366" class="box"/><text x="745" y="262" text-anchor="middle">Statistics Module</text>
+  <rect x="490" y="380" width="240" height="70" fill="#fff2cc" stroke="#d6b656" class="box"/><text x="610" y="422" text-anchor="middle">Persistence Layer</text>
+  <rect x="920" y="220" width="290" height="70" fill="#f8cecc" stroke="#b85450" class="box"/><text x="1065" y="250" text-anchor="middle">Platform Services</text><text x="1065" y="272" text-anchor="middle" class="small">(spaeter erweitert)</text>
+  <line x1="280" y1="105" x2="340" y2="105" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="280" y1="120" x2="630" y2="105" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="455" y1="140" x2="455" y2="220" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="860" y1="105" x2="920" y2="105" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="570" y1="255" x2="630" y2="255" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="455" y1="290" x2="560" y2="380" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="745" y1="290" x2="660" y2="380" stroke="#333" stroke-width="2" marker-end="url(#arr)"/>
+</svg>
