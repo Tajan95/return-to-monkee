@@ -1,4 +1,4 @@
-﻿# Lastenheft - Return to Monkee (MVP)
+# Lastenheft - Return to Monkee (MVP)
 
 ## 1. Einleitung
 
@@ -326,77 +326,62 @@ Vorgeschlagene Reihenfolge:
 5. Statistikmodul inkl. 7-Tage-Trend
 6. Stabilisierung, Test und Demo-Hardening
 
-## 16. Diagramm-Platzhalter (zur späteren Ergänzung)
+## 16. Diagramme
 
-Die Aufnahme von Diagrammen ist für dieses Projekt sehr sinnvoll, insbesondere zur Abstimmung im Team und zur Dokumentation für spätere Entwicklungsphasen. Die folgenden Platzhalter sind bewusst vorgesehen und werden im nächsten Arbeitsschritt mit konkreten Abbildungen befüllt.
+Die Aufnahme von Diagrammen ist für dieses Projekt sehr sinnvoll, insbesondere zur Abstimmung im Team und zur Dokumentation für spätere Entwicklungsphasen. Die Diagramme wurden nach Diagrammtyp in eigene Ordner unter `docs/diagramme/` aufgeteilt, damit die Struktur übersichtlich bleibt.
 
-### [Diagramm-Platzhalter 1] Systemkontextdiagramm
+### 16.1 Systemkontextdiagramm
 
-Dateien:
+Datei:
 
-- [Systemkontextdiagramm_v1.drawio](../diagramme/Systemkontextdiagramm_v1.drawio)
-- [Systemkontextdiagramm_v1.svg](../diagramme/Systemkontextdiagramm_v1.svg)
+- [Systemkontextdiagramm_v2.drawio](../diagramme/systemkontext/Systemkontextdiagramm_v2.drawio)
 
 Kurzbeschreibung:
 
 - App im Nutzungskontext mit Nutzer als Primärakteur
-- lokale SQLite-Datenhaltung als zentrale Persistenzgrenze
+- mobiles Gerät bzw. Betriebssystem als Laufzeitumgebung
+- lokale SQLite-Datenhaltung für Regeln, Events und Statistiken
 - OS-Notification-Service als externe plattformnahe Abhängigkeit
+- explizite MVP-Abgrenzung: kein Backend, kein Account, keine Cloud-Synchronisierung, keine echte App-Sperrung
 
-### [Diagramm-Platzhalter 2] Anwendungsfall-Diagramm (Use Cases)
+### 16.2 Anwendungsfall-Diagramm (Use Cases)
 
-Dateien:
+Datei:
 
-- [UseCase_Diagramm_MVP_v1.drawio](../diagramme/UseCase_Diagramm_MVP_v1.drawio)
-- [UseCase_Diagramm_MVP_v1.svg](../diagramme/UseCase_Diagramm_MVP_v1.svg)
-
-Kurzbeschreibung:
-
-- Kern-Use-Cases der 3 End-to-End-Workflows
-- Beziehung zwischen Nutzer und Zeitlimit-, Schlafenszeit- und Bewegungsflow
-
-### [Diagramm-Platzhalter 3] Fachliches Datenmodell (ER-Skizze)
-
-Inhalt später:
-
-- UserSettings, UsageRule, Reminder, UserEvent, DailyStatistic, ActivitySuggestion
-- Schlüsselbeziehungen und Kardinalitäten
-
-### [Diagramm-Platzhalter 4] Aktivitätsdiagramm Zeitlimit-Workflow
-
-Inhalt später:
-
-- Regel aktiv -> Nutzungsstatus -> Überschreitung -> Intervention -> Statistikupdate
-
-### [Diagramm-Platzhalter 5] Aktivitätsdiagramm Schlafenszeit-Workflow
-
-Inhalt später:
-
-- Schlafenszeit gesetzt -> Reminder -> Bestätigung -> Statistikeintrag
-
-### [Diagramm-Platzhalter 6] Aktivitätsdiagramm Bewegungspausen-Workflow
-
-Inhalt später:
-
-- Intervalltick -> Reminder -> bestätigt/ignoriert -> Tagesfortschritt
-
-### [Diagramm-Platzhalter 7] Modulübersicht (Architektur-Sicht)
-
-Dateien:
-
-- [Moduluebersicht_MVP_v1.drawio](../diagramme/Moduluebersicht_MVP_v1.drawio)
-- [Moduluebersicht_MVP_v1.svg](../diagramme/Moduluebersicht_MVP_v1.svg)
+- [UseCase_Diagramm_MVP_v2.drawio](../diagramme/use-cases/UseCase_Diagramm_MVP_v2.drawio)
 
 Kurzbeschreibung:
 
-- Modularer Monolith mit fachlichen Komponenten und Verantwortlichkeiten
-- Fokus auf die in Lastenheft/PRD beschriebenen Kernmodule für den MVP-Start
+- fachliche MVP-Anwendungsfälle des Nutzers
+- Setup und Onboarding
+- Regeln und Zeitlimits
+- Schlafenszeit- und Bewegungs-Reminder
+- Soft-Interventionen
+- Dashboard, Statistik und 7-Tage-Trend
+- lokale Datenkontrolle und Löschung
+
+### 16.3 Modulübersicht (Architektur-Sicht)
+
+Datei:
+
+- [Moduluebersicht_MVP_v2.drawio](../diagramme/moduluebersicht/Moduluebersicht_MVP_v2.drawio)
+
+Kurzbeschreibung:
+
+- modularer Monolith mit fachlichen Komponenten und Verantwortlichkeiten
+- UI/Presentation, Onboarding, Rule Engine, Reminder Scheduler, Intervention Engine, Statistics Aggregator, Settings/Data Control
+- technische Kapselung über Notification Adapter, Platform Services Abstraction und Persistence Facade
+- lokale SQLite-Persistenz und MVP-Abgrenzung zu Backend, Cloud, Usage-API und echter App-Sperrung
+
+### 16.4 Weitere geplante Diagramme
+
+Für spätere Projektphasen sind weitere Diagramme sinnvoll:
+
+- Fachliches Datenmodell / ER-Skizze
+- Aktivitätsdiagramm Zeitlimit-Workflow
+- Aktivitätsdiagramm Schlafenszeit-Workflow
+- Aktivitätsdiagramm Bewegungspausen-Workflow
 
 ## 17. Zusammenfassung
 
 Dieses Lastenheft definiert den fachlichen Soll-Zustand für den MVP von Return to Monkee. Es verbindet klare Produktziele mit einem realistischen Lieferumfang und berücksichtigt sowohl technische Machbarkeit als auch Datenschutz- und Nutzbarkeitsaspekte. Durch die Android-first-Strategie bei gleichzeitig plattformunabhängigem Produktanspruch wird ein kontrollierter, aber zukunftsfähiger Einstieg geschaffen. Das Dokument bildet damit die belastbare Grundlage für die weitere Ausarbeitung von Pflichtenheft, technischer Umsetzung und GitHub-Issue-Struktur.
-
-
-
-
-
