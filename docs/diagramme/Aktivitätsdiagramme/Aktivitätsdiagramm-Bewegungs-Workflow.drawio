@@ -1,0 +1,127 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2">
+  <diagram id="bewegungs-workflow" name="Bewegungs-Workflow">
+    <mxGraphModel dx="1028" dy="611" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" parent="1" style="ellipse;aspect=fixed;fillColor=#666666;strokeColor=#666666;fontColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="360" as="geometry" />
+        </mxCell>
+        <mxCell id="c5-haGQ5vKF5cMYVF1cK-6" edge="1" parent="1" source="config" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;" target="c5-haGQ5vKF5cMYVF1cK-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="config" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;fontColor=#000000;" value="Intervall konfigurieren&lt;div&gt;&amp;amp;&lt;/div&gt;&lt;div&gt;Tagesziel festlegen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="230" x="260" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="interval" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#000000;" value="Intervall-Timer läuft" vertex="1">
+          <mxGeometry height="50" width="230" x="260" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="c5-haGQ5vKF5cMYVF1cK-10" edge="1" parent="1" source="reminder" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;" target="decision_react" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="reminder" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1;fontColor=#000000;" value="Erinnerung an User" vertex="1">
+          <mxGeometry height="50" width="230" x="260" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="decision_react" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;fontColor=#000000;" value="Nutzer reagiert?" vertex="1">
+          <mxGeometry height="80" width="160" x="295" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="ignored" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;fontColor=#000000;" value="Ignoriert" vertex="1">
+          <mxGeometry height="50" width="130" x="80" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="confirmed" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#000000;" value="Bestätigt" vertex="1">
+          <mxGeometry height="50" width="130" x="540" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="log_activity" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1;fontColor=#000000;" value="Aktivität erfassen" vertex="1">
+          <mxGeometry height="50" width="230" x="260" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="update_progress" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#000000;" value="Tagesfortschritt aktualisieren" vertex="1">
+          <mxGeometry height="50" width="270" x="240" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="decision_goal" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;fontColor=#000000;" value="Tagesziel erreicht?" vertex="1">
+          <mxGeometry height="80" width="160" x="295" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="goal_reached" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#000000;" value="Ziel erreicht!&#xa;Erfolg anzeigen" vertex="1">
+          <mxGeometry height="50" width="130" x="540" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;aspect=fixed;fillColor=#666666;strokeColor=#666666;fontColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="360" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" style="edgeStyle=orthogonalEdgeStyle;fontColor=#000000;" target="config">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="decision_react" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;fontColor=#000000;" target="ignored" value="ignoriert">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="295" y="370" />
+              <mxPoint x="145" y="370" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="decision_react" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;fontColor=#000000;" target="confirmed" value="bestätigt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="455" y="370" />
+              <mxPoint x="605" y="370" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="confirmed" style="edgeStyle=orthogonalEdgeStyle;fontColor=#000000;" target="log_activity">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="605" y="420" />
+              <mxPoint x="605" y="475" />
+              <mxPoint x="490" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="log_activity" style="edgeStyle=orthogonalEdgeStyle;fontColor=#000000;" target="update_progress">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="update_progress" style="edgeStyle=orthogonalEdgeStyle;fontColor=#000000;" target="decision_goal">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="decision_goal" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;exitX=0;exitY=0.5;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#000000;" target="c5-haGQ5vKF5cMYVF1cK-5" value="nein">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="40" y="670" />
+              <mxPoint x="40" y="170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="decision_goal" style="edgeStyle=orthogonalEdgeStyle;fontSize=11;exitX=1;exitY=0.5;fontColor=#000000;" target="goal_reached" value="ja">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="455" y="670" />
+              <mxPoint x="605" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="goal_reached" style="edgeStyle=orthogonalEdgeStyle;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#000000;" target="end">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="605" y="720" />
+              <mxPoint x="375" y="720" />
+            </Array>
+            <mxPoint x="410" y="753" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c5-haGQ5vKF5cMYVF1cK-9" edge="1" parent="1" source="c5-haGQ5vKF5cMYVF1cK-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;" target="reminder" value="ja">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c5-haGQ5vKF5cMYVF1cK-5" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;fontColor=#000000;" value="Intervall a&lt;span style=&quot;background-color: transparent;&quot;&gt;bgelaufen?&lt;/span&gt;" vertex="1">
+          <mxGeometry height="80" width="160" x="295" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="c5-haGQ5vKF5cMYVF1cK-11" edge="1" parent="1" source="ignored" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fontColor=#000000;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="50" y="365" />
+              <mxPoint x="50" y="170" />
+            </Array>
+            <mxPoint x="250" y="310" as="sourcePoint" />
+            <mxPoint x="290" y="170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
