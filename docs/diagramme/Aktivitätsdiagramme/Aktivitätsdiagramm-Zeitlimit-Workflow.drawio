@@ -1,0 +1,110 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Zeitlimit-Workflow" id="0">
+    <mxGraphModel dx="1829" dy="1014" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Start" vertex="1">
+          <mxGeometry height="60" width="60" x="320" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="dash" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Dashboard anzeigen&#xa;(Liste der Zeitlimits)" vertex="1">
+          <mxGeometry height="60" width="220" x="240" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="all" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Zeitlimit für &#39;Alle Apps&#39; eingeben" vertex="1">
+          <mxGeometry height="60" width="220" x="240" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="valid1" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Eingabe gültig?" vertex="1">
+          <mxGeometry height="80" width="130" x="285" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="err1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Fehlermeldung anzeigen&#xa;und erneut eingeben" vertex="1">
+          <mxGeometry height="80" width="180" x="500" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="save1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Limit für alle Apps speichern" vertex="1">
+          <mxGeometry height="60" width="220" x="240" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="addapp" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="App hinzufügen?" vertex="1">
+          <mxGeometry height="80" width="130" x="285" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="select" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="App auswählen / hinzufügen" vertex="1">
+          <mxGeometry height="60" width="220" x="240" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="appLimit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Zeitlimit für ausgewählte App eingeben" vertex="1">
+          <mxGeometry height="60" width="220" x="240" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="valid2" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Eingabe gültig?" vertex="1">
+          <mxGeometry height="80" width="130" x="285" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="err2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Fehlermeldung anzeigen&#xa;und erneut eingeben" vertex="1">
+          <mxGeometry height="80" width="180" x="500" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="save2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Limit für App speichern" vertex="1">
+          <mxGeometry height="60" width="220" x="240" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="overview" parent="1" style="rounded=1;whiteSpace=wrap;html=1;" value="Übersicht aktualisieren und anzeigen" vertex="1">
+          <mxGeometry height="60" width="260" x="220" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="end" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Ende" vertex="1">
+          <mxGeometry height="60" width="60" x="320" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="start" target="dash">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="dash" target="all">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="all" target="valid1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="valid1" target="err1" value="Nein">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="valid1" target="save1" value="Ja">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="err1" target="all">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="save1" target="addapp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="addapp" target="select" value="Ja">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="select" target="appLimit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="appLimit" target="valid2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="valid2" target="err2" value="Nein">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="err2" target="appLimit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="valid2" target="save2" value="Ja">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" edge="1" parent="1" source="overview" target="end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="FQCSC4PhRofr8jA4OCaP-1" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="349.62" y="1020" as="sourcePoint" />
+            <mxPoint x="349.62" y="1070" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="FQCSC4PhRofr8jA4OCaP-2" edge="1" parent="1" source="addapp" style="exitX=0;exitY=0.5;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="end" value="Nein">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="570" />
+              <mxPoint x="160" y="1200" />
+            </Array>
+            <mxPoint x="110" y="580" as="sourcePoint" />
+            <mxPoint x="180" y="1190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
