@@ -22,6 +22,7 @@ Starte mit dem Quickstart:
 - [Systemkontextdiagramm v2](docs/diagramme/systemkontext/Systemkontextdiagramm_v2.drawio)
 - [Use-Case-Diagramm MVP v2](docs/diagramme/use-cases/UseCase_Diagramm_MVP_v2.drawio)
 - [Moduluebersicht MVP v2](docs/diagramme/moduluebersicht/Moduluebersicht_MVP_v2.drawio)
+- [Aktivitätsdiagramm-Bewegungspausen-Workflow](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungspausen-Workflow.svg)
 
 ## Projektkonventionen
 
