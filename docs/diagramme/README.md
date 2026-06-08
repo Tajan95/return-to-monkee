@@ -16,7 +16,7 @@ Die Diagramme sind nach Diagrammtyp in eigene Ordner aufgeteilt, damit der Ordne
 - [Systemkontextdiagramm v2](systemkontext/Systemkontextdiagramm_v2.drawio)
 - [Use-Case-Diagramm MVP v2](use-cases/UseCase_Diagramm_MVP_v2.drawio)
 - [Modulübersicht MVP v2](moduluebersicht/Moduluebersicht_MVP_v2.drawio)
-- [Aktivitätsdiagramm-Bewegungspausen-Workflow.svg](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungspausen-Workflow.svg)
+- [Aktivitätsdiagramm-Bewegungspausen-Workflow](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungspausen-Workflow.svg)
 
 ## Hinweis
 
