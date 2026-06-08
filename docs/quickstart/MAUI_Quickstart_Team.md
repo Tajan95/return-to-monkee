@@ -34,7 +34,20 @@ dotnet build -f net10.0-android
 
 Erwartung: Build laeuft ohne Fehler durch.
 
-## 4) App starten (Android)
+## 4) Emulator starten
+
+Vor dem App-Start muss ein Android-Ziel verfuegbar sein. Entweder ein physisches Geraet per USB (USB-Debugging aktivieren) oder ein Emulator:
+
+- Android Studio → Device Manager → AVD starten, oder per CLI:
+
+```bash
+adb start-server
+emulator -avd <avd-name> -no-audio -no-boot-anim &
+```
+
+Warten bis der Homescreen sichtbar ist, dann `adb devices` pruefen — es muss `device` (nicht `offline`) stehen.
+
+## 5) App starten (Android)
 
 Option A (Visual Studio):
 
@@ -48,9 +61,17 @@ Option B (CLI):
 dotnet build -t:Run -f net10.0-android
 ```
 
-Hinweis: Fuer CLI-Run muss ein lauffaehiges Android-Ziel verfuegbar sein.
+### Linux
 
-## 5) Troubleshooting (Kurz)
+Auf Linux nur das Android-Target angeben und den `maui-android`-Workload verwenden:
+
+```bash
+dotnet workload install maui-android
+dotnet restore -p:TargetFrameworks=net10.0-android
+dotnet build -t:Run -f net10.0-android -p:TargetFrameworks=net10.0-android
+```
+
+## 6) Troubleshooting (Kurz)
 
 ### Problem: MAUI-Workload fehlt
 
@@ -96,7 +117,7 @@ Loesung:
 - Visual Studio + .NET SDK + MAUI-Workloads auf kompatiblen Stand bringen.
 - Danach Workloads erneut installieren/restoren.
 
-## 6) Naechster Schritt fuer iOS (Folgepfad)
+## 7) Naechster Schritt fuer iOS (Folgepfad)
 
 iOS ist im MVP nicht der erste Onboarding-Pfad. Nach erfolgreichem Android-Setup:
 
