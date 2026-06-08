@@ -1,9 +1,10 @@
-﻿namespace ReturnToMonkee;
+namespace ReturnToMonkee;
 
 public partial class AppShell : Shell
 {
-	public AppShell()
+	public AppShell(MainPage mainPage)
 	{
 		InitializeComponent();
+		HomeShellContent.Content = mainPage;
 	}
 }
