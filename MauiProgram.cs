@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
+using ReturnToMonkee.Infrastructure.Persistence;
 
 namespace ReturnToMonkee;
 
@@ -18,6 +19,10 @@ public static class MauiProgram
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
+
+		builder.Services.AddSingleton<ILocalDatabase, LocalDatabase>();
+		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<AppShell>();
 
 		return builder.Build();
 	}
