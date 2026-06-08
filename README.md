@@ -23,6 +23,7 @@ Starte mit dem Quickstart:
 - [Use-Case-Diagramm MVP v2](docs/diagramme/use-cases/UseCase_Diagramm_MVP_v2.drawio)
 - [Moduluebersicht MVP v2](docs/diagramme/moduluebersicht/Moduluebersicht_MVP_v2.drawio)
 - [Aktivitätsdiagramm-Bewegungspausen-Workflow](docs/diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungs-Workflow.svg)
+- [Aktivitätsdiagramm-Zeitlimit-Workflow](docs/diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Zeitlimit-Workflow.drawio.svg)
 
 ## Projektkonventionen
 
