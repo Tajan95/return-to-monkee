@@ -15,12 +15,18 @@ public partial class MainPage : ContentPage
 		this.logger = logger;
 	}
 
+	/// <summary>
+	/// Wird aufgerufen, wenn die Seite sichtbar wird, und startet dann die Datenbankpruefung.
+	/// </summary>
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();
 		await UpdateDatabaseStatusAsync();
 	}
 
+	/// <summary>
+	/// Fragt den Datenbankstatus ab, zeigt ihn im Label an und loggt Fehler fuer Entwickler.
+	/// </summary>
 	private async Task UpdateDatabaseStatusAsync()
 	{
 		var health = await localDatabase.CheckHealthAsync();
