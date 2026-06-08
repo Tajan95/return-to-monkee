@@ -43,6 +43,15 @@ public sealed class LocalDatabase : ILocalDatabase
 		}
 	}
 
+	/// <summary>
+	/// Initialisiert die Datenbank und gibt danach die wiederverwendbare Verbindung zurueck.
+	/// </summary>
+	public async Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default)
+	{
+		await InitializeAsync(cancellationToken);
+		return connection.Value;
+	}
+
 	// Baut den vollstaendigen Pfad zur Datenbankdatei und erstellt die SQLite-Verbindung.
 	private static SQLiteAsyncConnection CreateConnection() =>
 		new(Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename), OpenFlags);

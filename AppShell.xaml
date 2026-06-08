@@ -9,5 +9,9 @@
         x:Name="HomeShellContent"
         Title="Home"
         Route="MainPage" />
+    <ShellContent
+        x:Name="TestStringCrudShellContent"
+        Title="TestString CRUD"
+        Route="TestStringCrudPage" />
 
 </Shell>

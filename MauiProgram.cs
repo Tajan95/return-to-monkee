@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using ReturnToMonkee.Features.TestStringDemo;
 using ReturnToMonkee.Infrastructure.Persistence;
 
 namespace ReturnToMonkee;
@@ -21,7 +22,9 @@ public static class MauiProgram
 #endif
 
 		builder.Services.AddSingleton<ILocalDatabase, LocalDatabase>();
+		builder.Services.AddSingleton<ITestStringRepository, TestStringRepository>();
 		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<TestStringCrudPage>();
 		builder.Services.AddSingleton<AppShell>();
 
 		return builder.Build();
