@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ReturnToMonkee.Features.TestStringDemo.TestStringCrudPage"
+             Title="TestString CRUD">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="24"
+            Spacing="16">
+            <Label
+                Text="SQLite TestString CRUD"
+                FontSize="28" />
+            <Label
+                Text="Ein einfacher Demo-Datensatz fuer Create, Read, Update und Delete."
+                FontSize="16" />
+            <Entry
+                x:Name="TestStringEntry"
+                Placeholder="Demo-String eingeben" />
+            <Grid
+                ColumnDefinitions="*,*"
+                ColumnSpacing="12"
+                RowDefinitions="Auto,Auto"
+                RowSpacing="12">
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Speichern / Create"
+                    Clicked="OnCreateClicked" />
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="Laden / Read"
+                    Clicked="OnReadClicked" />
+                <Button
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Text="Bearbeiten / Update"
+                    Clicked="OnUpdateClicked" />
+                <Button
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="Loeschen / Delete"
+                    Clicked="OnDeleteClicked" />
+            </Grid>
+            <Label
+                Text="Aktuell gespeichert:"
+                FontAttributes="Bold" />
+            <Label
+                x:Name="StoredValueLabel"
+                Text="Noch kein Wert geladen."
+                FontSize="18" />
+            <Label
+                x:Name="StatusLabel"
+                Text="Bereit."
+                FontSize="14" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

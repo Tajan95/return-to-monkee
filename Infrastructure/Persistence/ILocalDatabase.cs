@@ -1,3 +1,5 @@
+using SQLite;
+
 namespace ReturnToMonkee.Infrastructure.Persistence;
 
 /// <summary>
@@ -14,4 +16,9 @@ public interface ILocalDatabase
 	/// Prueft, ob die lokale Datenbank aktuell erreichbar ist.
 	/// </summary>
 	Task<DatabaseHealthResult> CheckHealthAsync(CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Gibt eine initialisierte SQLite-Verbindung fuer einfache Repository-Klassen zurueck.
+	/// </summary>
+	Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default);
 }
