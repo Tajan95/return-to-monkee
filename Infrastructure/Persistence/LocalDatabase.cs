@@ -37,11 +37,11 @@ public sealed class LocalDatabase : ILocalDatabase
 
 
 
-    // Initialisiert die Datenbank und gibt danach die wiederverwendbare Verbindung zurück.
-    public async Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default)
+    // Gibt die wiederverwendbare Verbindung zurück.
+    public Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default)
 	{
-		await EnsureDatabaseAccessibleAsync(cancellationToken);
-		return connection.Value;
+		cancellationToken.ThrowIfCancellationRequested();
+		return Task.FromResult(connection.Value);
 	}
 
 
