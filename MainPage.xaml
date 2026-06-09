@@ -13,7 +13,7 @@
             HorizontalOptions="Center" />
         <Label
             x:Name="DatabaseStatusLabel"
-            Text="DB wird geprueft..."
+            Text="DB wird geprüft..."
             FontSize="18"
             Margin="0,16,0,0"
             HorizontalOptions="Center" />
