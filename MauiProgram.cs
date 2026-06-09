@@ -31,6 +31,8 @@ public static class MauiProgram
 
 		// Seiten
 		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<PersonListPage>();
+		builder.Services.AddTransient<PersonEditPage>();
 		builder.Services.AddSingleton<AppShell>();
 
 		return builder.Build();

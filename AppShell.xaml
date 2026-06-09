@@ -9,5 +9,9 @@
         x:Name="HomeShellContent"
         Title="Home"
         Route="MainPage" />
+    <ShellContent
+        x:Name="PersonListShellContent"
+        Title="Personen"
+        Route="PersonListPage" />
 
 </Shell>
