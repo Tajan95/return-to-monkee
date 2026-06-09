@@ -1,13 +1,16 @@
-using ReturnToMonkee.Features.TestStringDemo;
+using ReturnToMonkee.Features.PersonTest;
 
 namespace ReturnToMonkee;
 
 public partial class AppShell : Shell
 {
-	public AppShell(MainPage mainPage, TestStringCrudPage testStringCrudPage)
+	public AppShell(MainPage mainPage, PersonListPage personListPage)
 	{
 		InitializeComponent();
-		HomeShellContent.Content = mainPage;
-		TestStringCrudShellContent.Content = testStringCrudPage;
-	}
+
+		Routing.RegisterRoute(nameof(PersonEditPage), typeof(PersonEditPage));
+
+        HomeShellContent.Content = mainPage;
+        PersonListShellContent.Content = personListPage;
+    }
 }
