@@ -4,10 +4,9 @@ namespace ReturnToMonkee.Infrastructure.Persistence;
 
 public sealed class LocalDatabase : ILocalDatabase
 {
-	// Name der SQLite-Datei im lokalen App-Datenordner.
 	private const string DatabaseFilename = "return_to_monkee.db3";
 
-	// Oeffnet die Datenbank schreibend und legt sie an, falls sie noch nicht existiert.
+	// Öffnet die Datenbank schreibend und legt sie an, falls sie noch nicht existiert.
 	private static readonly SQLiteOpenFlags OpenFlags =
 		SQLiteOpenFlags.ReadWrite |
 		SQLiteOpenFlags.Create |
@@ -16,25 +15,18 @@ public sealed class LocalDatabase : ILocalDatabase
 	// Die Verbindung wird erst erstellt, wenn sie zum ersten Mal gebraucht wird.
 	private readonly Lazy<SQLiteAsyncConnection> connection = new(CreateConnection);
 
-	/// <summary>
-	/// Stellt sicher, dass der App-Datenordner und die SQLite-Verbindung vorhanden sind.
-	/// </summary>
-	public async Task InitializeAsync(CancellationToken cancellationToken = default)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
 
-		Directory.CreateDirectory(FileSystem.AppDataDirectory);
-		await connection.Value.ExecuteScalarAsync<int>("SELECT 1");
-	}
 
-	/// <summary>
-	/// Fuehrt eine einfache Abfrage aus und liefert einen UI-tauglichen Status zurueck.
-	/// </summary>
-	public async Task<DatabaseHealthResult> CheckHealthAsync(CancellationToken cancellationToken = default)
+
+
+
+
+    // Führt eine einfache Abfrage aus und liefert einen UI - tauglichen Status zurück.
+    public async Task<DatabaseHealthResult> CheckHealthAsync(CancellationToken cancellationToken = default)
 	{
 		try
 		{
-			await InitializeAsync(cancellationToken);
+			await EnsureDatabaseAccessibleAsync(cancellationToken);
 			return DatabaseHealthResult.Ready();
 		}
 		catch (Exception exception)
@@ -43,16 +35,67 @@ public sealed class LocalDatabase : ILocalDatabase
 		}
 	}
 
-	/// <summary>
-	/// Initialisiert die Datenbank und gibt danach die wiederverwendbare Verbindung zurueck.
-	/// </summary>
-	public async Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default)
+
+
+    // Initialisiert die Datenbank und gibt danach die wiederverwendbare Verbindung zurück.
+    public async Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default)
 	{
-		await InitializeAsync(cancellationToken);
+		await EnsureDatabaseAccessibleAsync(cancellationToken);
 		return connection.Value;
 	}
 
-	// Baut den vollstaendigen Pfad zur Datenbankdatei und erstellt die SQLite-Verbindung.
-	private static SQLiteAsyncConnection CreateConnection() =>
-		new(Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename), OpenFlags);
+
+
+    // Prüft ob die SQLite Datei erreichbar ist.
+    public async Task EnsureDatabaseAccessibleAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Directory.CreateDirectory(GetDatabaseDirectory());
+        await connection.Value.ExecuteScalarAsync<int>("SELECT 1");
+    }
+
+
+
+    // Baut den vollständigen Pfad zur Datenbankdatei und erstellt die SQLite-Verbindung.
+    private static SQLiteAsyncConnection CreateConnection()
+	{
+		return new(Path.Combine(GetDatabaseDirectory(), DatabaseFilename), OpenFlags);
+    } 
+		
+
+
+	// Holt SQLite Datenbank Directory (Windows vs. Android, iOS)
+	private static string GetDatabaseDirectory()
+	{
+		#if WINDOWS
+		var projectRoot = FindProjectRoot();
+		if (projectRoot != null)
+		{
+			return Path.Combine(projectRoot, "Infrastructure", "Database");
+		}
+		#endif
+
+		return FileSystem.AppDataDirectory;
+	}
+
+
+
+    // Holt den Root Pfad des Projektes (nur für Windows relevant)
+    private static string? FindProjectRoot()
+	{
+		var currentDirectory = new DirectoryInfo(AppContext.BaseDirectory);
+
+		while (currentDirectory is not null)
+		{
+			if (currentDirectory.EnumerateFiles("*.csproj").Any())
+			{
+				return currentDirectory.FullName;
+			}
+
+			currentDirectory = currentDirectory.Parent;
+		}
+
+		return null;
+	}
 }
