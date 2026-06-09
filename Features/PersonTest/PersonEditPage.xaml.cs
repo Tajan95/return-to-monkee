@@ -12,6 +12,8 @@ public partial class PersonEditPage : ContentPage
         this.personRepository = personRepository;
     }
 
+
+
     public string? PersonId
     {
         set
@@ -24,9 +26,12 @@ public partial class PersonEditPage : ContentPage
         }
     }
 
+
+
     private async Task LoadPersonAsync(Guid id)
     {
         var person = await personRepository.Get(id);
+
         if (person is null)
         {
             return;
@@ -36,6 +41,8 @@ public partial class PersonEditPage : ContentPage
         LastNameEntry.Text = person.LastName;
     }
 
+
+
     private async void OnSaveClicked(object sender, EventArgs e)
     {
         var firstName = FirstNameEntry.Text?.Trim() ?? string.Empty;
@@ -43,11 +50,12 @@ public partial class PersonEditPage : ContentPage
 
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
         {
-            ValidationLabel.Text = "Vorname und Nachname duerfen nicht leer sein.";
+            ValidationLabel.Text = "Vorname und Nachname dürfen nicht leer sein.";
             ValidationLabel.IsVisible = true;
             return;
         }
 
+        // Wenn Id vorhanden, dann update
         if (currentPersonId is Guid id)
         {
             await personRepository.Update(new Person
@@ -68,6 +76,8 @@ public partial class PersonEditPage : ContentPage
 
         await Shell.Current.GoToAsync("..");
     }
+
+
 
     private async void OnCancelClicked(object sender, EventArgs e)
     {

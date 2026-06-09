@@ -10,11 +10,15 @@ public partial class PersonListPage : ContentPage
         this.personRepository = personRepository;
     }
 
+
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         await LoadPersonsAsync();
     }
+
+
 
     private async void OnCreateClicked(object sender, EventArgs e)
     {
@@ -37,6 +41,8 @@ public partial class PersonListPage : ContentPage
             await LoadPersonsAsync();
         }
     }
+
+
 
     private async Task LoadPersonsAsync()
     {

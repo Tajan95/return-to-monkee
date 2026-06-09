@@ -4,27 +4,26 @@
              xmlns:local="clr-namespace:ReturnToMonkee.Features.PersonTest"
              x:Class="ReturnToMonkee.Features.PersonTest.PersonListPage"
              Title="Personen">
-    <Grid Padding="24" RowDefinitions="Auto,*" RowSpacing="16">
+    <Grid Padding="24" RowDefinitions="Auto,Auto,*" RowSpacing="16">
         <Button
-            Text="Create"
+            Text="Person erstellen"
             HorizontalOptions="Start"
             Clicked="OnCreateClicked" />
 
-        <CollectionView
+        <Grid
             Grid.Row="1"
+            ColumnDefinitions="*,*,Auto,Auto"
+            ColumnSpacing="12">
+            <Label Text="Vorname" FontAttributes="Bold" />
+            <Label Grid.Column="1" Text="Nachname" FontAttributes="Bold" />
+            <Label Grid.Column="2" Text="Bearbeiten" FontAttributes="Bold" />
+            <Label Grid.Column="3" Text="Löschen" FontAttributes="Bold" />
+        </Grid>
+
+        <CollectionView
+            Grid.Row="2"
             x:Name="PersonsCollectionView"
             SelectionMode="None">
-            <CollectionView.Header>
-                <Grid
-                    Padding="0,0,0,8"
-                    ColumnDefinitions="*,*,Auto,Auto"
-                    ColumnSpacing="12">
-                    <Label Text="Vorname" FontAttributes="Bold" />
-                    <Label Grid.Column="1" Text="Nachname" FontAttributes="Bold" />
-                    <Label Grid.Column="2" Text="Edit" FontAttributes="Bold" />
-                    <Label Grid.Column="3" Text="Delete" FontAttributes="Bold" />
-                </Grid>
-            </CollectionView.Header>
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="local:Person">
                     <Grid
@@ -35,12 +34,12 @@
                         <Label Grid.Column="1" Text="{Binding LastName}" VerticalOptions="Center" />
                         <Button
                             Grid.Column="2"
-                            Text="Edit"
+                            Text="Bearbeiten"
                             Clicked="OnEditClicked"
                             CommandParameter="{Binding Id}" />
                         <Button
                             Grid.Column="3"
-                            Text="Delete"
+                            Text="Löschen"
                             Clicked="OnDeleteClicked"
                             CommandParameter="{Binding Id}" />
                     </Grid>
