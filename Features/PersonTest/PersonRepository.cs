@@ -4,6 +4,10 @@ namespace ReturnToMonkee.Features.PersonTest;
 
 public sealed class PersonRepository : IPersonRepository
 {
+    // WICHTIG! WENN ENTITÄT VERÄNDERT WURDE, DIESE ZAHL INKREMENTIEREN:
+    private const int PersonSchemaVersion = 1;
+    private bool personSchemaEnsured;
+
     private readonly ILocalDatabase localDatabase;
 
     public PersonRepository(ILocalDatabase localDatabase)
@@ -71,8 +75,33 @@ public sealed class PersonRepository : IPersonRepository
     private async Task<SQLite.SQLiteAsyncConnection> GetDBConnectionAsync()
     {
         var connection = await localDatabase.GetConnectionAsync();
-        await connection.CreateTableAsync<Person>();
+
+        if (!personSchemaEnsured)
+        {
+            await EnsurePersonSchemaAsync(connection);
+            personSchemaEnsured = true;
+        }
 
         return connection;
+    }
+
+
+
+
+    // Setzt die Person-Tabelle neu auf, wenn sich die Schema-Version geändert hat.
+    private static async Task EnsurePersonSchemaAsync(SQLite.SQLiteAsyncConnection connection)
+    {
+        var currentSchemaVersion = await connection.ExecuteScalarAsync<int>("PRAGMA user_version");
+
+        if (currentSchemaVersion == PersonSchemaVersion)
+        {
+            await connection.CreateTableAsync<Person>();
+            return;
+        }
+
+        // Wenn neues Schema (Entität verändert) Tabelle neu aufsetzten.
+        await connection.DropTableAsync<Person>();
+        await connection.CreateTableAsync<Person>();
+        await connection.ExecuteAsync($"PRAGMA user_version = {PersonSchemaVersion}");
     }
 }
