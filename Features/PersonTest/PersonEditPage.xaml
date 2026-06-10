@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ReturnToMonkee.Features.PersonTest.PersonEditPage"
+             Title="Person bearbeiten">
+    <VerticalStackLayout Padding="24" Spacing="16">
+        <Entry
+            x:Name="FirstNameEntry"
+            Placeholder="Vorname" />
+        <Entry
+            x:Name="LastNameEntry"
+            Placeholder="Nachname" />
+        <Label
+            x:Name="ValidationLabel"
+            TextColor="Red"
+            IsVisible="False" />
+        <HorizontalStackLayout Spacing="12">
+            <Button
+                Text="Speichern"
+                Clicked="OnSaveClicked" />
+            <Button
+                Text="Abbrechen"
+                Clicked="OnCancelClicked" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

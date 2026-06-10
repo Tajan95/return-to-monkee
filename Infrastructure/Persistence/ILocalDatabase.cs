@@ -8,9 +8,9 @@ namespace ReturnToMonkee.Infrastructure.Persistence;
 public interface ILocalDatabase
 {
 	/// <summary>
-	/// Oeffnet oder erstellt die lokale Datenbankdatei.
+	/// Prueft, ob die lokale Datenbankdatei erreichbar ist.
 	/// </summary>
-	Task InitializeAsync(CancellationToken cancellationToken = default);
+	Task EnsureDatabaseAccessibleAsync(CancellationToken cancellationToken = default);
 
 	/// <summary>
 	/// Prueft, ob die lokale Datenbank aktuell erreichbar ist.

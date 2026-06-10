@@ -483,3 +483,10 @@ $RECYCLE.BIN/
 
 # Local agent notes
 AGENTS.md
+
+# Local Windows development database
+Infrastructure/Database/*.db3
+
+# User specific VSCode Settings
+.vscode/settings.json
+.serena
