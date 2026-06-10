@@ -13,5 +13,9 @@
         x:Name="TestStringCrudShellContent"
         Title="TestString CRUD"
         Route="TestStringCrudPage" />
+    <ShellContent
+        x:Name="BewegungsErinnerungShellContent"
+        Title="Bewegungserinnerungen"
+        Route="BewegungsErinnerungPage" />
 
 </Shell>

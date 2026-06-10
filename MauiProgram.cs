@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using ReturnToMonkee.Features.BewegungsErinnerungDemo;
 using ReturnToMonkee.Features.TestStringDemo;
 using ReturnToMonkee.Infrastructure.Persistence;
 
@@ -23,8 +24,12 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<ILocalDatabase, LocalDatabase>();
 		builder.Services.AddSingleton<ITestStringRepository, TestStringRepository>();
+		builder.Services.AddSingleton<IBewegungsErinnerungsRepository, BewegungsErinnerungsRepository>();
+		builder.Services.AddSingleton<IReminderService, ReminderService>();
+		builder.Services.AddSingleton<BewegungsErinnerungViewModel>();
 		builder.Services.AddSingleton<MainPage>();
 		builder.Services.AddSingleton<TestStringCrudPage>();
+		builder.Services.AddSingleton<BewegungsErinnerungPage>();
 		builder.Services.AddSingleton<AppShell>();
 
 		return builder.Build();
