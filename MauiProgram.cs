@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using ReturnToMonkee.Features.PersonTest;
+using ReturnToMonkee.Infrastructure.Notifications;
 using ReturnToMonkee.Infrastructure.Persistence;
 
 namespace ReturnToMonkee;
@@ -25,6 +26,9 @@ public static class MauiProgram
 
 		// Datenbank
 		builder.Services.AddSingleton<ILocalDatabase, LocalDatabase>();
+
+		// Notifications
+		builder.Services.AddSingleton<INotificationAdapter, MockNotificationAdapter>();
 
 		// Services
 		builder.Services.AddSingleton<IPersonRepository, PersonRepository>();
