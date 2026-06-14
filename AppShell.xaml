@@ -19,7 +19,7 @@
         ContentTemplate="{DataTemplate onboarding:GoalOrientationView}" />
 
     <ShellContent
-        x:Name="Home"
+        x:Name="HomeShellContent"
         Title="Home"
         Route="home"
         ContentTemplate="{DataTemplate home:MainPage}" />
