@@ -406,7 +406,7 @@ Fachliche Kernaussagen:
 
 ### 16.5 Aktivitätsdiagramm Bewegungspausen-Workflow
 
-![Aktivitätsdiagramm Bewegungspausen-Workflow](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungs-Workflow.svg)
+![Aktivitätsdiagramm Bewegungspausen-Workflow](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungs-Workflow.drawio.svg)
 
 Quelle:
 
