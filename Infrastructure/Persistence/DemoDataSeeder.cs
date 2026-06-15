@@ -5,6 +5,7 @@ namespace ReturnToMonkee.Infrastructure.Persistence;
 
 public sealed class DemoDataSeeder
 {
+	private const int ExpectedSeedEntityCount = 3;
 	private static readonly Guid TimeLimitRuleId = Guid.Parse("f4e8d4f7-7f6f-47d3-bdb1-4f2b60d5f01b");
 	private static readonly Guid ReminderId = Guid.Parse("7d0ef1ef-6b75-4dc0-9d8f-0a2e8a8f1f6b");
 	private static readonly Guid NotificationEventId = Guid.Parse("0a6a91b9-1d9b-4c21-9e36-2b4cb5f8d8d3");
@@ -23,7 +24,7 @@ public sealed class DemoDataSeeder
 	{
 		if (seeded)
 		{
-			return 0;
+			return await GetSeedEntityCountAsync(cancellationToken);
 		}
 
 		var connection = await localDatabase.GetConnectionAsync(cancellationToken);
@@ -37,7 +38,19 @@ public sealed class DemoDataSeeder
 		createdRows += await SeedNotificationEventAsync(connection, cancellationToken);
 
 		seeded = true;
-		return createdRows;
+		logger.LogInformation("Seed data ready: {Count} entities, {Created} newly created", ExpectedSeedEntityCount, createdRows);
+		return await GetSeedEntityCountAsync(cancellationToken);
+	}
+
+	public async Task<int> GetSeedEntityCountAsync(CancellationToken cancellationToken = default)
+	{
+		var connection = await localDatabase.GetConnectionAsync(cancellationToken);
+
+		var ruleCount = await connection.Table<TimeLimitRule>().Where(rule => rule.Id == TimeLimitRuleId).CountAsync();
+		var reminderCount = await connection.Table<Reminder>().Where(reminder => reminder.Id == ReminderId).CountAsync();
+		var eventCount = await connection.Table<NotificationEvent>().Where(notificationEvent => notificationEvent.Id == NotificationEventId).CountAsync();
+
+		return ruleCount + reminderCount + eventCount;
 	}
 
 	private async Task<int> SeedTimeLimitRuleAsync(SQLiteAsyncConnection connection, CancellationToken cancellationToken)

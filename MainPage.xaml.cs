@@ -33,12 +33,10 @@ public partial class MainPage : ContentPage
 	{
 		try
 		{
-			var createdRows = await demoDataSeeder.EnsureSeedDataAsync();
+			var seedEntityCount = await demoDataSeeder.EnsureSeedDataAsync();
 			var health = await localDatabase.CheckHealthAsync();
 
-			DatabaseStatusLabel.Text = createdRows > 0
-				? $"{health.Message}\nDemo-Daten angelegt: {createdRows}"
-				: health.Message;
+			DatabaseStatusLabel.Text = $"{health.Message}\n{seedEntityCount} seed entities ready";
 
 			if (!health.IsReady)
 			{
