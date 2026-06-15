@@ -58,5 +58,6 @@ Starte mit dem Quickstart:
 
 - Akzeptanzkriterien des Issues sind vollstaendig erfuellt.
 - Lokaler Build ist erfolgreich (mindestens Android Debug).
+- Tests laufen durch: `dotnet test ReturnToMonkee.Tests/ReturnToMonkee.Tests.csproj`
 - Relevante Dokumentation ist aktualisiert.
 - Aenderung ist in einer reviewbaren PR mit klarer Issue-Referenz beschrieben.
