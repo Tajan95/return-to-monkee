@@ -117,7 +117,17 @@ Loesung:
 - Visual Studio + .NET SDK + MAUI-Workloads auf kompatiblen Stand bringen.
 - Danach Workloads erneut installieren/restoren.
 
-## 7) Naechster Schritt fuer iOS (Folgepfad)
+## 7) Tests ausführen
+
+Das Testprojekt läuft ohne Emulator oder Android-Gerät auf allen Betriebssystemen:
+
+```bash
+dotnet test ReturnToMonkee.Tests/ReturnToMonkee.Tests.csproj
+```
+
+Erwartetes Ergebnis: alle Tests grün, kein Android-Setup erforderlich.
+
+## 8) Naechster Schritt fuer iOS (Folgepfad)
 
 iOS ist im MVP nicht der erste Onboarding-Pfad. Nach erfolgreichem Android-Setup:
 
