@@ -42,6 +42,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IStartupNavigator, StartupNavigator>();
         builder.Services.AddSingleton<IOnboardingRepository, OnboardingRepository>();
 		builder.Services.AddSingleton<IGoalsRepository, GoalsRepository>();
+		builder.Services.AddSingleton<ITimeLimitRuleRepository, TimeLimitRuleRepository>();
 
         // Seiten
         builder.Services.AddSingleton<MainPage>();
