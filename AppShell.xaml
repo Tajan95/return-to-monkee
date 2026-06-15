@@ -11,7 +11,7 @@
     <ShellContent
         x:Name="PersonListShellContent"
         Title="Personen"
-        Route="PersonListPage" 
+        Route="PersonListPage"
         ContentTemplate="{DataTemplate personTest:PersonListPage}" />
 
     <ShellContent
@@ -24,5 +24,10 @@
         Title="Home"
         Route="home"
         ContentTemplate="{DataTemplate home:MainPage}" />
+
+    <ShellContent
+        x:Name="BewegungsErinnerungShellContent"
+        Title="Bewegungserinnerungen"
+        Route="BewegungsErinnerungPage" />
 
 </Shell>
