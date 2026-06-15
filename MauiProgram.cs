@@ -28,6 +28,7 @@ public static class MauiProgram
 
 		// Services
 		builder.Services.AddSingleton<IPersonRepository, PersonRepository>();
+		builder.Services.AddSingleton<DemoDataSeeder>();
 
 		// Seiten
 		builder.Services.AddSingleton<MainPage>();
