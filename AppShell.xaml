@@ -16,6 +16,7 @@
 
     <ShellContent
         Route="onboarding"
+		FlyoutItemIsVisible="False"
         ContentTemplate="{DataTemplate onboarding:GoalOrientationView}" />
 
     <ShellContent
