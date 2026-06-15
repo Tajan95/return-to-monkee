@@ -421,13 +421,31 @@ Fachliche Kernaussagen:
 - bestätigte oder ignorierte Erinnerungen können als Ereignisse für einfache Statistiken genutzt werden
 - der Workflow bleibt MVP-tauglich und verzichtet auf komplexe Sensorik oder Gesundheitsplattform-Integration
 
-### 16.6 Weitere geplante Diagramme
+### 16.6 Aktivitätsdiagramm Schlafenszeit-Workflow
+
+![Aktivitätsdiagramm Schlafenszeit-Workflow](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Schlafenszeit-Workflow.drawio.svg)
+
+Quelle:
+
+* [Aktivitätsdiagramm-Schlafenszeit-Workflow.drawio](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Schlafenszeit-Workflow.drawio)
+
+Das Aktivitätsdiagramm beschreibt den fachlichen Ablauf der Schlafenszeit-Erinnerung. Es zeigt, wie eine gesetzte Schlafenszeit in einen geplanten Reminder überführt wird und wie die Reaktion des Nutzers anschließend für Dashboard und Statistik ausgewertet werden kann.
+
+Fachliche Kernaussagen:
+
+* die Schlafenszeit wird lokal gesetzt bzw. geändert und als Einstellung gespeichert
+* der Reminder-Zeitpunkt wird aus der hinterlegten Schlafenszeit abgeleitet
+* die Erinnerung wird als Soft-Intervention ausgelöst und kann bestätigt oder ignoriert werden
+* bestätigte und ignorierte Reminder werden als Ereignisse für Tagesauswertung und Statistik verarbeitet
+* der Workflow bleibt MVP-tauglich, da keine medizinische Bewertung und keine harte App-Sperrung erfolgt
+
+### 16.7 Weitere geplante Diagramme
 
 Für spätere Projektphasen sind weitere Diagramme sinnvoll:
 
-- Fachliches Datenmodell / ER-Skizze
-- Aktivitätsdiagramm Schlafenszeit-Workflow
-- detaillierte Sequenzdiagramme für Benachrichtigungen und Statistikaggregation
+* Fachliches Datenmodell / ER-Skizze
+* detaillierte Sequenzdiagramme für Benachrichtigungen und Statistikaggregation
+
 
 ## 17. Zusammenfassung
 
