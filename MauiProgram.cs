@@ -42,6 +42,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IStartupNavigator, StartupNavigator>();
         builder.Services.AddSingleton<IOnboardingRepository, OnboardingRepository>();
 		builder.Services.AddSingleton<IGoalsRepository, GoalsRepository>();
+        builder.Services.AddSingleton<IUserSettingsRepository, UserSettingsRepository>();
 
         // Seiten
         builder.Services.AddSingleton<MainPage>();
@@ -51,6 +52,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<BewegungsErinnerungViewModel>();
         builder.Services.AddTransient<GoalOrientationView>();
         builder.Services.AddTransient<GoalOrientationViewModel>();
+        builder.Services.AddSingleton<ReturnToMonkee.Features.Settings.SettingsPage>();
+        builder.Services.AddTransient<OnboardingStep2Page>();
         builder.Services.AddSingleton<AppShell>();
 
 		return builder.Build();

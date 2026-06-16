@@ -1,4 +1,5 @@
 using ReturnToMonkee.Features.BewegungsErinnerungDemo;
+using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 
@@ -8,17 +9,19 @@ public partial class AppShell : Shell
 {
 	private readonly IReminderService? reminderService;
 
-	public AppShell(IOnboardingRepository repo, MainPage mainPage, PersonListPage personListPage, BewegungsErinnerungPage bewegungsErinnerungPage, IReminderService reminderService)
+	public AppShell(IOnboardingRepository repo, MainPage mainPage, PersonListPage personListPage, BewegungsErinnerungPage bewegungsErinnerungPage, IReminderService reminderService, ReturnToMonkee.Features.Settings.SettingsPage settingsPage)
 	{
 		InitializeComponent();
 
         _ = InitAsync(repo);
 
         Routing.RegisterRoute(nameof(PersonEditPage), typeof(PersonEditPage));
+        Routing.RegisterRoute(nameof(OnboardingStep2Page), typeof(OnboardingStep2Page));
 
         HomeShellContent.Content = mainPage;
         PersonListShellContent.Content = personListPage;
 		BewegungsErinnerungShellContent.Content = bewegungsErinnerungPage;
+        SettingsShellContent.Content = settingsPage;
 
 		this.reminderService = reminderService;
 		_ = this.reminderService.StartAsync();

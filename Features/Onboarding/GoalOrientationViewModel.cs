@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Infrastructure.Persistence.Entities;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using System.Collections.ObjectModel;
@@ -47,8 +48,7 @@ public partial class GoalOrientationViewModel : ObservableObject
 
         await repository.SaveSelectedGoalsAsync(selected);
 
-        //Todo: anpassen wenn die nächste Onboarding Seite da ist
-        await Shell.Current.GoToAsync("//home");
+        await Shell.Current.GoToAsync(nameof(OnboardingStep2Page));
     }
 }
 

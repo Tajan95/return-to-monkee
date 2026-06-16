@@ -28,5 +28,8 @@ public partial class OnboardingStep2Page : ContentPage
         settings.SleepTime = SleepTimePicker.Time ?? settings.SleepTime;
         await userSettingsRepository.SaveAsync(settings);
         ConfirmationLabel.IsVisible = true;
+
+        await Task.Delay(800);
+        await Shell.Current.GoToAsync("//home");
     }
 }

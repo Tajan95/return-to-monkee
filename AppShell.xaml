@@ -6,6 +6,7 @@
     xmlns:onboarding="clr-namespace:ReturnToMonkee.Features.Onboarding"
     xmlns:home="clr-namespace:ReturnToMonkee"
     xmlns:personTest="clr-namespace:ReturnToMonkee.Features.PersonTest"
+    xmlns:settings="clr-namespace:ReturnToMonkee.Features.Settings"
     Title="ReturnToMonkee">
 
     <ShellContent
@@ -29,5 +30,10 @@
         x:Name="BewegungsErinnerungShellContent"
         Title="Bewegungserinnerungen"
         Route="BewegungsErinnerungPage" />
+
+    <ShellContent
+        x:Name="SettingsShellContent"
+        Title="Einstellungen"
+        Route="SettingsPage" />
 
 </Shell>
