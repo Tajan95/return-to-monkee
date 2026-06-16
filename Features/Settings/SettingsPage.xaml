@@ -27,5 +27,13 @@
         </Grid>
 
         <!-- Platzhalter für #18: Bewegungsintervall -->
+
+        <!-- Entwickler-Option: Onboarding erneut anzeigen -->
+        <HorizontalStackLayout Spacing="8">
+            <CheckBox x:Name="ShowOnboardingOnStartupCheckBox"
+                      CheckedChanged="OnShowOnboardingOnStartupCheckedChanged" />
+            <Label Text="Onboarding beim App-Start anzeigen (Entwicklung)"
+                   VerticalOptions="Center" />
+        </HorizontalStackLayout>
     </VerticalStackLayout>
 </ContentPage>

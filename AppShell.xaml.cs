@@ -10,11 +10,11 @@ public partial class AppShell : Shell
 {
 	private readonly IReminderService? reminderService;
 
-	public AppShell(IOnboardingRepository repo, MainPage mainPage, PersonListPage personListPage, BewegungsErinnerungPage bewegungsErinnerungPage, IReminderService reminderService, SettingsPage settingsPage)
+	public AppShell(IOnboardingRepository repo, IUserSettingsRepository userSettingsRepository, MainPage mainPage, PersonListPage personListPage, BewegungsErinnerungPage bewegungsErinnerungPage, IReminderService reminderService, SettingsPage settingsPage)
 	{
 		InitializeComponent();
 
-        _ = InitAsync(repo);
+        _ = InitAsync(repo, userSettingsRepository);
 
         Routing.RegisterRoute(nameof(PersonEditPage), typeof(PersonEditPage));
         Routing.RegisterRoute(nameof(OnboardingStep2Page), typeof(OnboardingStep2Page));
@@ -28,13 +28,14 @@ public partial class AppShell : Shell
 		_ = this.reminderService.StartAsync();
     }
 
-    private async Task InitAsync(IOnboardingRepository repo)
+    private async Task InitAsync(IOnboardingRepository repo, IUserSettingsRepository userSettingsRepository)
     {
         var completed = await repo.IsOnboardingCompletedAsync();
+        var settings = await userSettingsRepository.GetAsync();
 
         await Task.Delay(50);
 
-        if (AppSettings.ForceShowOnboarding || !completed)
+        if (settings.ShowOnboardingOnStartup || !completed)
             await GoToAsync("//onboarding");
         else
             await GoToAsync("//home");
