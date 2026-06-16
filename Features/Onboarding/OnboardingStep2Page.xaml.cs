@@ -24,6 +24,12 @@ public partial class OnboardingStep2Page : ContentPage
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
+        // Verhindert Doppel-Speicherung/Doppel-Navigation bei schnellem Doppelklick.
+        if (sender is Button button)
+        {
+            button.IsEnabled = false;
+        }
+
         var settings = await userSettingsRepository.GetAsync();
         settings.SleepTime = SleepTimePicker.Time ?? settings.SleepTime;
         await userSettingsRepository.SaveAsync(settings);

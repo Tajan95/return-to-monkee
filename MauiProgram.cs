@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using ReturnToMonkee.Features.BewegungsErinnerungDemo;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
+using ReturnToMonkee.Features.Settings;
 using ReturnToMonkee.Infrastructure.Notifications;
 using ReturnToMonkee.Infrastructure.Persistence;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
@@ -52,7 +53,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<BewegungsErinnerungViewModel>();
         builder.Services.AddTransient<GoalOrientationView>();
         builder.Services.AddTransient<GoalOrientationViewModel>();
-        builder.Services.AddSingleton<ReturnToMonkee.Features.Settings.SettingsPage>();
+        builder.Services.AddSingleton<SettingsPage>();
         builder.Services.AddTransient<OnboardingStep2Page>();
         builder.Services.AddSingleton<AppShell>();
 
