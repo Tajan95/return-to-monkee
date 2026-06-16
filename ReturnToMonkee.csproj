@@ -63,6 +63,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
@@ -71,6 +72,19 @@
 	<ItemGroup>
 		<!-- Exclude the test project folder from the main app's source glob. -->
 		<Compile Remove="ReturnToMonkee.Tests/**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Features\BewegungsErinnerungDemo\BewegungsErinnerungPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Features\Onboarding\GoalOrientationView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Infrastructure\Database\Models\" />
 	</ItemGroup>
 
 </Project>
