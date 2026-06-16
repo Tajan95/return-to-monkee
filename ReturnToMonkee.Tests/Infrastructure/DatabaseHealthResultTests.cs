@@ -25,6 +25,4 @@ public sealed class DatabaseHealthResultTests
         Assert.Equal("DB nicht verfuegbar", result.Message);
         Assert.Equal(errorDetails, result.Details);
     }
-
-    // TODO #12: Rule-Validierungstests hierhin, sobald UsageRule-Domain-Modell existiert.
 }
