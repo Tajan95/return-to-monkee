@@ -17,53 +17,83 @@ public sealed class TimeLimitRuleTests
     [Fact]
     public void IsValid_ReturnsTrue_WhenTitleTimeLimitAndTargetApplicationAreSet()
     {
+        // Arrange
         var rule = CreateValidRule();
 
-        Assert.True(rule.IsValid());
+        // Act
+        var isValid = rule.IsValid();
+
+        // Assert
+        Assert.True(isValid);
     }
 
     [Fact]
     public void IsValid_ReturnsFalse_WhenTitleIsEmpty()
     {
+        // Arrange
         var rule = CreateValidRule();
         rule.Title = string.Empty;
 
-        Assert.False(rule.IsValid());
+        // Act
+        var isValid = rule.IsValid();
+
+        // Assert
+        Assert.False(isValid);
     }
 
     [Fact]
     public void IsValid_ReturnsFalse_WhenTitleIsWhitespace()
     {
+        // Arrange
         var rule = CreateValidRule();
         rule.Title = "   ";
 
-        Assert.False(rule.IsValid());
+        // Act
+        var isValid = rule.IsValid();
+
+        // Assert
+        Assert.False(isValid);
     }
 
     [Fact]
     public void IsValid_ReturnsFalse_WhenTimeLimitMinutesIsZero()
     {
+        // Arrange
         var rule = CreateValidRule();
         rule.TimeLimitMinutes = 0;
 
-        Assert.False(rule.IsValid());
+        // Act
+        var isValid = rule.IsValid();
+
+        // Assert
+        Assert.False(isValid);
     }
 
     [Fact]
     public void IsValid_ReturnsFalse_WhenTimeLimitMinutesIsNegative()
     {
+        // Arrange
         var rule = CreateValidRule();
         rule.TimeLimitMinutes = -5;
 
-        Assert.False(rule.IsValid());
+        // Act
+        var isValid = rule.IsValid();
+
+        // Assert
+        Assert.False(isValid);
     }
 
     [Fact]
     public void IsValid_ReturnsFalse_WhenTargetApplicationIsEmpty()
     {
+        // Arrange
         var rule = CreateValidRule();
         rule.TargetApplication = string.Empty;
 
-        Assert.False(rule.IsValid());
+        // Act
+        var isValid = rule.IsValid();
+
+        // Assert
+        Assert.False(isValid);
     }
 }
