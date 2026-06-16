@@ -484,6 +484,7 @@ $RECYCLE.BIN/
 # Local agent notes/memories
 AGENTS.md
 .serena
+docs/superpowers
 
 # Local Windows development database
 Infrastructure/Database/*.db3
