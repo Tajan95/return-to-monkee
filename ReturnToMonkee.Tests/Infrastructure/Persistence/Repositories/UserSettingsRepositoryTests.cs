@@ -1,7 +1,8 @@
-using ReturnToMonkee.Features.Settings;
+using ReturnToMonkee.Infrastructure.Persistence.Entities;
+using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Tests.Helpers;
 
-namespace ReturnToMonkee.Tests.Features.Settings;
+namespace ReturnToMonkee.Tests.Infrastructure.Persistence.Repositories;
 
 public sealed class UserSettingsRepositoryTests
 {
@@ -68,6 +69,6 @@ public sealed class UserSettingsRepositoryTests
         cts.Cancel();
 
         await Assert.ThrowsAsync<OperationCanceledException>(
-            () => repo.SaveAsync(new UserSettings(), cts.Token));
+            () => repo.SaveAsync(new UserSettingsEntity(), cts.Token));
     }
 }

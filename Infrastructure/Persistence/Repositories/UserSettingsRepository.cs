@@ -1,15 +1,15 @@
-using ReturnToMonkee.Infrastructure.Persistence;
+using ReturnToMonkee.Infrastructure.Persistence.Entities;
 using SQLite;
 
-namespace ReturnToMonkee.Features.Settings;
+namespace ReturnToMonkee.Infrastructure.Persistence.Repositories;
 
 /// <summary>
 /// SQLite-Repository für Benutzereinstellungen.
-/// Verwaltet genau einen Datensatz (<see cref="UserSettings.DefaultId"/>).
+/// Verwaltet genau einen Datensatz (<see cref="UserSettingsEntity.DefaultId"/>).
 ///
 /// Bewusst kein PRAGMA user_version (globales Pragma, konfliktanfällig bei mehreren Repos).
 /// CreateTableAsync ergänzt neue Spalten automatisch beim nächsten App-Start (via MigrateTable intern) —
-/// #16 und #18 können GoalDirection/MovementIntervalMinutes einfach zur Entity hinzufügen.
+/// z. B. #18 kann MovementIntervalMinutes einfach zur Entity hinzufügen.
 /// </summary>
 public sealed class UserSettingsRepository : IUserSettingsRepository
 {
@@ -22,15 +22,15 @@ public sealed class UserSettingsRepository : IUserSettingsRepository
     }
 
     /// <inheritdoc/>
-    public async Task<UserSettings> GetAsync(CancellationToken cancellationToken = default)
+    public async Task<UserSettingsEntity> GetAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var connection = await GetDbConnectionAsync();
-        return await connection.FindAsync<UserSettings>(UserSettings.DefaultId) ?? new UserSettings();
+        return await connection.FindAsync<UserSettingsEntity>(UserSettingsEntity.DefaultId) ?? new UserSettingsEntity();
     }
 
     /// <inheritdoc/>
-    public async Task SaveAsync(UserSettings settings, CancellationToken cancellationToken = default)
+    public async Task SaveAsync(UserSettingsEntity settings, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var connection = await GetDbConnectionAsync();
@@ -42,7 +42,7 @@ public sealed class UserSettingsRepository : IUserSettingsRepository
         var connection = await localDatabase.GetConnectionAsync();
         if (!schemaEnsured)
         {
-            await connection.CreateTableAsync<UserSettings>();
+            await connection.CreateTableAsync<UserSettingsEntity>();
             schemaEnsured = true;
         }
         return connection;

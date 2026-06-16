@@ -1,13 +1,15 @@
 using SQLite;
 
+namespace ReturnToMonkee.Infrastructure.Persistence.Entities;
+
 /// <summary>
 /// Lokale Benutzereinstellungen — genau ein Datensatz in der DB.
-/// Neue Felder hier ergänzen (#16: GoalDirection, #18: MovementIntervalMinutes).
-/// Das Repository nutzt CreateFlags.Migrate, d. h. neue Spalten werden automatisch
-/// beim nächsten App-Start als DB-Spalten ergänzt, ohne Datenverlust.
+/// Neue Felder hier ergänzen (z. B. #18: MovementIntervalMinutes).
+/// CreateTableAsync ergänzt neue Spalten automatisch beim nächsten App-Start (intern via
+/// MigrateTable), ohne Datenverlust.
 /// </summary>
 [Table("UserSettings")]
-public class UserSettings
+public class UserSettingsEntity
 {
     /// <summary>
     /// Feste PK-ID des Singleton-Datensatzes.
@@ -24,7 +26,6 @@ public class UserSettings
     /// </summary>
     public int SleepTimeMinutes { get; set; } = 22 * 60;
 
-    // Platzhalter für #16: public int GoalDirection { get; set; } = 0;
     // Platzhalter für #18: public int MovementIntervalMinutes { get; set; } = 60;
 
     /// <summary>
