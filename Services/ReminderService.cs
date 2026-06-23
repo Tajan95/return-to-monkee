@@ -2,8 +2,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Maui.ApplicationModel;
+using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 
-namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
+namespace ReturnToMonkee.Services
 {
     public class ReminderService : IReminderService, IDisposable
     {

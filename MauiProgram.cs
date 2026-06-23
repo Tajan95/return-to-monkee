@@ -1,11 +1,12 @@
 using Microsoft.Extensions.Logging;
-using ReturnToMonkee.Features.BewegungsErinnerungDemo;
+using ReturnToMonkee.Features.BewegungsErinnerung;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
 using ReturnToMonkee.Infrastructure.Notifications;
 using ReturnToMonkee.Infrastructure.Persistence;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Onboarding;
+using ReturnToMonkee.Services;
 
 namespace ReturnToMonkee;
 

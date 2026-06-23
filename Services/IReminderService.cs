@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
+namespace ReturnToMonkee.Services
 {
     public interface IReminderService
     {

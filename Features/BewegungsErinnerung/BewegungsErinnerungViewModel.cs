@@ -5,8 +5,10 @@ using ReturnToMonkee.Infrastructure.Persistence;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
+using ReturnToMonkee.Infrastructure.Persistence.Entities;
+using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 
-namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
+namespace ReturnToMonkee.Features.BewegungsErinnerung
 {
     public class BewegungsErinnerungViewModel : INotifyPropertyChanged
     {

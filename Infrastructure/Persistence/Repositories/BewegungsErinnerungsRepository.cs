@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using ReturnToMonkee.Infrastructure.Persistence;
+using ReturnToMonkee.Infrastructure.Persistence.Entities;
 using SQLite;
 
-namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
+namespace ReturnToMonkee.Infrastructure.Persistence.Repositories
 {
     public sealed class BewegungsErinnerungsRepository : IBewegungsErinnerungsRepository
     {

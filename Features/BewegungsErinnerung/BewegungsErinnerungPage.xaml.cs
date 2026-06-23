@@ -1,4 +1,6 @@
-namespace ReturnToMonkee.Features.BewegungsErinnerungDemo;
+using ReturnToMonkee.Features.BewegungsErinnerung;
+
+namespace ReturnToMonkee.Features.BewegungsErinnerung;
 
 public partial class BewegungsErinnerungPage : ContentPage
 {

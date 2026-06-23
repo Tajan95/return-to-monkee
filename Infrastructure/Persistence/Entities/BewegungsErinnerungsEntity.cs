@@ -5,7 +5,7 @@ using System.Text;
 using System.Transactions;
 using SQLite;
 
-namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
+namespace ReturnToMonkee.Infrastructure.Persistence.Entities
 {
     public sealed class BewegungsErinnerungsEntity
     {
