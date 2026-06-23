@@ -17,10 +17,15 @@ public partial class BewegungsErinnerungPage : ContentPage
         await viewModel.LoadEntriesAsync();
     }
 
-    private async void OnNewClicked(object sender, EventArgs e)
+    private void OnNewClicked(object sender, EventArgs e)
     {
+        // 1. Logik für den "Neu"-Modus setzen
+        viewModel.IsEditMode = true;
+        viewModel.IsNewEntry = true;
         viewModel.SelectedEntry = null;
-        viewModel.ClearForm();
+
+        // 2. Bestehenden Command im ViewModel ausführen
+        viewModel.NewEntryCommand.Execute(null);
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -33,10 +38,25 @@ public partial class BewegungsErinnerungPage : ContentPage
         {
             await viewModel.UpdateEntryAsync();
         }
+
+        // Nach dem Speichern den Edit-Modus wieder beenden
+        viewModel.IsEditMode = false;
+        viewModel.IsNewEntry = false;
     }
 
     private async void OnDeleteClicked(object sender, EventArgs e)
     {
         await viewModel.DeleteEntryAsync();
+
+        // Nach dem Löschen Formular einklappen
+        viewModel.IsEditMode = false;
+        viewModel.IsNewEntry = false;
+    }
+
+    private void OnCancelClicked(object sender, EventArgs e)
+    {
+        // Wenn abgebrochen wird, einfach den Modus beenden und Formular verstecken
+        viewModel.IsEditMode = false;
+        viewModel.IsNewEntry = false;
     }
 }

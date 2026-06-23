@@ -9,7 +9,6 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <OnPlatform x:Key="PageBackgroundColor" x:TypeArguments="Color">
-                <!-- dunkler Hintergrund auf Windows, damit Seite zur AppBar passt -->
                 <On Platform="WinUI" Value="#111010" />
                 <On Platform="Android" Value="Transparent" />
                 <On Platform="iOS" Value="Transparent" />
@@ -17,7 +16,6 @@
             </OnPlatform>
 
             <OnPlatform x:Key="CardBackgroundColor" x:TypeArguments="Color">
-                <!-- Karten dunkler als Page, aber noch abhebbar -->
                 <On Platform="WinUI" Value="#1f1b24" />
                 <On Platform="Android" Value="#f5f5f5" />
                 <On Platform="iOS" Value="#f5f5f5" />
@@ -25,7 +23,6 @@
             </OnPlatform>
 
             <OnPlatform x:Key="PrimaryTextColor" x:TypeArguments="Color">
-                <!-- heller Text auf Windows (dark background) -->
                 <On Platform="WinUI" Value="#EFE8FF" />
                 <On Platform="Android" Value="#000000" />
                 <On Platform="iOS" Value="#000000" />
@@ -64,7 +61,6 @@
         Padding="12"
         BackgroundColor="{StaticResource PageBackgroundColor}">
 
-        <!-- Listenansicht -->
         <Grid
             Grid.Row="0"
             RowDefinitions="Auto,Auto,*"
@@ -75,14 +71,13 @@
                 Text="Erinnerungen"
                 FontSize="24"
                 FontAttributes="Bold" />
-            <!-- Debug: Anzahl geladener Einträge anzeigen (separate Zeile, keine Überlagerung) -->
+
             <Label
                 Grid.Row="1"
                 Text="{Binding Eintraege.Count, StringFormat='Anzahl: {0}'}"
                 FontSize="12"
                 TextColor="{StaticResource PrimaryTextColor}" />
 
-            <!-- Einfachere Anzeige mit BindableLayout: stabiler auf WinUI -->
             <ScrollView Grid.Row="2" VerticalOptions="FillAndExpand">
                 <ScrollView.HeightRequest>
                     <OnPlatform x:TypeArguments="x:Double">
@@ -106,8 +101,35 @@
                                         <Label Text="{Binding Titel}" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource PrimaryTextColor}" LineBreakMode="TailTruncation" HorizontalOptions="StartAndExpand" />
                                         <Label Grid.Column="1" Text="{Binding Id, StringFormat='ID: {0}'}" FontSize="12" TextColor="{StaticResource PrimaryTextColor}" HorizontalOptions="End" />
                                     </Grid>
-                                    <Label Text="{Binding Wochentag, StringFormat='Wochentag: {0}'}" FontSize="14" TextColor="{StaticResource PrimaryTextColor}" />
+
+                                    <Label Text="{Binding Wochentag, StringFormat='Wochentag: {0}'}" FontSize="14" TextColor="{StaticResource PrimaryTextColor}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Wochentag}" Value="Monday">
+                                                <Setter Property="Text" Value="Wochentag: Montag"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Wochentag}" Value="Tuesday">
+                                                <Setter Property="Text" Value="Wochentag: Dienstag"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Wochentag}" Value="Wednesday">
+                                                <Setter Property="Text" Value="Wochentag: Mittwoch"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Wochentag}" Value="Thursday">
+                                                <Setter Property="Text" Value="Wochentag: Donnerstag"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Wochentag}" Value="Friday">
+                                                <Setter Property="Text" Value="Wochentag: Freitag"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Wochentag}" Value="Saturday">
+                                                <Setter Property="Text" Value="Wochentag: Samstag"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Wochentag}" Value="Sunday">
+                                                <Setter Property="Text" Value="Wochentag: Sonntag"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+
                                     <Label Text="{Binding Erinnerungszeitpunkt, StringFormat='Zeit: {0:hh\:mm}'}" FontSize="14" TextColor="{StaticResource PrimaryTextColor}" />
+
                                     <Label Text="{Binding Beschreibung}" FontSize="12" TextColor="{StaticResource PrimaryTextColor}" />
                                 </VerticalStackLayout>
                             </Frame>
@@ -117,103 +139,118 @@
             </ScrollView>
         </Grid>
 
-        <!-- Bearbeitungsformular -->
         <ScrollView Grid.Row="1">
-            <VerticalStackLayout
-                Spacing="12"
-                Padding="12"
-                BackgroundColor="{StaticResource CardBackgroundColor}">
+            <VerticalStackLayout Spacing="12" Padding="12">
 
-                <Label
-                    Text="{Binding SelectedEntry, StringFormat='{0:Neuer Eintrag}'}"
-                    FontSize="18"
-                    FontAttributes="Bold" />
+                <VerticalStackLayout 
+                    Spacing="12" 
+                    IsVisible="False"
+                    BackgroundColor="{StaticResource CardBackgroundColor}"
+                    Padding="12">
 
-                <!-- Titel -->
-                <VerticalStackLayout Spacing="4">
+                    <VerticalStackLayout.Triggers>
+                        <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding IsEditMode}" Value="True">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </VerticalStackLayout.Triggers>
+
                     <Label
-                        Text="Titel"
-                        FontSize="14"
+                        Text="{Binding SelectedEntry, StringFormat='{0:Neuer Eintrag}'}"
+                        FontSize="18"
                         FontAttributes="Bold" />
-                    <Entry
-                        Placeholder="Titel eingeben"
-                        Text="{Binding Titel, Mode=TwoWay}" />
-                </VerticalStackLayout>
 
-                <!-- Wochentag -->
-                <VerticalStackLayout Spacing="4">
-                    <Label
-                        Text="Wochentag"
-                        FontSize="14"
-                        FontAttributes="Bold" />
-                    <Picker
-                        Title="Wochentag auswählen"
-                        ItemsSource="{Binding Wochentage}"
-                        SelectedItem="{Binding Wochentag, Mode=TwoWay}" />
-                </VerticalStackLayout>
-
-                <!-- Erinnerungszeit -->
-                <VerticalStackLayout Spacing="4">
-                    <Label
-                        Text="Erinnerungszeit"
-                        FontSize="14"
-                        FontAttributes="Bold" />
-                    <TimePicker
-                        Time="{Binding Erinnerungszeitpunkt, Mode=TwoWay}" />
-                </VerticalStackLayout>
-
-                <!-- Beschreibung -->
-                <VerticalStackLayout Spacing="4">
-                    <Label
-                        Text="Beschreibung"
-                        FontSize="14"
-                        FontAttributes="Bold" />
-                    <Editor
-                        Placeholder="Beschreibung eingeben"
-                        Text="{Binding Beschreibung, Mode=TwoWay}"
-                        MinimumHeightRequest="80"
-                        MaximumHeightRequest="120" />
-                </VerticalStackLayout>
-
-                <!-- Schalter -->
-                <Grid
-                    ColumnDefinitions="*,*"
-                    ColumnSpacing="12">
-                    <VerticalStackLayout Grid.Column="0" Spacing="4">
-                        <Label
-                            Text="Aktiv"
-                            FontSize="14"
-                            FontAttributes="Bold" />
-                        <CheckBox
-                            IsChecked="{Binding IstAktiv, Mode=TwoWay}" />
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Titel" FontSize="14" FontAttributes="Bold" />
+                        <Entry Placeholder="Titel eingeben" Text="{Binding Titel, Mode=TwoWay}" />
                     </VerticalStackLayout>
-                    <VerticalStackLayout Grid.Column="1" Spacing="4">
-                        <Label
-                            Text="Bestätigt"
-                            FontSize="14"
-                            FontAttributes="Bold" />
-                        <CheckBox
-                            IsChecked="{Binding IstBestaetigt, Mode=TwoWay}" />
-                    </VerticalStackLayout>
-                </Grid>
 
-                <!-- Buttons -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Wochentag" FontSize="14" FontAttributes="Bold" />
+                        <Picker Title="Wochentag auswählen" ItemsSource="{Binding Wochentage}" SelectedItem="{Binding WochentagName, Mode=TwoWay}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Erinnerungszeit" FontSize="14" FontAttributes="Bold" />
+                        <TimePicker Time="{Binding Erinnerungszeitpunkt, Mode=TwoWay}" Format="HH:mm" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Beschreibung" FontSize="14" FontAttributes="Bold" />
+                        <Editor Placeholder="Beschreibung eingeben" Text="{Binding Beschreibung, Mode=TwoWay}" MinimumHeightRequest="80" MaximumHeightRequest="120" />
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Aktiv" FontSize="14" FontAttributes="Bold" />
+                            <CheckBox IsChecked="{Binding IstAktiv, Mode=TwoWay}" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+
                 <Grid
                     ColumnDefinitions="*,*,*"
                     ColumnSpacing="8">
+
                     <Button
                         Grid.Column="0"
                         Text="Neu"
-                        Clicked="OnNewClicked" />
+                        Clicked="OnNewClicked"
+                        IsVisible="True">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+
                     <Button
                         Grid.Column="1"
                         Text="Speichern"
-                        Clicked="OnSaveClicked" />
+                        Clicked="OnSaveClicked"
+                        IsVisible="False">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="IsVisible" Value="True" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+
                     <Button
                         Grid.Column="2"
                         Text="Löschen"
-                        Clicked="OnDeleteClicked" />
+                        Clicked="OnDeleteClicked"
+                        BackgroundColor="Red"
+                        IsVisible="False">
+                        <Button.Triggers>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding IsEditMode}" Value="True" />
+                                    <BindingCondition Binding="{Binding IsNewEntry}" Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="IsVisible" Value="True" />
+                            </MultiTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <Button
+                        Grid.Column="2"
+                        Text="Abbrechen"
+                        Clicked="OnCancelClicked" 
+                        BackgroundColor="Gray"
+                        IsVisible="False">
+                        <Button.Triggers>
+                            <MultiTrigger TargetType="Button">
+                                <MultiTrigger.Conditions>
+                                    <BindingCondition Binding="{Binding IsEditMode}" Value="True" />
+                                    <BindingCondition Binding="{Binding IsNewEntry}" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="IsVisible" Value="True" />
+                            </MultiTrigger>
+                        </Button.Triggers>
+                    </Button>
+
                 </Grid>
+
             </VerticalStackLayout>
         </ScrollView>
     </Grid>
