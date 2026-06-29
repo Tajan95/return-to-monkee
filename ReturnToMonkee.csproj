@@ -75,9 +75,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Features\BewegungsErinnerung\BewegungsErinnerungPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Features\Onboarding\GoalOrientationView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

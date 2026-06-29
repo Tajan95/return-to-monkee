@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using ReturnToMonkee.Features.BewegungsErinnerung;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
 using ReturnToMonkee.Infrastructure.Notifications;
@@ -32,7 +31,6 @@ public static class MauiProgram
 
 		// Datenbank
 		builder.Services.AddSingleton<ILocalDatabase, LocalDatabase>();
-		builder.Services.AddSingleton<IBewegungsErinnerungsRepository, BewegungsErinnerungsRepository>();
 		builder.Services.AddSingleton<IReminderService, ReminderService>();
 
 		// Notifications
@@ -45,12 +43,17 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IOnboardingRepository, OnboardingRepository>();
 		builder.Services.AddSingleton<IGoalsRepository, GoalsRepository>();
 
+        // Seiten
+		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<PersonListPage>();
+		builder.Services.AddTransient<PersonEditPage>();
+        builder.Services.AddTransient<GoalOrientationView>();
+        builder.Services.AddTransient<GoalOrientationViewModel>();
+        builder.Services.AddSingleton<AppShell>();
 		// Seiten
 		builder.Services.AddSingleton<MainPage>();
 		builder.Services.AddSingleton<PersonListPage>();
 		builder.Services.AddTransient<PersonEditPage>();
-		builder.Services.AddSingleton<BewegungsErinnerungPage>();
-		builder.Services.AddSingleton<BewegungsErinnerungViewModel>();
 		builder.Services.AddTransient<GoalOrientationView>();
 		builder.Services.AddTransient<GoalOrientationViewModel>();
 
