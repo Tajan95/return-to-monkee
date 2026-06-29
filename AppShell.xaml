@@ -25,9 +25,4 @@
         Route="home"
         ContentTemplate="{DataTemplate home:MainPage}" />
 
-    <ShellContent
-        x:Name="BewegungsErinnerungShellContent"
-        Title="Bewegungserinnerungen"
-        Route="BewegungsErinnerungPage" />
-
 </Shell>
