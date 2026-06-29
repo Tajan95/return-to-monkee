@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ReturnToMonkee.Infrastructure.Persistence.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
+namespace ReturnToMonkee.Infrastructure.Persistence.Repositories
 {
     public interface IBewegungsErinnerungsRepository
     {

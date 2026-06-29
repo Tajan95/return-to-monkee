@@ -1,4 +1,5 @@
 using SQLite;
+using System.Diagnostics;
 
 namespace ReturnToMonkee.Infrastructure.Persistence;
 
@@ -60,7 +61,9 @@ public sealed class LocalDatabase : ILocalDatabase
     // Baut den vollständigen Pfad zur Datenbankdatei und erstellt die SQLite-Verbindung.
     private static SQLiteAsyncConnection CreateConnection()
 	{
-		return new(Path.Combine(GetDatabaseDirectory(), DatabaseFilename), OpenFlags);
+		var path = Path.Combine(GetDatabaseDirectory(), DatabaseFilename);
+		Debug.WriteLine($"LocalDatabase: opening SQLite DB at: {path}");
+		return new(path, OpenFlags);
     } 
 		
 
@@ -68,15 +71,35 @@ public sealed class LocalDatabase : ILocalDatabase
 	// Holt SQLite Datenbank Directory (Windows vs. Android, iOS)
 	private static string GetDatabaseDirectory()
 	{
-		#if WINDOWS
-		var projectRoot = FindProjectRoot();
-		if (projectRoot != null)
-		{
-			return Path.Combine(projectRoot, "Infrastructure", "Database");
-		}
-		#endif
+		// Always use the platform app data directory at runtime so mobile and desktop use the same location.
+		var appData = FileSystem.AppDataDirectory;
 
-		return FileSystem.AppDataDirectory;
+		// If we are running on Windows during development and there is a project-local database file,
+		// copy it into AppData if the runtime DB does not exist yet. This makes it easier to work
+		// with a single database file across development and devices.
+#if WINDOWS
+		try
+		{
+			var projectRoot = FindProjectRoot();
+			if (projectRoot != null)
+			{
+				var projectDb = Path.Combine(projectRoot, "Infrastructure", "Database", DatabaseFilename);
+				var destDb = Path.Combine(appData, DatabaseFilename);
+				if (File.Exists(projectDb) && !File.Exists(destDb))
+				{
+					Directory.CreateDirectory(appData);
+					File.Copy(projectDb, destDb);
+					Debug.WriteLine($"LocalDatabase: copied project DB to AppData: {destDb}");
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Debug.WriteLine($"LocalDatabase: failed to copy project DB: {ex.Message}");
+		}
+#endif
+
+		return appData;
 	}
 
 

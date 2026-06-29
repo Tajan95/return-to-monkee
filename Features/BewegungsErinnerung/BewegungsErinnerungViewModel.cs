@@ -5,23 +5,55 @@ using ReturnToMonkee.Infrastructure.Persistence;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
+using ReturnToMonkee.Infrastructure.Persistence.Entities;
+using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 
-namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
+namespace ReturnToMonkee.Features.BewegungsErinnerung
 {
     public class BewegungsErinnerungViewModel : INotifyPropertyChanged
     {
+        private bool isEditMode;
+        private bool _isNewEntry;
         private readonly IBewegungsErinnerungsRepository repository;
         private ObservableCollection<BewegungsErinnerungsEntity> eintraege = new();
         private BewegungsErinnerungsEntity? selectedEntry;
         private string? titel;
-        private DayOfWeek wochentag = DayOfWeek.Monday;
+        private string wochentagName = "Montag";
         private TimeSpan erinnerungszeitpunkt = new TimeSpan(9, 0, 0);
         private bool istAktiv = true;
         private bool istBestaetigt = false;
         private string? beschreibung = string.Empty;
         private int nextId = 1;
-        public IEnumerable<DayOfWeek> Wochentage { get; } = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>();
+        public List<string> Wochentage { get; } = new()
+        {
+            "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"
+        };
+
+        public ICommand NewEntryCommand { get; }
         public ICommand SelectEntryCommand { get; }
+
+        public bool IsEditMode
+        {
+            get => isEditMode;
+            set => SetProperty(ref isEditMode, value);
+        }
+
+        public bool IsNewEntry
+        {
+            get => _isNewEntry;
+            set
+            {
+                _isNewEntry = value;
+                OnPropertyChanged(); // Oder wie auch immer dein PropertyChanged aufgerufen wird
+            }
+        }
+
+        private readonly Dictionary<DayOfWeek, string> enumToGerman = new()
+        {
+            { DayOfWeek.Monday, "Montag" }, { DayOfWeek.Tuesday, "Dienstag" },
+            { DayOfWeek.Wednesday, "Mittwoch" }, { DayOfWeek.Thursday, "Donnerstag" },
+            { DayOfWeek.Friday, "Freitag" }, { DayOfWeek.Saturday, "Samstag" }, { DayOfWeek.Sunday, "Sonntag" }
+        };
 
         public ObservableCollection<BewegungsErinnerungsEntity> Eintraege
         {
@@ -48,10 +80,10 @@ namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
             set => SetProperty(ref titel, value);
         }
 
-        public DayOfWeek Wochentag
+        public string WochentagName
         {
-            get => wochentag;
-            set => SetProperty(ref wochentag, value);
+            get => wochentagName;
+            set => SetProperty(ref wochentagName, value);
         }
 
         public TimeSpan Erinnerungszeitpunkt
@@ -87,16 +119,26 @@ namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
         public BewegungsErinnerungViewModel(IBewegungsErinnerungsRepository repository)
         {
             this.repository = repository;
+
             SelectEntryCommand = new Command<BewegungsErinnerungsEntity>(e =>
             {
                 if (e == null) return;
-                // deselect previous
+
                 if (SelectedEntry != null)
                     SelectedEntry.IsSelected = false;
 
-                // select new
                 e.IsSelected = true;
                 SelectedEntry = e;
+
+                // Sobald geladen, wechseln wir in den Edit-Mode
+                IsEditMode = true;
+            });
+
+            // "Neu" Button leert das Formular und öffnet die Ansicht
+            NewEntryCommand = new Command(() =>
+            {
+                ClearForm();
+                IsEditMode = true;
             });
         }
 
@@ -141,7 +183,8 @@ namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
                 {
                     Id = NextId,
                     Titel = Titel,
-                    Wochentag = Wochentag,
+                    // Übersetzt den deutschen String aus dem Picker ("Montag") zurück ins Enum (DayOfWeek.Monday)
+                    Wochentag = GetDayOfWeekFromGerman(WochentagName),
                     Erinnerungszeitpunkt = Erinnerungszeitpunkt,
                     IstAktiv = IstAktiv,
                     IstBestaetigt = IstBestaetigt,
@@ -194,7 +237,8 @@ namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
                 {
                     Id = SelectedEntry.Id,
                     Titel = Titel,
-                    Wochentag = Wochentag,
+                    // Übersetzt auch beim Update den Picker-String zurück ins Enum für die DB
+                    Wochentag = GetDayOfWeekFromGerman(WochentagName),
                     Erinnerungszeitpunkt = Erinnerungszeitpunkt,
                     IstAktiv = IstAktiv,
                     IstBestaetigt = IstBestaetigt,
@@ -267,30 +311,40 @@ namespace ReturnToMonkee.Features.BewegungsErinnerungDemo
         private void LoadFormFromEntry(BewegungsErinnerungsEntity entry)
         {
             Titel = entry.Titel;
-            Wochentag = entry.Wochentag;
+
+            // Übersetze Enum in deutschen String für das Formular
+            WochentagName = enumToGerman.TryGetValue(entry.Wochentag, out var de) ? de : "Montag";
+
             Erinnerungszeitpunkt = entry.Erinnerungszeitpunkt;
             IstAktiv = entry.IstAktiv;
             IstBestaetigt = entry.IstBestaetigt;
             Beschreibung = entry.Beschreibung;
-            System.Diagnostics.Debug.WriteLine($"LoadFormFromEntry: Titel={Titel}, Wochentag={Wochentag}, Zeit={Erinnerungszeitpunkt}, Aktiv={IstAktiv}, Bestaetigt={IstBestaetigt}, BeschreibungLen={Beschreibung?.Length}");
         }
 
         public void ClearForm()
         {
             Titel = null;
-            Wochentag = DayOfWeek.Monday;
+            WochentagName = "Montag"; // Standard
             Erinnerungszeitpunkt = new TimeSpan(9, 0, 0);
             IstAktiv = true;
             IstBestaetigt = false;
             Beschreibung = string.Empty;
+
             if (SelectedEntry != null)
                 SelectedEntry.IsSelected = false;
             SelectedEntry = null;
+            IsEditMode = false;
         }
 
         private void UpdateNextId()
         {
             NextId = Eintraege.Count > 0 ? Eintraege.Max(e => e.Id) + 1 : 1;
+        }
+
+        // Hilfsmethode, um den deutschen String wieder in das DayOfWeek-Enum zu verwandeln
+        private DayOfWeek GetDayOfWeekFromGerman(string germanDay)
+        {
+            return enumToGerman.FirstOrDefault(x => x.Value == germanDay).Key;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
