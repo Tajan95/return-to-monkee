@@ -7,6 +7,7 @@ using ReturnToMonkee.Infrastructure.Persistence;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Onboarding;
 using ReturnToMonkee.Services;
+using ReturnToMonkee.Features.Rules;
 
 namespace ReturnToMonkee;
 
@@ -40,19 +41,24 @@ public static class MauiProgram
 		// Services
 		builder.Services.AddSingleton<IPersonRepository, PersonRepository>();
 		builder.Services.AddSingleton<DemoDataSeeder>();
-        builder.Services.AddSingleton<IStartupNavigator, StartupNavigator>();
-        builder.Services.AddSingleton<IOnboardingRepository, OnboardingRepository>();
+		builder.Services.AddSingleton<IStartupNavigator, StartupNavigator>();
+		builder.Services.AddSingleton<IOnboardingRepository, OnboardingRepository>();
 		builder.Services.AddSingleton<IGoalsRepository, GoalsRepository>();
 
-        // Seiten
-        builder.Services.AddSingleton<MainPage>();
+		// Seiten
+		builder.Services.AddSingleton<MainPage>();
 		builder.Services.AddSingleton<PersonListPage>();
 		builder.Services.AddTransient<PersonEditPage>();
 		builder.Services.AddSingleton<BewegungsErinnerungPage>();
 		builder.Services.AddSingleton<BewegungsErinnerungViewModel>();
-        builder.Services.AddTransient<GoalOrientationView>();
-        builder.Services.AddTransient<GoalOrientationViewModel>();
-        builder.Services.AddSingleton<AppShell>();
+		builder.Services.AddTransient<GoalOrientationView>();
+		builder.Services.AddTransient<GoalOrientationViewModel>();
+
+		// Regeln
+		builder.Services.AddSingleton<RulesViewModel>();
+		builder.Services.AddSingleton<RulesPage>();
+
+		builder.Services.AddSingleton<AppShell>();
 
 		return builder.Build();
 	}
