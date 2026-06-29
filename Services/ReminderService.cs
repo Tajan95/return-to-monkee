@@ -9,6 +9,7 @@ namespace ReturnToMonkee.Services
     public class ReminderService : IReminderService, IDisposable
     {
         private readonly IOnboardingRepository onboardingRepository;
+        private readonly INotificationEventRepository notificationEventRepository;
         private readonly INotificationAdapter notificationAdapter;
         private Timer? timer;
         private readonly TimeSpan checkInterval = TimeSpan.FromMinutes(1);
@@ -18,9 +19,11 @@ namespace ReturnToMonkee.Services
 
         public ReminderService(
             IOnboardingRepository onboardingRepository,
+            INotificationEventRepository notificationEventRepository,
             INotificationAdapter notificationAdapter)
         {
             this.onboardingRepository = onboardingRepository;
+            this.notificationEventRepository = notificationEventRepository;
             this.notificationAdapter = notificationAdapter;
         }
 
@@ -63,6 +66,7 @@ namespace ReturnToMonkee.Services
                     "Ignorieren");
 
                 lastReminderAt = DateTime.Now;
+                await SaveMovementReminderEventAsync(confirmed, intervalMinutes);
 
                 if (!confirmed)
                 {
@@ -77,6 +81,25 @@ namespace ReturnToMonkee.Services
             {
                 isChecking = false;
             }
+        }
+
+        private Task SaveMovementReminderEventAsync(
+            bool confirmed,
+            int intervalMinutes)
+        {
+            var status = confirmed ? "confirmed" : "ignored";
+
+            return notificationEventRepository.SaveAsync(
+                new NotificationEvent
+                {
+                    Id = Guid.NewGuid(),
+                    Time = DateTimeOffset.UtcNow,
+                    Title = confirmed
+                        ? "Bewegungspause bestaetigt"
+                        : "Bewegungspause ignoriert",
+                    Message = $"Bewegungs-Reminder nach {intervalMinutes} Minuten wurde {status}.",
+                    AppReference = $"return-to-monkee://movement-reminder/{status}"
+                });
         }
 
         protected virtual void Dispose(bool disposing)

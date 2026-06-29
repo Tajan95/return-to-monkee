@@ -32,6 +32,7 @@ public static class MauiProgram
 		// Datenbank
 		builder.Services.AddSingleton<ILocalDatabase, LocalDatabase>();
 		builder.Services.AddSingleton<IReminderService, ReminderService>();
+		builder.Services.AddSingleton<INotificationEventRepository, NotificationEventRepository>();
 
 		// Notifications
 		builder.Services.AddSingleton<INotificationAdapter, MockNotificationAdapter>();
