@@ -7,6 +7,7 @@ using SQLite;
 
 namespace ReturnToMonkee.Infrastructure.Persistence.Entities
 {
+    [Table("BewegungsErinnerungen")]
     public sealed class BewegungsErinnerungsEntity
     {
         [PrimaryKey]

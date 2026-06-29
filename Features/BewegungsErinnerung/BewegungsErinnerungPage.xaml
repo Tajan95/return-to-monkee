@@ -72,11 +72,11 @@
                 FontSize="24"
                 FontAttributes="Bold" />
 
-            <Label
+            <!--<Label
                 Grid.Row="1"
                 Text="{Binding Eintraege.Count, StringFormat='Anzahl: {0}'}"
                 FontSize="12"
-                TextColor="{StaticResource PrimaryTextColor}" />
+                TextColor="{StaticResource PrimaryTextColor}" />-->
 
             <ScrollView Grid.Row="2" VerticalOptions="FillAndExpand">
                 <ScrollView.HeightRequest>
@@ -97,10 +97,7 @@
                                     </DataTrigger>
                                 </Frame.Triggers>
                                 <VerticalStackLayout Spacing="1">
-                                    <Grid ColumnDefinitions="*,Auto">
-                                        <Label Text="{Binding Titel}" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource PrimaryTextColor}" LineBreakMode="TailTruncation" HorizontalOptions="StartAndExpand" />
-                                        <Label Grid.Column="1" Text="{Binding Id, StringFormat='ID: {0}'}" FontSize="12" TextColor="{StaticResource PrimaryTextColor}" HorizontalOptions="End" />
-                                    </Grid>
+                                    <Label Text="{Binding Titel}" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource PrimaryTextColor}" LineBreakMode="TailTruncation" HorizontalOptions="StartAndExpand" />
 
                                     <Label Text="{Binding Wochentag, StringFormat='Wochentag: {0}'}" FontSize="14" TextColor="{StaticResource PrimaryTextColor}">
                                         <Label.Triggers>
