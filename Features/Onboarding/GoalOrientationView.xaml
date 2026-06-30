@@ -32,6 +32,13 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
+        <Label Text="Bewegungserinnerung" FontSize="20" />
+
+        <Label Text="Intervall in Minuten" />
+
+        <Picker ItemsSource="{Binding MovementReminderIntervals}"
+                SelectedItem="{Binding SelectedMovementReminderInterval, Mode=TwoWay}" />
+
         <Button Text="Weiter"
                 Command="{Binding SaveCommand}" />
 

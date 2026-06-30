@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Infrastructure.Persistence.Entities;
@@ -9,21 +9,31 @@ namespace ReturnToMonkee.Onboarding;
 
 public partial class GoalOrientationViewModel : ObservableObject
 {
-    private readonly IGoalsRepository repository;
+    private readonly IGoalsRepository goalsRepository;
+    private readonly IOnboardingRepository onboardingRepository;
 
     public ObservableCollection<GoalItem> Goals { get; } = new();
+    public ObservableCollection<int> MovementReminderIntervals { get; } = new() { 30, 60, 90 };
 
-    public GoalOrientationViewModel(IGoalsRepository repository)
+    [ObservableProperty]
+    private int selectedMovementReminderInterval = 60;
+
+    public GoalOrientationViewModel(
+        IGoalsRepository goalsRepository,
+        IOnboardingRepository onboardingRepository)
     {
-        this.repository = repository;
+        this.goalsRepository = goalsRepository;
+        this.onboardingRepository = onboardingRepository;
     }
 
     public async Task LoadAsync()
     {
-        await repository.SeedAsync();
+        await goalsRepository.SeedAsync();
 
-        var goals = await repository.GetAllGoalsAsync();
-        var selectedIds = await repository.GetSelectedGoalIdsAsync();
+        var goals = await goalsRepository.GetAllGoalsAsync();
+        var selectedIds = await goalsRepository.GetSelectedGoalIdsAsync();
+        SelectedMovementReminderInterval =
+            await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
 
         Goals.Clear();
 
@@ -46,7 +56,11 @@ public partial class GoalOrientationViewModel : ObservableObject
             .Select(x => x.Id)
             .ToList();
 
-        await repository.SaveSelectedGoalsAsync(selected);
+        await goalsRepository.SaveSelectedGoalsAsync(selected);
+        await onboardingRepository.SaveGoalOrientationAsync(
+            selected.Count > 0 ? string.Join(",", selected) : "none");
+        await onboardingRepository.SaveMovementReminderIntervalMinutesAsync(
+            SelectedMovementReminderInterval);
 
         await Shell.Current.GoToAsync(nameof(OnboardingStep2Page));
     }

@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-    x:Class="ReturnToMonkee.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:onboarding="clr-namespace:ReturnToMonkee.Features.Onboarding"
-    xmlns:home="clr-namespace:ReturnToMonkee"
-    xmlns:personTest="clr-namespace:ReturnToMonkee.Features.PersonTest"
-    xmlns:settings="clr-namespace:ReturnToMonkee.Features.Settings"
-    Title="ReturnToMonkee">
+	x:Class="ReturnToMonkee.AppShell"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:onboarding="clr-namespace:ReturnToMonkee.Features.Onboarding"
+	xmlns:home="clr-namespace:ReturnToMonkee"
+	xmlns:personTest="clr-namespace:ReturnToMonkee.Features.PersonTest"
+	xmlns:rules="clr-namespace:ReturnToMonkee.Features.Rules"
+	Title="ReturnToMonkee">
 
-    <ShellContent
-        x:Name="PersonListShellContent"
-        Title="Personen"
-        Route="PersonListPage"
-        ContentTemplate="{DataTemplate personTest:PersonListPage}" />
+	<ShellContent
+		x:Name="PersonListShellContent"
+		Title="Personen"
+		Route="PersonListPage"
+		ContentTemplate="{DataTemplate personTest:PersonListPage}" />
 
-    <ShellContent
-        Route="onboarding"
+	<ShellContent
+		Route="onboarding"
 		FlyoutItemIsVisible="False"
-        ContentTemplate="{DataTemplate onboarding:GoalOrientationView}" />
+		ContentTemplate="{DataTemplate onboarding:GoalOrientationView}" />
 
-    <ShellContent
-        x:Name="HomeShellContent"
-        Title="Home"
-        Route="home"
-        ContentTemplate="{DataTemplate home:MainPage}" />
+	<ShellContent
+		x:Name="HomeShellContent"
+		Title="Home"
+		Route="home"
+		ContentTemplate="{DataTemplate home:MainPage}" />
 
-    <ShellContent
-        x:Name="BewegungsErinnerungShellContent"
-        Title="Bewegungserinnerungen"
-        Route="BewegungsErinnerungPage" />
+	<ShellContent
+		x:Name="RulesShellContent"
+		Title="Regeln"
+		Route="RulesPage"
+		ContentTemplate="{DataTemplate rules:RulesPage}" />
 
-    <ShellContent
-        x:Name="SettingsShellContent"
-        Title="Einstellungen"
-        Route="SettingsPage" />
+	<ShellContent
+		x:Name="SettingsShellContent"
+		Title="Einstellungen"
+		Route="SettingsPage" />
 
 </Shell>
