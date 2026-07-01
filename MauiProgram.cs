@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
+using ReturnToMonkee.Features.Interventions;
 using ReturnToMonkee.Infrastructure.Notifications;
 using ReturnToMonkee.Infrastructure.Persistence;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
@@ -61,6 +62,10 @@ public static class MauiProgram
 		// Regeln
 		builder.Services.AddSingleton<RulesViewModel>();
 		builder.Services.AddSingleton<RulesPage>();
+
+		// Interventionen
+		builder.Services.AddSingleton<TimeLimitInterventionViewModel>();
+		builder.Services.AddSingleton<TimeLimitInterventionPage>();
 
 		builder.Services.AddSingleton<AppShell>();
 
