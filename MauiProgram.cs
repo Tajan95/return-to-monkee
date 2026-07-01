@@ -1,13 +1,14 @@
 using Microsoft.Extensions.Logging;
+using ReturnToMonkee.Features.Interventions;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
+using ReturnToMonkee.Features.Rules;
 using ReturnToMonkee.Features.Settings;
 using ReturnToMonkee.Infrastructure.Notifications;
 using ReturnToMonkee.Infrastructure.Persistence;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Onboarding;
 using ReturnToMonkee.Services;
-using ReturnToMonkee.Features.Rules;
 
 namespace ReturnToMonkee;
 
@@ -25,7 +26,6 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
 			});
 
-
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
@@ -41,30 +41,26 @@ public static class MauiProgram
 		// Services
 		builder.Services.AddSingleton<IPersonRepository, PersonRepository>();
 		builder.Services.AddSingleton<DemoDataSeeder>();
-		builder.Services.AddSingleton<IStartupNavigator, StartupNavigator>();
 		builder.Services.AddSingleton<IOnboardingRepository, OnboardingRepository>();
 		builder.Services.AddSingleton<IGoalsRepository, GoalsRepository>();
-        builder.Services.AddSingleton<IUserSettingsRepository, UserSettingsRepository>();
+		builder.Services.AddSingleton<IUserSettingsRepository, UserSettingsRepository>();
 
-        // Seiten
-		builder.Services.AddSingleton<MainPage>();
-		builder.Services.AddSingleton<PersonListPage>();
-		builder.Services.AddTransient<PersonEditPage>();
-        builder.Services.AddTransient<GoalOrientationView>();
-        builder.Services.AddTransient<GoalOrientationViewModel>();
-        builder.Services.AddSingleton<SettingsPage>();
-        builder.Services.AddTransient<OnboardingStep2Page>();
-        builder.Services.AddSingleton<AppShell>();
 		// Seiten
 		builder.Services.AddSingleton<MainPage>();
 		builder.Services.AddSingleton<PersonListPage>();
 		builder.Services.AddTransient<PersonEditPage>();
 		builder.Services.AddTransient<GoalOrientationView>();
 		builder.Services.AddTransient<GoalOrientationViewModel>();
+		builder.Services.AddSingleton<SettingsPage>();
+		builder.Services.AddTransient<OnboardingStep2Page>();
 
 		// Regeln
 		builder.Services.AddSingleton<RulesViewModel>();
 		builder.Services.AddSingleton<RulesPage>();
+
+		// Interventionen
+		builder.Services.AddSingleton<TimeLimitInterventionViewModel>();
+		builder.Services.AddSingleton<TimeLimitInterventionPage>();
 
 		builder.Services.AddSingleton<AppShell>();
 

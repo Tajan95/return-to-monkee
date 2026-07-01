@@ -1,5 +1,7 @@
+using ReturnToMonkee.Features.Interventions;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
+using ReturnToMonkee.Features.Rules;
 using ReturnToMonkee.Features.Settings;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Services;
@@ -10,7 +12,15 @@ public partial class AppShell : Shell
 {
 	private readonly IReminderService? reminderService;
 
-	public AppShell(IOnboardingRepository repo, IUserSettingsRepository userSettingsRepository, MainPage mainPage, PersonListPage personListPage, IReminderService reminderService, SettingsPage settingsPage)
+	public AppShell(
+        IOnboardingRepository repo,
+        IUserSettingsRepository userSettingsRepository,
+        MainPage mainPage,
+        PersonListPage personListPage,
+        RulesPage rulesPage,
+        TimeLimitInterventionPage timeLimitInterventionPage,
+        IReminderService reminderService,
+        SettingsPage settingsPage)
 	{
 		InitializeComponent();
 
@@ -21,6 +31,8 @@ public partial class AppShell : Shell
 
         HomeShellContent.Content = mainPage;
         PersonListShellContent.Content = personListPage;
+        RulesShellContent.Content = rulesPage;
+        InterventionShellContent.Content = timeLimitInterventionPage;
         SettingsShellContent.Content = settingsPage;
 
 		this.reminderService = reminderService;
