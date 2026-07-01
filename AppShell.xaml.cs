@@ -1,4 +1,6 @@
+using ReturnToMonkee.Features.Interventions;
 using ReturnToMonkee.Features.PersonTest;
+using ReturnToMonkee.Features.Rules;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Services;
 
@@ -12,6 +14,8 @@ public partial class AppShell : Shell
         IOnboardingRepository repo,
         MainPage mainPage,
         PersonListPage personListPage,
+        RulesPage rulesPage,
+        TimeLimitInterventionPage timeLimitInterventionPage,
         IReminderService reminderService)
 	{
 		InitializeComponent();
@@ -22,6 +26,8 @@ public partial class AppShell : Shell
 
         HomeShellContent.Content = mainPage;
         PersonListShellContent.Content = personListPage;
+        RulesShellContent.Content = rulesPage;
+        InterventionShellContent.Content = timeLimitInterventionPage;
 
 		this.reminderService = reminderService;
 		_ = this.reminderService.StartAsync();
