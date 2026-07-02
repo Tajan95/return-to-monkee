@@ -75,6 +75,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<InternalsVisibleTo Include="ReturnToMonkee.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Features\Onboarding\GoalOrientationView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
