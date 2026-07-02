@@ -39,4 +39,9 @@
 		Route="TimeLimitInterventionPage"
 		ContentTemplate="{DataTemplate interventions:TimeLimitInterventionPage}" />
 
+	<ShellContent
+		x:Name="SettingsShellContent"
+		Title="Einstellungen"
+		Route="SettingsPage" />
+
 </Shell>

@@ -16,7 +16,7 @@ public sealed class TimeLimitInterventionViewModelTests
         await viewModel.MarkTimeLimitExceededAsync();
 
         Assert.True(viewModel.IsSoftInterventionVisible);
-        Assert.Equal("Zeitlimit-Ueberschreitung gespeichert.", viewModel.StatusMessage);
+        Assert.Equal("Zeitlimit-Überschreitung gespeichert.", viewModel.StatusMessage);
         Assert.Equal(TimeLimitInterventionViewModel.InterventionTitle, adapter.Title);
         Assert.Equal(TimeLimitInterventionViewModel.InterventionMessage, adapter.Message);
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ReturnToMonkee.Features.Onboarding.OnboardingStep2Page"
+             Shell.FlyoutBehavior="Disabled"
+             Title="Schlafenszeit">
+    <VerticalStackLayout Padding="24" Spacing="16">
+        <Label Text="Wann möchtest du schlafen gehen?"
+               FontSize="18"
+               FontAttributes="Bold" />
+        <Label Text="Diese Zeit wird für deinen Schlafenszeit-Reminder verwendet." />
+        <TimePicker x:Name="SleepTimePicker" />
+        <Button Text="Speichern"
+                Clicked="OnSaveClicked" />
+        <Label x:Name="ConfirmationLabel"
+               IsVisible="False"
+               Text="Schlafenszeit gespeichert."
+               TextColor="Green" />
+    </VerticalStackLayout>
+</ContentPage>
