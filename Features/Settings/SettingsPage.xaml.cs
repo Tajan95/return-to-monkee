@@ -1,18 +1,21 @@
 // Features/Settings/SettingsPage.xaml.cs
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
+using ReturnToMonkee.Services;
 
 namespace ReturnToMonkee.Features.Settings;
 
 public partial class SettingsPage : ContentPage
 {
     private readonly IUserSettingsRepository userSettingsRepository;
+    private readonly IReminderService reminderService;
     private bool isLoadingSettings;
 
-    public SettingsPage(IUserSettingsRepository userSettingsRepository)
+    public SettingsPage(IUserSettingsRepository userSettingsRepository, IReminderService reminderService)
     {
         InitializeComponent();
         this.userSettingsRepository = userSettingsRepository;
+        this.reminderService = reminderService;
     }
 
     // Lädt bei jedem Besuch neu — zeigt nach Speichern auf Step2 sofort den neuen Wert.
@@ -32,6 +35,11 @@ public partial class SettingsPage : ContentPage
     private async void OnEditSleepTimeClicked(object sender, EventArgs e)
     {
         await Shell.Current.GoToAsync(nameof(OnboardingStep2Page));
+    }
+
+    private async void OnTestSleepReminderClicked(object sender, EventArgs e)
+    {
+        await reminderService.TriggerSleepReminderAsync();
     }
 
     private async void OnShowOnboardingOnStartupCheckedChanged(object sender, CheckedChangedEventArgs e)
