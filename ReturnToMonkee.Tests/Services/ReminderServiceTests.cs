@@ -25,7 +25,7 @@ public sealed class ReminderServiceTests
         var sleepTime = new TimeSpan(22, 0, 0);
         var now = new DateTime(2026, 7, 2, 22, 0, 0);
 
-        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: null);
+        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: null, lastTriggeredSleepTime: null);
 
         Assert.True(result);
     }
@@ -36,19 +36,19 @@ public sealed class ReminderServiceTests
         var sleepTime = new TimeSpan(22, 0, 0);
         var now = new DateTime(2026, 7, 2, 21, 59, 0);
 
-        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: null);
+        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: null, lastTriggeredSleepTime: null);
 
         Assert.False(result);
     }
 
     [Fact]
-    public void IsSleepReminderDue_ReturnsFalse_WhenAlreadyTriggeredToday()
+    public void IsSleepReminderDue_ReturnsFalse_WhenAlreadyTriggeredToday_ForTheSameSleepTime()
     {
         var sleepTime = new TimeSpan(22, 0, 0);
         var now = new DateTime(2026, 7, 2, 23, 0, 0);
         var today = DateOnly.FromDateTime(now);
 
-        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: today);
+        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: today, lastTriggeredSleepTime: sleepTime);
 
         Assert.False(result);
     }
@@ -60,7 +60,27 @@ public sealed class ReminderServiceTests
         var yesterday = new DateOnly(2026, 7, 1);
         var now = new DateTime(2026, 7, 2, 22, 0, 0);
 
-        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: yesterday);
+        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: yesterday, lastTriggeredSleepTime: sleepTime);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsSleepReminderDue_ReturnsTrue_WhenAlreadyTriggeredToday_ButSleepTimeWasChangedToALaterReachedValue()
+    {
+        // Deckt den Fall ab, dass der Reminder beim App-Start sofort fuer eine bereits
+        // verstrichene (alte) Schlafenszeit ausgeloest wurde, bevor der Nutzer die
+        // Schlafenszeit auf einen spaeteren, ebenfalls schon erreichten Wert aendert.
+        var oldSleepTime = new TimeSpan(19, 0, 0);
+        var newSleepTime = new TimeSpan(20, 0, 0);
+        var now = new DateTime(2026, 7, 2, 20, 10, 0);
+        var today = DateOnly.FromDateTime(now);
+
+        var result = ReminderService.IsSleepReminderDue(
+            newSleepTime,
+            now,
+            lastTriggeredDate: today,
+            lastTriggeredSleepTime: oldSleepTime);
 
         Assert.True(result);
     }
@@ -163,6 +183,54 @@ public sealed class ReminderServiceTests
             eventRepository.SavedEvents,
             e => e.AppReference == "return-to-monkee://sleep-reminder/confirmed");
         Assert.NotNull(savedEvent);
+    }
+
+    [Fact]
+    public async Task TriggerSleepReminderAsync_DoesNotSuppress_TheSameDaysAutomaticReminder()
+    {
+        var adapter = new RecordingNotificationAdapter(promptResult: true);
+        var eventRepository = new RecordingNotificationEventRepository();
+        var service = CreateService(adapter, eventRepository, sleepTime: new TimeSpan(22, 0, 0));
+        var beforeSleepTime = new DateTime(2026, 7, 2, 18, 0, 0);
+        var atSleepTime = new DateTime(2026, 7, 2, 22, 0, 0);
+
+        await service.TriggerSleepReminderAsync();
+        await service.CheckDueAsync(beforeSleepTime);
+        await service.CheckDueAsync(atSleepTime);
+
+        var sleepEvents = eventRepository.SavedEvents
+            .Where(e => e.AppReference.StartsWith("return-to-monkee://sleep-reminder/"))
+            .ToList();
+        Assert.Equal(2, sleepEvents.Count);
+    }
+
+    [Fact]
+    public async Task CheckDueAsync_TriggersAgain_WhenSleepTimeIsChangedToALaterValueAfterAlreadyTriggeredToday()
+    {
+        // Reproduziert den App-Start-Fall: Schlafenszeit steht noch auf einem bereits
+        // verstrichenen Wert (z.B. von gestern), der Reminder feuert deshalb sofort beim
+        // ersten Check. Aendert der Nutzer die Schlafenszeit danach auf einen spaeteren,
+        // aber ebenfalls schon erreichten Wert, muss der Reminder erneut feuern.
+        var adapter = new RecordingNotificationAdapter(promptResult: true);
+        var eventRepository = new RecordingNotificationEventRepository();
+        var settingsRepository = new StubUserSettingsRepository { SleepTime = new TimeSpan(19, 0, 0) };
+        var service = new ReminderService(
+            new StubOnboardingRepository(),
+            eventRepository,
+            adapter,
+            settingsRepository);
+        var appStart = new DateTime(2026, 7, 2, 19, 10, 0);
+        var afterSleepTimeChanged = new DateTime(2026, 7, 2, 20, 10, 0);
+
+        await service.CheckDueAsync(appStart);
+
+        settingsRepository.SleepTime = new TimeSpan(20, 0, 0);
+        await service.CheckDueAsync(afterSleepTimeChanged);
+
+        var sleepEvents = eventRepository.SavedEvents
+            .Where(e => e.AppReference.StartsWith("return-to-monkee://sleep-reminder/"))
+            .ToList();
+        Assert.Equal(2, sleepEvents.Count);
     }
 
     private sealed class RecordingNotificationAdapter : INotificationAdapter
