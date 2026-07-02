@@ -26,6 +26,10 @@
                     Clicked="OnEditSleepTimeClicked" />
         </Grid>
 
+        <Button Text="Schlafenszeit-Reminder jetzt testen"
+                HorizontalOptions="Start"
+                Clicked="OnTestSleepReminderClicked" />
+
         <!-- Platzhalter für #18: Bewegungsintervall -->
 
         <!-- Entwickler-Option: Onboarding erneut anzeigen -->
