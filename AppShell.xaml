@@ -11,6 +11,7 @@
 	xmlns:rules="clr-namespace:ReturnToMonkee.Features.Rules"
 	Title="ReturnToMonkee"
 	FlyoutBackdrop="Transparent"
+	BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray950}}"
 	FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray950}}">
 
 	<Shell.Resources>

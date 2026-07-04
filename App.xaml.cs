@@ -22,6 +22,18 @@ public partial class App : Microsoft.Maui.Controls.Application
     protected override Window CreateWindow(IActivationState? activationState)
     {
         var shell = services.GetRequiredService<AppShell>();
-        return new Window(shell);
+        var window = new Window(shell);
+
+#if WINDOWS
+        // Klassische Handy-Dimension auf dem Desktop: feste schmale Breite, Hoehe flexibel.
+        const double phoneWidth = 420;
+        window.Width = phoneWidth;
+        window.Height = 860;
+        window.MinimumWidth = phoneWidth;
+        window.MaximumWidth = phoneWidth;
+        window.MinimumHeight = 600;
+#endif
+
+        return window;
     }
 }
