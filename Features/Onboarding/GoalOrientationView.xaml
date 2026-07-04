@@ -17,33 +17,44 @@
                 <VerticalStackLayout IsVisible="{Binding IsWelcomeStep}"
                                      Spacing="18"
                                      VerticalOptions="Center">
-                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray900}}"
-                            Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
-                            StrokeThickness="1"
-                            HeightRequest="96"
-                            WidthRequest="96"
-                            HorizontalOptions="Center">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="48" />
-                        </Border.StrokeShape>
-                        <Image HeightRequest="42"
-                               WidthRequest="42"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center">
-                            <Image.Source>
-                                <FontImageSource FontFamily="FontAwesomeSolid"
-                                                 Glyph="{StaticResource IconSeedling}"
-                                                 Size="42"
-                                                 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
-                            </Image.Source>
-                        </Image>
-                    </Border>
+                    <Grid HeightRequest="118"
+                          WidthRequest="118"
+                          HorizontalOptions="Center">
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray900}}"
+                                Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
+                                StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="59" />
+                            </Border.StrokeShape>
+                        </Border>
 
-                    <Label Text="Willkommen bei Return To Monkee"
-                           FontSize="30"
-                           FontAttributes="Bold"
-                           HorizontalTextAlignment="Center"
-                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                        <Image Source="monkey_face_svgrepo.png"
+                               Aspect="AspectFit"
+                               HeightRequest="82"
+                               WidthRequest="82"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Grid>
+
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Willkommen bei"
+                               FontSize="25"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+
+                        <Label Text="Return To"
+                               FontSize="38"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+
+                        <Label Text="Monkee"
+                               FontSize="38"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                    </VerticalStackLayout>
 
                     <Label Text="Richte in wenigen Schritten Ziele, Pausen, Zeitlimit und Schlafenszeit ein."
                            FontSize="16"
@@ -368,6 +379,7 @@
                          IsVisible="{Binding IsProgressVisible}" />
 
             <Label Text="{Binding StepCounterText}"
+                   IsVisible="{Binding IsProgressVisible}"
                    FontSize="13"
                    HorizontalTextAlignment="Center"
                    TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
