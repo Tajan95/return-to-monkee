@@ -85,9 +85,6 @@
 	  <MauiXaml Update="Features\Rules\RulesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Features\Interventions\TimeLimitInterventionPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Features\Statistics\StatisticsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

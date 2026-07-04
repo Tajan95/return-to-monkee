@@ -6,12 +6,40 @@
     <CollectionView ItemsSource="{Binding Rules}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <Grid Padding="12" ColumnDefinitions="*,Auto">
-                    <StackLayout>
+                <Grid Padding="12" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                    <VerticalStackLayout Spacing="4">
                         <Label Text="{Binding Title}" FontAttributes="Bold" />
                         <Label Text="{Binding Description}" FontSize="Small" />
-                    </StackLayout>
+                    </VerticalStackLayout>
+
                     <Switch Grid.Column="1" IsToggled="{Binding IsEnabled}" Toggled="Switch_Toggled" />
+
+                    <Button Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Text="Zeitlimit testen"
+                            IsVisible="{Binding IsTimeLimitRule}"
+                            Clicked="TestTimeLimit_Clicked" />
+
+                    <Border Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            IsVisible="{Binding IsSoftInterventionVisible}"
+                            Stroke="{AppThemeBinding Light=#D6D3D1, Dark=#6E6E6E}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="12"
+                            BackgroundColor="{AppThemeBinding Light=#F7F7F2, Dark=#2A2A2A}">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Soft-Intervention"
+                                   FontAttributes="Bold"
+                                   FontSize="16"
+                                   TextColor="{AppThemeBinding Light=#212121, Dark=#FFFFFF}" />
+                            <Label Text="{Binding InterventionMessage}"
+                                   TextColor="{AppThemeBinding Light=#212121, Dark=#FFFFFF}" />
+                            <Label Text="{Binding StatusMessage}"
+                                   FontSize="Small"
+                                   TextColor="{AppThemeBinding Light=#404040, Dark=#E1E1E1}" />
+                        </VerticalStackLayout>
+                    </Border>
                 </Grid>
             </DataTemplate>
         </CollectionView.ItemTemplate>
