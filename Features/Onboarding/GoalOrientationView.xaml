@@ -202,30 +202,20 @@
                            FontSize="14"
                            TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
-                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}"
+                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
                             StrokeThickness="1"
-                            Padding="16">
+                            Padding="14,10">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8" />
                         </Border.StrokeShape>
-
-                        <VerticalStackLayout Spacing="10">
+                        <VerticalStackLayout Spacing="4">
                             <Label Text="Intervall in Minuten"
+                                   FontSize="13"
                                    FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
-
-                            <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
-                                    Padding="12,0"
-                                    MinimumHeightRequest="48">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="8" />
-                                </Border.StrokeShape>
-                                <Picker ItemsSource="{Binding MovementReminderIntervals}"
-                                        SelectedItem="{Binding SelectedMovementReminderInterval, Mode=TwoWay}"
-                                        Title="Intervall auswählen" />
-                            </Border>
+                                   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                            <Picker ItemsSource="{Binding MovementReminderIntervals}"
+                                    SelectedItem="{Binding SelectedMovementReminderInterval, Mode=TwoWay}" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
@@ -252,46 +242,38 @@
                            FontSize="14"
                            TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
-                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}"
+                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
                             StrokeThickness="1"
-                            Padding="16">
+                            Padding="14,10">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8" />
                         </Border.StrokeShape>
-
-                        <VerticalStackLayout Spacing="12">
+                        <VerticalStackLayout Spacing="4">
                             <Label Text="Kategorie"
+                                   FontSize="13"
                                    FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                                   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                            <Picker ItemsSource="{Binding TimeLimitCategories}"
+                                    SelectedItem="{Binding SelectedTimeLimitCategory}" />
+                        </VerticalStackLayout>
+                    </Border>
 
-                            <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
-                                    Padding="12,0"
-                                    MinimumHeightRequest="48">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="8" />
-                                </Border.StrokeShape>
-                                <Picker ItemsSource="{Binding TimeLimitCategories}"
-                                        SelectedItem="{Binding SelectedTimeLimitCategory}"
-                                        Title="Kategorie auswählen" />
-                            </Border>
-
+                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
+                            StrokeThickness="1"
+                            Padding="14,10">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4">
                             <Label Text="Tägliches Zeitlimit in Minuten"
+                                   FontSize="13"
                                    FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
-
-                            <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
-                                    Padding="12,0"
-                                    MinimumHeightRequest="48">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="8" />
-                                </Border.StrokeShape>
-                                <Entry Text="{Binding TimeLimitMinutesText}"
-                                       Keyboard="Numeric"
-                                       Placeholder="z. B. 30" />
-                            </Border>
+                                   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                            <Entry Text="{Binding TimeLimitMinutesText}"
+                                   Keyboard="Numeric"
+                                   Placeholder="z. B. 30" />
                         </VerticalStackLayout>
                     </Border>
 
@@ -322,28 +304,20 @@
                            FontSize="14"
                            TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
-                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}"
+                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
                             StrokeThickness="1"
-                            Padding="16">
+                            Padding="14,10">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8" />
                         </Border.StrokeShape>
-
-                        <VerticalStackLayout Spacing="10">
+                        <VerticalStackLayout Spacing="4">
                             <Label Text="Schlafenszeit"
+                                   FontSize="13"
                                    FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
-
-                            <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
-                                    Padding="12,0"
-                                    MinimumHeightRequest="48">
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="8" />
-                                </Border.StrokeShape>
-                                <TimePicker Time="{Binding SleepTime, Mode=TwoWay}" />
-                            </Border>
+                                   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                            <TimePicker Time="{Binding SleepTime, Mode=TwoWay}"
+                                        Format="HH:mm" />
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>

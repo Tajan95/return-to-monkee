@@ -22,7 +22,8 @@ public partial class GoalOrientationViewModel : ObservableObject
     private readonly IUserSettingsRepository userSettingsRepository;
 
     public ObservableCollection<GoalItem> Goals { get; } = new();
-    public ObservableCollection<int> MovementReminderIntervals { get; } = new() { 30, 60, 90 };
+    public ObservableCollection<string> MovementReminderIntervals { get; } =
+        new() { "30 Minuten", "60 Minuten", "90 Minuten" };
 
     public ObservableCollection<string> TimeLimitCategories { get; } =
         new()
@@ -36,7 +37,7 @@ public partial class GoalOrientationViewModel : ObservableObject
     private int currentStepIndex;
 
     [ObservableProperty]
-    private int selectedMovementReminderInterval = 60;
+    private string selectedMovementReminderInterval = "60 Minuten";
 
     [ObservableProperty]
     private string selectedTimeLimitCategory = "Social Media";
@@ -133,8 +134,9 @@ public partial class GoalOrientationViewModel : ObservableObject
         var selectedIds = await goalsRepository.GetSelectedGoalIdsAsync();
         var settings = await userSettingsRepository.GetAsync();
 
-        SelectedMovementReminderInterval =
+        var movementIntervalMinutes =
             await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
+        SelectedMovementReminderInterval = $"{movementIntervalMinutes} Minuten";
         SleepTime = settings.SleepTime;
 
         Goals.Clear();
@@ -160,6 +162,12 @@ public partial class GoalOrientationViewModel : ObservableObject
             "Mehr Energie" => char.ConvertFromUtf32(0xF4D8),         // IconSeedling
             _ => char.ConvertFromUtf32(0xF140)                       // IconBullseye fallback
         };
+
+    private static int ParseIntervalMinutes(string value)
+    {
+        var digits = new string(value.TakeWhile(char.IsDigit).ToArray());
+        return int.TryParse(digits, out var minutes) ? minutes : 60;
+    }
 
     [RelayCommand]
     private static void ToggleGoal(GoalItem? goal)
@@ -227,7 +235,7 @@ public partial class GoalOrientationViewModel : ObservableObject
         await onboardingRepository.SaveGoalOrientationAsync(
             selectedGoalIds.Count > 0 ? string.Join(",", selectedGoalIds) : "none");
         await onboardingRepository.SaveMovementReminderIntervalMinutesAsync(
-            SelectedMovementReminderInterval);
+            ParseIntervalMinutes(SelectedMovementReminderInterval));
         await timeLimitRuleRepository.SaveInitialTimeLimitRuleAsync(
             SelectedTimeLimitCategory,
             timeLimitMinutes);
