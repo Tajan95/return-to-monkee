@@ -6,6 +6,7 @@
 	xmlns:onboarding="clr-namespace:ReturnToMonkee.Features.Onboarding"
 	xmlns:home="clr-namespace:ReturnToMonkee"
 	xmlns:personTest="clr-namespace:ReturnToMonkee.Features.PersonTest"
+	xmlns:reminders="clr-namespace:ReturnToMonkee.Features.Reminders"
     xmlns:statistics="clr-namespace:ReturnToMonkee.Features.Statistics"
 	xmlns:rules="clr-namespace:ReturnToMonkee.Features.Rules"
 	Title="ReturnToMonkee"
@@ -74,7 +75,19 @@
 		Route="RulesPage"
 		ContentTemplate="{DataTemplate rules:RulesPage}" />
 
-    <ShellContent 
+	<ShellContent
+		x:Name="MovementReminderShellContent"
+		Title="Bewegung"
+		Route="MovementReminderPage"
+		ContentTemplate="{DataTemplate reminders:MovementReminderPage}" />
+
+	<ShellContent
+		x:Name="SleepReminderShellContent"
+		Title="Schlaf"
+		Route="SleepReminderPage"
+		ContentTemplate="{DataTemplate reminders:SleepReminderPage}" />
+
+    <ShellContent
     x:Name="StatisticsShellContent"
     Title="Statistiken" 
     Route="statistics" 

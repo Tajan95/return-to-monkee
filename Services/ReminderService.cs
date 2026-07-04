@@ -62,6 +62,35 @@ namespace ReturnToMonkee.Services
             await SendSleepReminderAsync(settings.SleepTime, cancellationToken);
         }
 
+        /// <summary>
+        /// Loest den Bewegungs-Reminder manuell aus (Testtrigger) und setzt <see cref="lastReminderAt"/>
+        /// zurueck, sodass der naechste automatische Reminder erst ein volles Intervall spaeter kommt.
+        /// </summary>
+        public async Task TriggerMovementReminderAsync(CancellationToken cancellationToken = default)
+        {
+            var intervalMinutes =
+                await onboardingRepository.GetMovementReminderIntervalMinutesAsync(cancellationToken);
+
+            var confirmed = await notificationAdapter.PromptAsync(
+                "Bewegungs-Erinnerung",
+                "Zeit für eine kurze Bewegungspause.",
+                "Bestätigen",
+                "Ignorieren",
+                cancellationToken);
+
+            lastReminderAt = DateTime.Now;
+            await SaveMovementReminderEventAsync(confirmed, intervalMinutes);
+        }
+
+        /// <inheritdoc/>
+        public async Task<DateTime> GetNextMovementReminderTimeAsync(CancellationToken cancellationToken = default)
+        {
+            var intervalMinutes =
+                await onboardingRepository.GetMovementReminderIntervalMinutesAsync(cancellationToken);
+
+            return lastReminderAt + TimeSpan.FromMinutes(intervalMinutes);
+        }
+
         private Task CheckDueAsync() => CheckDueAsync(DateTime.Now);
 
         internal async Task CheckDueAsync(DateTime now)
@@ -97,8 +126,8 @@ namespace ReturnToMonkee.Services
 
             var confirmed = await notificationAdapter.PromptAsync(
                 "Bewegungs-Erinnerung",
-                "Zeit fuer eine kurze Bewegungspause.",
-                "Bestaetigen",
+                "Zeit für eine kurze Bewegungspause.",
+                "Bestätigen",
                 "Ignorieren");
 
             lastReminderAt = now;
@@ -141,7 +170,7 @@ namespace ReturnToMonkee.Services
             var confirmed = await notificationAdapter.PromptAsync(
                 "Schlafenszeit-Erinnerung",
                 "Es ist Zeit, schlafen zu gehen.",
-                "Bestaetigen",
+                "Bestätigen",
                 "Ignorieren",
                 cancellationToken);
 
@@ -161,7 +190,7 @@ namespace ReturnToMonkee.Services
                     Id = Guid.NewGuid(),
                     Time = DateTimeOffset.UtcNow,
                     Title = confirmed
-                        ? "Schlafenszeit bestaetigt"
+                        ? "Schlafenszeit bestätigt"
                         : "Schlafenszeit ignoriert",
                     Message = $"Schlafenszeit-Reminder um {sleepTime:hh\\:mm} Uhr wurde {status}.",
                     AppReference = $"return-to-monkee://sleep-reminder/{status}"
@@ -181,7 +210,7 @@ namespace ReturnToMonkee.Services
                     Id = Guid.NewGuid(),
                     Time = DateTimeOffset.UtcNow,
                     Title = confirmed
-                        ? "Bewegungspause bestaetigt"
+                        ? "Bewegungspause bestätigt"
                         : "Bewegungspause ignoriert",
                     Message = $"Bewegungs-Reminder nach {intervalMinutes} Minuten wurde {status}.",
                     AppReference = $"return-to-monkee://movement-reminder/{status}"

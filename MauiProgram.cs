@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
+using ReturnToMonkee.Features.Reminders;
 using ReturnToMonkee.Features.Rules;
 using ReturnToMonkee.Features.Settings;
 using ReturnToMonkee.Features.Statistics;
@@ -59,6 +60,12 @@ public static class MauiProgram
 		// Regeln
 		builder.Services.AddSingleton<RulesViewModel>();
 		builder.Services.AddSingleton<RulesPage>();
+
+		// Reminder-Pages (Bewegung / Schlaf)
+		builder.Services.AddTransient<MovementReminderViewModel>();
+		builder.Services.AddTransient<MovementReminderPage>();
+		builder.Services.AddTransient<SleepReminderViewModel>();
+		builder.Services.AddTransient<SleepReminderPage>();
 
 		// Statistics Services
 		builder.Services.AddSingleton<INotificationEventQueryRepository, NotificationEventQueryRepository>();

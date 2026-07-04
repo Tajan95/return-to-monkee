@@ -15,5 +15,5 @@ public sealed record DatabaseHealthResult(bool IsReady, string Message, string? 
 	/// Erstellt das Ergebnis fuer eine fehlgeschlagene Datenbankpruefung.
 	/// </summary>
 	public static DatabaseHealthResult Unavailable(string details) =>
-		new(false, "DB nicht verfuegbar", details);
+		new(false, "DB nicht verfügbar", details);
 }

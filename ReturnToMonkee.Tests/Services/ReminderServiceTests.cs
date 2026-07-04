@@ -101,7 +101,7 @@ public sealed class ReminderServiceTests
         var savedEvent = Assert.Single(
             eventRepository.SavedEvents,
             e => e.AppReference == "return-to-monkee://sleep-reminder/confirmed");
-        Assert.Equal("Schlafenszeit bestaetigt", savedEvent.Title);
+        Assert.Equal("Schlafenszeit bestätigt", savedEvent.Title);
     }
 
     [Fact]

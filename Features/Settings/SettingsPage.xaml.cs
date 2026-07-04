@@ -1,5 +1,4 @@
 // Features/Settings/SettingsPage.xaml.cs
-using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Infrastructure.Persistence;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Services;
@@ -11,44 +10,89 @@ public partial class SettingsPage : ContentPage
     private readonly IUserSettingsRepository userSettingsRepository;
     private readonly IReminderService reminderService;
     private readonly ILocalDatabase localDatabase;
+    private readonly DemoDataSeeder demoDataSeeder;
     private bool isLoadingSettings;
 
     public SettingsPage(
         IUserSettingsRepository userSettingsRepository,
         IReminderService reminderService,
-        ILocalDatabase localDatabase)
+        ILocalDatabase localDatabase,
+        DemoDataSeeder demoDataSeeder)
     {
         InitializeComponent();
         this.userSettingsRepository = userSettingsRepository;
         this.reminderService = reminderService;
         this.localDatabase = localDatabase;
+        this.demoDataSeeder = demoDataSeeder;
     }
 
-    // Lädt bei jedem Besuch neu — zeigt nach Speichern auf Step2 sofort den neuen Wert.
+    // Lädt bei jedem Besuch neu.
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         var settings = await userSettingsRepository.GetAsync();
-        SleepTimeLabel.Text = settings.SleepTime.ToString(@"hh\:mm");
 
-        // Verhindert, dass das Setzen von IsChecked beim Laden den CheckedChanged-Handler auslöst
+        // Verhindert, dass das Setzen von IsToggled beim Laden den Toggled-Handler auslöst
         // und den geladenen Wert sofort wieder (unnötig) zurückschreibt.
         isLoadingSettings = true;
-        ShowOnboardingOnStartupCheckBox.IsChecked = settings.ShowOnboardingOnStartup;
+        ShowOnboardingOnStartupSwitch.IsToggled = settings.ShowOnboardingOnStartup;
         isLoadingSettings = false;
+
+        await UpdateDatabaseStatusAsync();
+        await UpdateSeedButtonStateAsync();
     }
 
-    private async void OnEditSleepTimeClicked(object sender, EventArgs e)
+    // Seed-Button deaktivieren, solange die Demo-Regeln schon vorhanden sind.
+    private async Task UpdateSeedButtonStateAsync()
     {
-        await Shell.Current.GoToAsync(nameof(OnboardingStep2Page));
+        var alreadySeeded = await demoDataSeeder.AreDemoRulesPresentAsync();
+        SeedRulesButton.IsEnabled = !alreadySeeded;
+
+        // Seite ist ein Singleton -> Label bei jedem Besuch neu setzen, damit nach einem Reset
+        // keine veraltete "bereits vorhanden"-Meldung stehen bleibt.
+        if (alreadySeeded)
+        {
+            SeedStatusLabel.Text = "Demo-Regeln sind bereits vorhanden.";
+            SeedStatusLabel.IsVisible = true;
+        }
+        else
+        {
+            SeedStatusLabel.Text = string.Empty;
+            SeedStatusLabel.IsVisible = false;
+        }
     }
 
-    private async void OnTestSleepReminderClicked(object sender, EventArgs e)
+    // Diagnose-Badge: Healthcheck der lokalen DB (grün = bereit, rot = nicht verfügbar).
+    private async Task UpdateDatabaseStatusAsync()
     {
-        await reminderService.TriggerSleepReminderAsync();
+        var health = await localDatabase.CheckHealthAsync();
+
+        DatabaseStatusLabel.Text = health.Message;
+        DatabaseStatusBadge.BackgroundColor = health.IsReady
+            ? GetColor("WarmSelected")
+            : GetColor("WarmDanger");
     }
 
-    private async void OnShowOnboardingOnStartupCheckedChanged(object sender, CheckedChangedEventArgs e)
+    private static Color GetColor(string key) =>
+        Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+            ? color
+            : Colors.Gray;
+
+    // Entwickler-Werkzeug: legt Demo-Zeitlimit-Regeln an (idempotent) und meldet das Ergebnis.
+    private async void OnSeedRulesClicked(object sender, EventArgs e)
+    {
+        var created = await demoDataSeeder.SeedRulesAsync();
+
+        SeedStatusLabel.Text = created > 0
+            ? $"{created} Demo-Regel(n) angelegt."
+            : "Demo-Regeln waren bereits vorhanden.";
+        SeedStatusLabel.IsVisible = true;
+
+        // Idempotent — nach dem Anlegen ist ein erneutes Seeden ein No-Op, Button deaktivieren.
+        SeedRulesButton.IsEnabled = false;
+    }
+
+    private async void OnShowOnboardingOnStartupToggled(object sender, ToggledEventArgs e)
     {
         if (isLoadingSettings)
         {

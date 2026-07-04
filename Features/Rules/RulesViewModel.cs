@@ -42,12 +42,11 @@ namespace ReturnToMonkee.Features.Rules
             try
             {
                 var conn = await localDatabase.GetConnectionAsync();
-                // Ensure tables exist
+                // Regel-Tab verwaltet nur Zeitlimit-Regeln (FR-02). Bewegungs-/Schlaf-Reminder
+                // haben eigene Pages; der frueher hier gelistete Reminder war ein toter Toggle.
                 await conn.CreateTableAsync<TimeLimitRule>();
-                await conn.CreateTableAsync<Reminder>();
 
                 var timeLimitRules = await conn.Table<TimeLimitRule>().ToListAsync();
-                var reminders = await conn.Table<Reminder>().ToListAsync();
 
                 var list = new List<RuleItem>();
 
@@ -63,18 +62,6 @@ namespace ReturnToMonkee.Features.Rules
                         TimeLimitMinutes = r.TimeLimitMinutes,
                         TargetApplication = r.TargetApplication,
                         StatusMessage = "Bereit zum Testen."
-                    });
-                }
-
-                foreach (var r in reminders)
-                {
-                    list.Add(new RuleItem
-                    {
-                        Id = r.Id,
-                        Title = r.Title,
-                        Description = string.Empty,
-                        IsEnabled = r.IsEnabled,
-                        Type = "Reminder"
                     });
                 }
 
@@ -97,10 +84,6 @@ namespace ReturnToMonkee.Features.Rules
                 if (item.Type == "TimeLimitRule")
                 {
                     await conn.ExecuteAsync("UPDATE TimeLimitRules SET IsEnabled = ? WHERE Id = ?", newState ? 1 : 0, item.Id.ToString());
-                }
-                else if (item.Type == "Reminder")
-                {
-                    await conn.ExecuteAsync("UPDATE Reminders SET IsEnabled = ? WHERE Id = ?", newState ? 1 : 0, item.Id.ToString());
                 }
 
                 // Update local state
