@@ -1,4 +1,5 @@
 using ReturnToMonkee.Infrastructure.Persistence;
+using ReturnToMonkee.Infrastructure.Persistence.Entities;
 using SQLite;
 
 namespace ReturnToMonkee.Tests.Helpers;
@@ -28,4 +29,25 @@ internal sealed class InMemoryLocalDatabase : ILocalDatabase
 
     public Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default)
         => Task.FromResult(connection);
+
+    public async Task ResetAllDataAsync(CancellationToken cancellationToken = default)
+    {
+        await connection.CreateTableAsync<UserSettingsEntity>();
+        await connection.DeleteAllAsync<UserSettingsEntity>();
+
+        await connection.CreateTableAsync<OnboardingSettingsEntity>();
+        await connection.DeleteAllAsync<OnboardingSettingsEntity>();
+
+        await connection.CreateTableAsync<GoalEntity>();
+        await connection.DeleteAllAsync<GoalEntity>();
+
+        await connection.CreateTableAsync<UserGoalEntity>();
+        await connection.DeleteAllAsync<UserGoalEntity>();
+
+        await connection.CreateTableAsync<global::TimeLimitRule>();
+        await connection.DeleteAllAsync<global::TimeLimitRule>();
+
+        await connection.CreateTableAsync<global::NotificationEvent>();
+        await connection.DeleteAllAsync<global::NotificationEvent>();
+    }
 }

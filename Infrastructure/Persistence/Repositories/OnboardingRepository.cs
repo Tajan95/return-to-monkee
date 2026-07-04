@@ -93,7 +93,10 @@ public sealed class OnboardingRepository : IOnboardingRepository
             await connection.Table<OnboardingSettingsEntity>()
                 .FirstOrDefaultAsync();
 
-        return !string.IsNullOrWhiteSpace(settings?.GoalOrientation);
+        return string.Equals(
+            settings?.GoalOrientation,
+            "completed",
+            StringComparison.OrdinalIgnoreCase);
     }
 
     private static async Task EnsureSettingsTableAsync(SQLiteAsyncConnection connection)

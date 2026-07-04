@@ -9,13 +9,53 @@
 	xmlns:personTest="clr-namespace:ReturnToMonkee.Features.PersonTest"
     xmlns:statistics="clr-namespace:ReturnToMonkee.Features.Statistics"
 	xmlns:rules="clr-namespace:ReturnToMonkee.Features.Rules"
-	Title="ReturnToMonkee">
+	Title="ReturnToMonkee"
+	FlyoutBackdrop="Transparent"
+	FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray950}}">
 
-	<ShellContent
-		x:Name="PersonListShellContent"
-		Title="Personen"
-		Route="PersonListPage"
-		ContentTemplate="{DataTemplate personTest:PersonListPage}" />
+	<Shell.Resources>
+		<!-- Flyout-Eintraege im App-Stil: transparent normal, Salbei ausgewaehlt -->
+		<Style TargetType="Layout"
+			   ApplyToDerivedTypes="True"
+			   Class="FlyoutItemLayoutStyle">
+			<Setter Property="VisualStateManager.VisualStateGroups">
+				<VisualStateGroupList>
+					<VisualStateGroup x:Name="CommonStates">
+						<VisualState x:Name="Normal">
+							<VisualState.Setters>
+								<Setter Property="BackgroundColor" Value="Transparent" />
+							</VisualState.Setters>
+						</VisualState>
+						<VisualState x:Name="Selected">
+							<VisualState.Setters>
+								<Setter Property="BackgroundColor" Value="{StaticResource WarmSelected}" />
+							</VisualState.Setters>
+						</VisualState>
+					</VisualStateGroup>
+				</VisualStateGroupList>
+			</Setter>
+		</Style>
+	</Shell.Resources>
+
+	<!-- Header verhindert, dass die Flyout-Eintraege unter die Android-Statusbar rutschen
+	     (Top-Padding = Statusbar-Inset) und gibt dem Menue einen sauberen Kopfbereich. -->
+	<Shell.FlyoutHeader>
+		<Grid Padding="20,12,20,16"
+			  ColumnDefinitions="Auto,*"
+			  ColumnSpacing="12"
+			  BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray950}}">
+			<Image Source="monkey_face_svgrepo.png"
+				   HeightRequest="40"
+				   WidthRequest="40"
+				   VerticalOptions="Center" />
+			<Label Grid.Column="1"
+				   Text="Return to Monkee"
+				   FontSize="18"
+				   FontAttributes="Bold"
+				   VerticalOptions="Center"
+				   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+		</Grid>
+	</Shell.FlyoutHeader>
 
 	<ShellContent
 		Route="onboarding"
@@ -50,5 +90,14 @@
 		x:Name="SettingsShellContent"
 		Title="Einstellungen"
 		Route="SettingsPage" />
+
+	<!-- Test-Feature: aus dem Menue ausgeblendet, bleibt aber als Route erreichbar.
+	     Bewusst als letzte ShellContent, damit sie nicht als Startseite aufblitzt. -->
+	<ShellContent
+		x:Name="PersonListShellContent"
+		Title="Personen"
+		Route="PersonListPage"
+		FlyoutItemIsVisible="False"
+		ContentTemplate="{DataTemplate personTest:PersonListPage}" />
 
 </Shell>

@@ -1,3 +1,4 @@
+using ReturnToMonkee.Infrastructure.Persistence.Entities;
 using SQLite;
 using System.Diagnostics;
 
@@ -7,7 +8,7 @@ public sealed class LocalDatabase : ILocalDatabase
 {
 	private const string DatabaseFilename = "return_to_monkee.db3";
 
-	// Öffnet die Datenbank schreibend und legt sie an, falls sie noch nicht existiert.
+	// ï¿½ffnet die Datenbank schreibend und legt sie an, falls sie noch nicht existiert.
 	private static readonly SQLiteOpenFlags OpenFlags =
 		SQLiteOpenFlags.ReadWrite |
 		SQLiteOpenFlags.Create |
@@ -22,7 +23,7 @@ public sealed class LocalDatabase : ILocalDatabase
 
 
 
-    // Führt eine einfache Abfrage aus und liefert einen UI - tauglichen Status zurück.
+    // Fï¿½hrt eine einfache Abfrage aus und liefert einen UI - tauglichen Status zurï¿½ck.
     public async Task<DatabaseHealthResult> CheckHealthAsync(CancellationToken cancellationToken = default)
 	{
 		try
@@ -38,7 +39,7 @@ public sealed class LocalDatabase : ILocalDatabase
 
 
 
-    // Gibt die wiederverwendbare Verbindung zurück.
+    // Gibt die wiederverwendbare Verbindung zurï¿½ck.
     public Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default)
 	{
 		cancellationToken.ThrowIfCancellationRequested();
@@ -47,7 +48,35 @@ public sealed class LocalDatabase : ILocalDatabase
 
 
 
-    // Prüft ob die SQLite Datei erreichbar ist.
+    // Werkseinstellungen: leert alle Tabellen. CreateTableAsync stellt sicher, dass die
+    // Tabelle existiert, bevor DeleteAllAsync sie leert (falls sie noch nie angelegt wurde).
+    public async Task ResetAllDataAsync(CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var db = connection.Value;
+
+        await db.CreateTableAsync<UserSettingsEntity>();
+        await db.DeleteAllAsync<UserSettingsEntity>();
+
+        await db.CreateTableAsync<OnboardingSettingsEntity>();
+        await db.DeleteAllAsync<OnboardingSettingsEntity>();
+
+        await db.CreateTableAsync<GoalEntity>();
+        await db.DeleteAllAsync<GoalEntity>();
+
+        await db.CreateTableAsync<UserGoalEntity>();
+        await db.DeleteAllAsync<UserGoalEntity>();
+
+        await db.CreateTableAsync<global::TimeLimitRule>();
+        await db.DeleteAllAsync<global::TimeLimitRule>();
+
+        await db.CreateTableAsync<global::NotificationEvent>();
+        await db.DeleteAllAsync<global::NotificationEvent>();
+    }
+
+
+
+    // Prï¿½ft ob die SQLite Datei erreichbar ist.
     public async Task EnsureDatabaseAccessibleAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -58,7 +87,7 @@ public sealed class LocalDatabase : ILocalDatabase
 
 
 
-    // Baut den vollständigen Pfad zur Datenbankdatei und erstellt die SQLite-Verbindung.
+    // Baut den vollstï¿½ndigen Pfad zur Datenbankdatei und erstellt die SQLite-Verbindung.
     private static SQLiteAsyncConnection CreateConnection()
 	{
 		var path = Path.Combine(GetDatabaseDirectory(), DatabaseFilename);
@@ -104,7 +133,7 @@ public sealed class LocalDatabase : ILocalDatabase
 
 
 
-    // Holt den Root Pfad des Projektes (nur für Windows relevant)
+    // Holt den Root Pfad des Projektes (nur fï¿½r Windows relevant)
     private static string? FindProjectRoot()
 	{
 		var currentDirectory = new DirectoryInfo(AppContext.BaseDirectory);

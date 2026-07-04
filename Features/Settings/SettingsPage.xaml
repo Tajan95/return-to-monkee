@@ -39,5 +39,20 @@
             <Label Text="Onboarding beim App-Start anzeigen (Entwicklung)"
                    VerticalOptions="Center" />
         </HorizontalStackLayout>
+
+        <!-- Werkseinstellungen: alle Daten löschen -->
+        <BoxView HeightRequest="1"
+                 Margin="0,8"
+                 Color="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}" />
+
+        <Label Text="Alle App-Daten (Ziele, Regeln, Einstellungen, Verlauf) löschen und mit dem Onboarding neu starten."
+               FontSize="13"
+               TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+
+        <Button Text="Alle Daten zurücksetzen"
+                HorizontalOptions="Fill"
+                BackgroundColor="{StaticResource WarmDanger}"
+                TextColor="{StaticResource White}"
+                Clicked="OnResetAllDataClicked" />
     </VerticalStackLayout>
 </ContentPage>

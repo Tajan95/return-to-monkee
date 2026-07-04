@@ -5,4 +5,33 @@
     xmlns:maui="using:Microsoft.Maui"
     xmlns:local="using:ReturnToMonkee.WinUI">
 
+    <maui:MauiWinUIApplication.Resources>
+        <ResourceDictionary>
+            <!-- Salbei-Akzent statt Windows-Blau in ComboBox/Picker-Dropdowns -->
+            <SolidColorBrush x:Key="ComboBoxItemPillFillBrush" Color="#5F6B4A" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="#5F6B4A" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="#6B7856" />
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPressed" Color="#556042" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected" Color="White" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPointerOver" Color="White" />
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPressed" Color="White" />
+
+            <!-- Salbei-Fokusstreifen statt Windows-Blau in Entry/TextBox -->
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#5F6B4A" />
+
+            <!-- Salbei-Auswahl statt Windows-Blau im TimePicker/DatePicker-Flyout -->
+            <SolidColorBrush x:Key="TimePickerFlyoutPresenterHighlightFill" Color="#5F6B4A" />
+            <SolidColorBrush x:Key="DatePickerFlyoutPresenterHighlightFill" Color="#5F6B4A" />
+
+            <!-- Shell-Flyout (WinUI NavigationView): blauer Marker + Auswahl in Salbei -->
+            <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="#5F6B4A" />
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="#5F6B4A" />
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="#6B7856" />
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPressed" Color="#556042" />
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="White" />
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="White" />
+            <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPressed" Color="White" />
+        </ResourceDictionary>
+    </maui:MauiWinUIApplication.Resources>
+
 </maui:MauiWinUIApplication>
