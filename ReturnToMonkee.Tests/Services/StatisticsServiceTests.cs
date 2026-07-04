@@ -18,7 +18,9 @@ public sealed class StatisticsServiceTests
             Evt(date, $"app://rules/time-limit/{Guid.NewGuid()}/exceeded")
         };
 
-        var service = new StatisticsService(new StubQueryRepository(events));
+        var service = new StatisticsService(
+            new StubQueryRepository(events),
+            new StubTimeLimitRuleRepository(enabledRuleCount: 0));
 
         var stats = await service.GetDailyStatisticsAsync(date);
 
@@ -38,7 +40,9 @@ public sealed class StatisticsServiceTests
             Evt(date, "return-to-monkee://sleep-reminder/ignored")
         };
 
-        var service = new StatisticsService(new StubQueryRepository(events));
+        var service = new StatisticsService(
+            new StubQueryRepository(events),
+            new StubTimeLimitRuleRepository(enabledRuleCount: 0));
 
         var stats = await service.GetDailyStatisticsAsync(date);
 
@@ -46,6 +50,64 @@ public sealed class StatisticsServiceTests
         Assert.Equal(1, stats.MovementRemindersIgnored);
         Assert.Equal(1, stats.SleepRemindersConfirmed);
         Assert.Equal(1, stats.SleepRemindersIgnored);
+    }
+
+    [Fact]
+    public async Task GetDailyStatisticsAsync_AllActiveRulesKept_WhenNoExceedances()
+    {
+        var date = new DateTime(2026, 7, 4);
+
+        var service = new StatisticsService(
+            new StubQueryRepository(new List<NotificationEvent>()),
+            new StubTimeLimitRuleRepository(enabledRuleCount: 3));
+
+        var stats = await service.GetDailyStatisticsAsync(date);
+
+        Assert.Equal(3, stats.LimitsKept);
+        Assert.Equal(0, stats.LimitsExceeded);
+        Assert.Equal(100, stats.LimitKeptRate);
+    }
+
+    [Fact]
+    public async Task GetDailyStatisticsAsync_ExceededReducesKept_FromSameRuleBase()
+    {
+        var date = new DateTime(2026, 7, 4);
+
+        var events = new List<NotificationEvent>
+        {
+            Evt(date, $"app://rules/time-limit/{Guid.NewGuid()}/exceeded")
+        };
+
+        var service = new StatisticsService(
+            new StubQueryRepository(events),
+            new StubTimeLimitRuleRepository(enabledRuleCount: 2));
+
+        var stats = await service.GetDailyStatisticsAsync(date);
+
+        Assert.Equal(1, stats.LimitsExceeded);
+        Assert.Equal(1, stats.LimitsKept);
+        Assert.Equal(50, stats.LimitKeptRate);
+    }
+
+    [Fact]
+    public async Task GetDailyStatisticsAsync_LimitsKeptNeverNegative_WhenExceededMoreThanRules()
+    {
+        var date = new DateTime(2026, 7, 4);
+
+        var events = new List<NotificationEvent>
+        {
+            Evt(date, $"app://rules/time-limit/{Guid.NewGuid()}/exceeded"),
+            Evt(date, $"app://rules/time-limit/{Guid.NewGuid()}/exceeded")
+        };
+
+        var service = new StatisticsService(
+            new StubQueryRepository(events),
+            new StubTimeLimitRuleRepository(enabledRuleCount: 1));
+
+        var stats = await service.GetDailyStatisticsAsync(date);
+
+        Assert.Equal(2, stats.LimitsExceeded);
+        Assert.Equal(0, stats.LimitsKept);
     }
 
     private static NotificationEvent Evt(DateTime date, string appReference) => new()
@@ -72,5 +134,26 @@ public sealed class StatisticsServiceTests
             string appReferencePattern,
             CancellationToken cancellationToken = default)
             => Task.FromResult(events);
+    }
+
+    private sealed class StubTimeLimitRuleRepository : ITimeLimitRuleRepository
+    {
+        private readonly List<TimeLimitRule> rules;
+
+        public StubTimeLimitRuleRepository(int enabledRuleCount)
+        {
+            rules = Enumerable.Range(0, enabledRuleCount)
+                .Select(_ => new TimeLimitRule { Id = Guid.NewGuid(), IsEnabled = true })
+                .ToList();
+        }
+
+        public Task SaveInitialTimeLimitRuleAsync(
+            string category,
+            int timeLimitMinutes,
+            CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
+
+        public Task<List<TimeLimitRule>> GetAllAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(rules);
     }
 }
