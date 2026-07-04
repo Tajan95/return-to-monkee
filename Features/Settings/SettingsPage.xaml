@@ -2,43 +2,28 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ReturnToMonkee.Features.Settings.SettingsPage"
-             Title="Einstellungen">
+             Title="Einstellungen"
+             BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}">
     <VerticalStackLayout Padding="24" Spacing="20">
         <Label Text="Einstellungen"
                FontSize="22"
-               FontAttributes="Bold" />
-
-        <!-- Schlafenszeit (#17) -->
-        <Grid ColumnDefinitions="*,Auto"
-              RowDefinitions="Auto,Auto"
-              RowSpacing="8">
-            <Label Text="Schlafenszeit"
-                   FontAttributes="Bold"
-                   VerticalOptions="Center" />
-            <Label x:Name="SleepTimeLabel"
-                   Grid.Column="1"
-                   VerticalOptions="Center"
-                   Text="–" />
-            <Button Grid.Row="1"
-                    Grid.ColumnSpan="2"
-                    Text="Schlafenszeit ändern"
-                    HorizontalOptions="Start"
-                    Clicked="OnEditSleepTimeClicked" />
-        </Grid>
-
-        <Button Text="Schlafenszeit-Reminder jetzt testen"
-                HorizontalOptions="Start"
-                Clicked="OnTestSleepReminderClicked" />
-
-        <!-- Platzhalter für #18: Bewegungsintervall -->
+               FontAttributes="Bold"
+               TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
         <!-- Entwickler-Option: Onboarding erneut anzeigen -->
         <HorizontalStackLayout Spacing="8">
             <CheckBox x:Name="ShowOnboardingOnStartupCheckBox"
                       CheckedChanged="OnShowOnboardingOnStartupCheckedChanged" />
             <Label Text="Onboarding beim App-Start anzeigen (Entwicklung)"
-                   VerticalOptions="Center" />
+                   VerticalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
         </HorizontalStackLayout>
+
+        <!-- Diagnose: DB-Status + Seed-Datensaetze (aus dem Dashboard hierher verschoben) -->
+        <Label x:Name="DatabaseStatusLabel"
+               Text="DB wird geprüft..."
+               FontSize="13"
+               TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
         <!-- Werkseinstellungen: alle Daten löschen -->
         <BoxView HeightRequest="1"

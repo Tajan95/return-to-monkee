@@ -1,5 +1,4 @@
 // Features/Settings/SettingsPage.xaml.cs
-using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Infrastructure.Persistence;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Services;
@@ -11,41 +10,46 @@ public partial class SettingsPage : ContentPage
     private readonly IUserSettingsRepository userSettingsRepository;
     private readonly IReminderService reminderService;
     private readonly ILocalDatabase localDatabase;
+    private readonly DemoDataSeeder demoDataSeeder;
     private bool isLoadingSettings;
 
     public SettingsPage(
         IUserSettingsRepository userSettingsRepository,
         IReminderService reminderService,
-        ILocalDatabase localDatabase)
+        ILocalDatabase localDatabase,
+        DemoDataSeeder demoDataSeeder)
     {
         InitializeComponent();
         this.userSettingsRepository = userSettingsRepository;
         this.reminderService = reminderService;
         this.localDatabase = localDatabase;
+        this.demoDataSeeder = demoDataSeeder;
     }
 
-    // Lädt bei jedem Besuch neu — zeigt nach Speichern auf Step2 sofort den neuen Wert.
+    // Lädt bei jedem Besuch neu.
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         var settings = await userSettingsRepository.GetAsync();
-        SleepTimeLabel.Text = settings.SleepTime.ToString(@"hh\:mm");
 
         // Verhindert, dass das Setzen von IsChecked beim Laden den CheckedChanged-Handler auslöst
         // und den geladenen Wert sofort wieder (unnötig) zurückschreibt.
         isLoadingSettings = true;
         ShowOnboardingOnStartupCheckBox.IsChecked = settings.ShowOnboardingOnStartup;
         isLoadingSettings = false;
+
+        await UpdateDatabaseStatusAsync();
     }
 
-    private async void OnEditSleepTimeClicked(object sender, EventArgs e)
+    // Diagnose-Anzeige (aus dem Dashboard hierher verschoben): stellt Seed-Daten sicher
+    // und zeigt Healthcheck + Anzahl Seed-Datensätze.
+    private async Task UpdateDatabaseStatusAsync()
     {
-        await Shell.Current.GoToAsync(nameof(OnboardingStep2Page));
-    }
+        var seedEntityCount = await demoDataSeeder.EnsureSeedDataAsync();
+        var health = await localDatabase.CheckHealthAsync();
 
-    private async void OnTestSleepReminderClicked(object sender, EventArgs e)
-    {
-        await reminderService.TriggerSleepReminderAsync();
+        DatabaseStatusLabel.Text =
+            $"{health.Message} · {seedEntityCount} Seed-Datensätze verfügbar";
     }
 
     private async void OnShowOnboardingOnStartupCheckedChanged(object sender, CheckedChangedEventArgs e)

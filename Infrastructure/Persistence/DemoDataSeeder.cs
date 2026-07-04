@@ -5,9 +5,8 @@ namespace ReturnToMonkee.Infrastructure.Persistence;
 
 public sealed class DemoDataSeeder
 {
-	private const int ExpectedSeedEntityCount = 3;
+	private const int ExpectedSeedEntityCount = 2;
 	private static readonly Guid TimeLimitRuleId = Guid.Parse("f4e8d4f7-7f6f-47d3-bdb1-4f2b60d5f01b");
-	private static readonly Guid ReminderId = Guid.Parse("7d0ef1ef-6b75-4dc0-9d8f-0a2e8a8f1f6b");
 	private static readonly Guid NotificationEventId = Guid.Parse("0a6a91b9-1d9b-4c21-9e36-2b4cb5f8d8d3");
 
 	private readonly ILocalDatabase localDatabase;
@@ -29,12 +28,10 @@ public sealed class DemoDataSeeder
 
 		var connection = await localDatabase.GetConnectionAsync(cancellationToken);
 		await connection.CreateTableAsync<TimeLimitRule>();
-		await connection.CreateTableAsync<Reminder>();
 		await connection.CreateTableAsync<NotificationEvent>();
 
 		var createdRows = 0;
 		createdRows += await SeedTimeLimitRuleAsync(connection, cancellationToken);
-		createdRows += await SeedReminderAsync(connection, cancellationToken);
 		createdRows += await SeedNotificationEventAsync(connection, cancellationToken);
 
 		seeded = true;
@@ -47,10 +44,9 @@ public sealed class DemoDataSeeder
 		var connection = await localDatabase.GetConnectionAsync(cancellationToken);
 
 		var ruleCount = await connection.Table<TimeLimitRule>().Where(rule => rule.Id == TimeLimitRuleId).CountAsync();
-		var reminderCount = await connection.Table<Reminder>().Where(reminder => reminder.Id == ReminderId).CountAsync();
 		var eventCount = await connection.Table<NotificationEvent>().Where(notificationEvent => notificationEvent.Id == NotificationEventId).CountAsync();
 
-		return ruleCount + reminderCount + eventCount;
+		return ruleCount + eventCount;
 	}
 
 	private async Task<int> SeedTimeLimitRuleAsync(SQLiteAsyncConnection connection, CancellationToken cancellationToken)
@@ -78,32 +74,6 @@ public sealed class DemoDataSeeder
 
 		await connection.InsertAsync(rule);
 		logger.LogInformation("Seed row created: TimeLimitRule {Id} {Title}", rule.Id, rule.Title);
-		return 1;
-	}
-
-	private async Task<int> SeedReminderAsync(SQLiteAsyncConnection connection, CancellationToken cancellationToken)
-	{
-		cancellationToken.ThrowIfCancellationRequested();
-
-		var existing = await connection.Table<Reminder>()
-			.Where(reminder => reminder.Id == ReminderId)
-			.CountAsync();
-
-		if (existing > 0)
-		{
-			return 0;
-		}
-
-		var reminder = new Reminder
-		{
-			Id = ReminderId,
-			Title = "Demo-Bewegungspause",
-			Interval = "PT60M",
-			IsEnabled = true
-		};
-
-		await connection.InsertAsync(reminder);
-		logger.LogInformation("Seed row created: Reminder {Id} {Title}", reminder.Id, reminder.Title);
 		return 1;
 	}
 

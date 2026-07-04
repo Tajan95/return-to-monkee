@@ -9,30 +9,30 @@ namespace ReturnToMonkee;
 public partial class MainPage : ContentPage
 {
     private readonly ILocalDatabase localDatabase;
-    private readonly DemoDataSeeder demoDataSeeder;
     private readonly ILogger<MainPage> logger;
     private readonly IStatisticsService statisticsService;
     private readonly IUserSettingsRepository userSettingsRepository;
     private readonly IOnboardingRepository onboardingRepository;
+    private readonly IReminderService reminderService;
 
     private readonly ObservableCollection<DashboardRuleItem> activeRules = new();
 
     public MainPage(
         ILocalDatabase localDatabase,
-        DemoDataSeeder demoDataSeeder,
         ILogger<MainPage> logger,
         IStatisticsService statisticsService,
         IUserSettingsRepository userSettingsRepository,
-        IOnboardingRepository onboardingRepository)
+        IOnboardingRepository onboardingRepository,
+        IReminderService reminderService)
     {
         InitializeComponent();
 
         this.localDatabase = localDatabase;
-        this.demoDataSeeder = demoDataSeeder;
         this.logger = logger;
         this.statisticsService = statisticsService;
         this.userSettingsRepository = userSettingsRepository;
         this.onboardingRepository = onboardingRepository;
+        this.reminderService = reminderService;
 
         ActiveRulesCollection.ItemsSource = activeRules;
     }
@@ -56,7 +56,6 @@ public partial class MainPage : ContentPage
             ErrorLabel.IsVisible = false;
             ErrorLabel.Text = string.Empty;
 
-            await UpdateDatabaseStatusAsync();
             await LoadActiveRulesAsync();
             await LoadReminderStatusAsync();
             await LoadTodayStatisticsAsync();
@@ -73,31 +72,13 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private async Task UpdateDatabaseStatusAsync()
-    {
-        var seedEntityCount = await demoDataSeeder.EnsureSeedDataAsync();
-        var health = await localDatabase.CheckHealthAsync();
-
-        DatabaseStatusLabel.Text =
-            $"{health.Message} · {seedEntityCount} Seed-Datensätze verfügbar";
-
-        if (!health.IsReady)
-        {
-            logger.LogWarning("SQLite healthcheck failed: {Details}", health.Details);
-        }
-    }
-
     private async Task LoadActiveRulesAsync()
     {
         var connection = await localDatabase.GetConnectionAsync();
 
         await connection.CreateTableAsync<global::TimeLimitRule>();
-        await connection.CreateTableAsync<global::Reminder>();
 
         var timeLimitRules = await connection.Table<global::TimeLimitRule>()
-            .ToListAsync();
-
-        var reminders = await connection.Table<global::Reminder>()
             .ToListAsync();
 
         activeRules.Clear();
@@ -111,18 +92,6 @@ public partial class MainPage : ContentPage
                     : rule.Title,
                 Description = $"{rule.TargetApplication}: {rule.TimeLimitMinutes} Minuten pro Tag",
                 Kind = "Zeitlimit"
-            });
-        }
-
-        foreach (var reminder in reminders.Where(reminder => reminder.IsEnabled))
-        {
-            activeRules.Add(new DashboardRuleItem
-            {
-                Title = string.IsNullOrWhiteSpace(reminder.Title)
-                    ? "Aktiver Reminder"
-                    : reminder.Title,
-                Description = $"Intervall / Regel: {reminder.Interval}",
-                Kind = "Reminder"
             });
         }
 
@@ -144,10 +113,12 @@ public partial class MainPage : ContentPage
         var movementIntervalMinutes =
             await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
 
-        var nextMovementReminder = now.AddMinutes(movementIntervalMinutes);
+        // Echten naechsten Zeitpunkt vom ReminderService holen (letzter Reminder + Intervall),
+        // statt faelschlich immer "jetzt + Intervall" anzuzeigen.
+        var nextMovementReminder = await reminderService.GetNextMovementReminderTimeAsync();
 
         MovementReminderLabel.Text =
-            $"Bewegung: alle {movementIntervalMinutes} Minuten · nächster Reminder ca. {nextMovementReminder:HH:mm} Uhr";
+            $"Bewegung: alle {movementIntervalMinutes} Minuten · nächster Reminder {FormatReminderDate(nextMovementReminder, now)}";
     }
 
     private async Task LoadTodayStatisticsAsync()

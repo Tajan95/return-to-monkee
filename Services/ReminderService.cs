@@ -62,6 +62,35 @@ namespace ReturnToMonkee.Services
             await SendSleepReminderAsync(settings.SleepTime, cancellationToken);
         }
 
+        /// <summary>
+        /// Loest den Bewegungs-Reminder manuell aus (Testtrigger) und setzt <see cref="lastReminderAt"/>
+        /// zurueck, sodass der naechste automatische Reminder erst ein volles Intervall spaeter kommt.
+        /// </summary>
+        public async Task TriggerMovementReminderAsync(CancellationToken cancellationToken = default)
+        {
+            var intervalMinutes =
+                await onboardingRepository.GetMovementReminderIntervalMinutesAsync(cancellationToken);
+
+            var confirmed = await notificationAdapter.PromptAsync(
+                "Bewegungs-Erinnerung",
+                "Zeit fuer eine kurze Bewegungspause.",
+                "Bestaetigen",
+                "Ignorieren",
+                cancellationToken);
+
+            lastReminderAt = DateTime.Now;
+            await SaveMovementReminderEventAsync(confirmed, intervalMinutes);
+        }
+
+        /// <inheritdoc/>
+        public async Task<DateTime> GetNextMovementReminderTimeAsync(CancellationToken cancellationToken = default)
+        {
+            var intervalMinutes =
+                await onboardingRepository.GetMovementReminderIntervalMinutesAsync(cancellationToken);
+
+            return lastReminderAt + TimeSpan.FromMinutes(intervalMinutes);
+        }
+
         private Task CheckDueAsync() => CheckDueAsync(DateTime.Now);
 
         internal async Task CheckDueAsync(DateTime now)

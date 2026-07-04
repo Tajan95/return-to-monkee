@@ -15,11 +15,6 @@
                    FontSize="24"
                    FontAttributes="Bold" />
 
-            <Label x:Name="DatabaseStatusLabel"
-                   Text="DB wird geprüft..."
-                   FontSize="13"
-                   TextColor="Gray" />
-
             <Button x:Name="RefreshButton"
                     Text="Dashboard aktualisieren"
                     Clicked="OnRefreshClicked" />

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 x:Class="ReturnToMonkee.Features.Reminders.MovementReminderPage"
+			 Title="Bewegung"
+			 BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}">
+
+	<ScrollView>
+		<VerticalStackLayout Padding="24,28,24,24" Spacing="16">
+
+			<Image HeightRequest="34" WidthRequest="34" HorizontalOptions="Start">
+				<Image.Source>
+					<FontImageSource FontFamily="FontAwesomeSolid"
+									 Glyph="{StaticResource IconPersonWalking}"
+									 Size="34"
+									 Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+				</Image.Source>
+			</Image>
+
+			<Label Text="Bewegungspausen"
+				   FontSize="26"
+				   FontAttributes="Bold"
+				   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+
+			<Label Text="Wähle, wie oft du an eine kurze Bewegungspause erinnert werden möchtest."
+				   FontSize="14"
+				   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+
+			<Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+					BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
+					StrokeThickness="1"
+					Padding="14,10">
+				<Border.StrokeShape>
+					<RoundRectangle CornerRadius="8" />
+				</Border.StrokeShape>
+				<VerticalStackLayout Spacing="4">
+					<Label Text="Intervall in Minuten"
+						   FontSize="13"
+						   FontAttributes="Bold"
+						   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+					<Picker ItemsSource="{Binding MovementReminderIntervals}"
+							SelectedItem="{Binding SelectedMovementReminderInterval, Mode=TwoWay}" />
+				</VerticalStackLayout>
+			</Border>
+
+			<Button Text="Speichern"
+					Command="{Binding SaveCommand}"
+					HorizontalOptions="Fill"
+					BackgroundColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}"
+					TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+
+			<Button Text="Bewegungs-Reminder jetzt testen"
+					Command="{Binding TestCommand}"
+					HorizontalOptions="Fill"
+					BackgroundColor="Transparent"
+					BorderWidth="1"
+					BorderColor="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
+					TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+
+			<Label Text="{Binding StatusMessage}"
+				   FontSize="13"
+				   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>
