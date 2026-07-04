@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using ReturnToMonkee.Features.Interventions;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
 using ReturnToMonkee.Features.Rules;
@@ -60,10 +59,6 @@ public static class MauiProgram
 		// Regeln
 		builder.Services.AddSingleton<RulesViewModel>();
 		builder.Services.AddSingleton<RulesPage>();
-
-		// Interventionen
-		builder.Services.AddSingleton<TimeLimitInterventionViewModel>();
-		builder.Services.AddSingleton<TimeLimitInterventionPage>();
 
 		// Statistics Services
 		builder.Services.AddSingleton<INotificationEventQueryRepository, NotificationEventQueryRepository>();

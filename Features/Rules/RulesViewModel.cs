@@ -7,12 +7,18 @@ using System.Linq;
 using System.Collections.Generic;
 using System;
 using Microsoft.Maui.Controls;
+using ReturnToMonkee.Infrastructure.Notifications;
+using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 
 namespace ReturnToMonkee.Features.Rules
 {
     public class RulesViewModel : INotifyPropertyChanged
     {
+        public const string TimeLimitInterventionTitle = "Zeitlimit erreicht";
+
         private readonly ILocalDatabase localDatabase;
+        private readonly INotificationAdapter notificationAdapter;
+        private readonly INotificationEventRepository notificationEventRepository;
         private ObservableCollection<RuleItem> rules = new();
 
         public ObservableCollection<RuleItem> Rules
@@ -21,9 +27,14 @@ namespace ReturnToMonkee.Features.Rules
             set { rules = value; OnPropertyChanged(); }
         }
 
-        public RulesViewModel(ILocalDatabase localDatabase)
+        public RulesViewModel(
+            ILocalDatabase localDatabase,
+            INotificationAdapter notificationAdapter,
+            INotificationEventRepository notificationEventRepository)
         {
             this.localDatabase = localDatabase;
+            this.notificationAdapter = notificationAdapter;
+            this.notificationEventRepository = notificationEventRepository;
         }
 
         public async Task LoadRulesAsync()
@@ -48,7 +59,10 @@ namespace ReturnToMonkee.Features.Rules
                         Title = r.Title,
                         Description = r.Description,
                         IsEnabled = r.IsEnabled,
-                        Type = "TimeLimitRule"
+                        Type = "TimeLimitRule",
+                        TimeLimitMinutes = r.TimeLimitMinutes,
+                        TargetApplication = r.TargetApplication,
+                        StatusMessage = "Bereit zum Testen."
                     });
                 }
 
@@ -68,10 +82,7 @@ namespace ReturnToMonkee.Features.Rules
             }
             catch (Exception ex)
             {
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await Application.Current?.MainPage?.DisplayAlert("Fehler", $"Regeln konnten nicht geladen werden: {ex.Message}", "OK");
-                });
+                await ShowErrorAsync($"Regeln konnten nicht geladen werden: {ex.Message}");
             }
         }
 
@@ -101,11 +112,72 @@ namespace ReturnToMonkee.Features.Rules
             }
             catch (Exception ex)
             {
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await Application.Current?.MainPage?.DisplayAlert("Fehler", $"Status konnte nicht gespeichert werden: {ex.Message}", "OK");
-                });
+                await ShowErrorAsync($"Status konnte nicht gespeichert werden: {ex.Message}");
             }
+        }
+
+        public async Task TestTimeLimitRuleAsync(RuleItem item, CancellationToken cancellationToken = default)
+        {
+            if (item == null || !item.IsTimeLimitRule || item.IsTesting)
+            {
+                return;
+            }
+
+            try
+            {
+                item.IsTesting = true;
+                item.IsSoftInterventionVisible = true;
+                item.StatusMessage = "Zeitlimit-Ueberschreitung markiert.";
+
+                var message = BuildTimeLimitInterventionMessage(item);
+
+                await notificationAdapter.SendAsync(
+                    TimeLimitInterventionTitle,
+                    message,
+                    cancellationToken);
+
+                var notificationEvent = new NotificationEvent
+                {
+                    Id = Guid.NewGuid(),
+                    Time = DateTimeOffset.UtcNow,
+                    Title = TimeLimitInterventionTitle,
+                    Message = message,
+                    AppReference = $"app://rules/time-limit/{item.Id}/exceeded"
+                };
+
+                await notificationEventRepository.SaveAsync(notificationEvent, cancellationToken);
+                item.InterventionMessage = message;
+                item.StatusMessage = "Zeitlimit-Ueberschreitung gespeichert.";
+            }
+            catch (Exception ex)
+            {
+                await ShowErrorAsync($"Intervention konnte nicht getestet werden: {ex.Message}");
+            }
+            finally
+            {
+                item.IsTesting = false;
+            }
+        }
+
+        private static string BuildTimeLimitInterventionMessage(RuleItem item)
+        {
+            var target = string.IsNullOrWhiteSpace(item.TargetApplication)
+                ? item.Title
+                : item.TargetApplication;
+
+            return $"Du hast dein Zeitlimit fuer {target} erreicht ({item.TimeLimitMinutes} Minuten). Was brauchst du gerade, bevor du weitermachst?";
+        }
+
+        private static Task ShowErrorAsync(string message)
+        {
+            return MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                var page = Application.Current?.Windows.FirstOrDefault()?.Page;
+                if (page != null)
+                {
+                    await page.DisplayAlertAsync("Fehler", message, "OK");
+                }
+            });
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -117,16 +189,47 @@ namespace ReturnToMonkee.Features.Rules
         public class RuleItem : INotifyPropertyChanged
         {
             private bool isEnabled;
+            private bool isSoftInterventionVisible;
+            private bool isTesting;
+            private string statusMessage = string.Empty;
+            private string interventionMessage = string.Empty;
 
             public Guid Id { get; set; }
             public string Title { get; set; } = string.Empty;
             public string Description { get; set; } = string.Empty;
             public string Type { get; set; } = string.Empty;
+            public int TimeLimitMinutes { get; set; }
+            public string TargetApplication { get; set; } = string.Empty;
+            public bool IsTimeLimitRule => Type == "TimeLimitRule";
 
             public bool IsEnabled
             {
                 get => isEnabled;
                 set { isEnabled = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsEnabled))); }
+            }
+
+            public bool IsSoftInterventionVisible
+            {
+                get => isSoftInterventionVisible;
+                set { isSoftInterventionVisible = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSoftInterventionVisible))); }
+            }
+
+            public bool IsTesting
+            {
+                get => isTesting;
+                set { isTesting = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsTesting))); }
+            }
+
+            public string StatusMessage
+            {
+                get => statusMessage;
+                set { statusMessage = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusMessage))); }
+            }
+
+            public string InterventionMessage
+            {
+                get => interventionMessage;
+                set { interventionMessage = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InterventionMessage))); }
             }
 
             public event PropertyChangedEventHandler? PropertyChanged;

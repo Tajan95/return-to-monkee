@@ -5,7 +5,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	xmlns:onboarding="clr-namespace:ReturnToMonkee.Features.Onboarding"
 	xmlns:home="clr-namespace:ReturnToMonkee"
-	xmlns:interventions="clr-namespace:ReturnToMonkee.Features.Interventions"
 	xmlns:personTest="clr-namespace:ReturnToMonkee.Features.PersonTest"
     xmlns:statistics="clr-namespace:ReturnToMonkee.Features.Statistics"
 	xmlns:rules="clr-namespace:ReturnToMonkee.Features.Rules"
@@ -74,12 +73,6 @@
 		Title="Regeln"
 		Route="RulesPage"
 		ContentTemplate="{DataTemplate rules:RulesPage}" />
-
-	<ShellContent
-		x:Name="InterventionShellContent"
-		Title="Intervention"
-		Route="TimeLimitInterventionPage"
-		ContentTemplate="{DataTemplate interventions:TimeLimitInterventionPage}" />
 
     <ShellContent 
     x:Name="StatisticsShellContent"

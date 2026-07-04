@@ -34,4 +34,19 @@ public partial class RulesPage : ContentPage
             // ignore for now
         }
     }
+
+    private async void TestTimeLimit_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (sender is Button button && button.BindingContext is RulesViewModel.RuleItem item)
+            {
+                await viewModel.TestTimeLimitRuleAsync(item);
+            }
+        }
+        catch (Exception)
+        {
+            // ignore for now
+        }
+    }
 }
