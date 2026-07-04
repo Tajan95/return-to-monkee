@@ -70,7 +70,8 @@ public class StatisticsService : IStatisticsService
                 stats.SleepRemindersConfirmed++;
             else if (@event.AppReference.Contains("sleep-reminder/ignored"))
                 stats.SleepRemindersIgnored++;
-            else if (@event.AppReference.Contains("time-limit-exceeded"))
+            else if (@event.AppReference.Contains("time-limit") &&
+                     @event.AppReference.Contains("exceeded"))
                 stats.LimitsExceeded++;
         }
 
