@@ -4,6 +4,7 @@ using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
 using ReturnToMonkee.Features.Rules;
 using ReturnToMonkee.Features.Settings;
+using ReturnToMonkee.Features.Statistics;
 using ReturnToMonkee.Infrastructure.Notifications;
 using ReturnToMonkee.Infrastructure.Persistence;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
@@ -46,8 +47,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<ITimeLimitRuleRepository, TimeLimitRuleRepository>();
 		builder.Services.AddSingleton<IUserSettingsRepository, UserSettingsRepository>();
 
-		// Seiten
-		builder.Services.AddSingleton<MainPage>();
+        // Seiten
+        builder.Services.AddSingleton<MainPage>();
 		builder.Services.AddSingleton<PersonListPage>();
 		builder.Services.AddTransient<PersonEditPage>();
 		builder.Services.AddTransient<GoalOrientationView>();
@@ -62,6 +63,12 @@ public static class MauiProgram
 		// Interventionen
 		builder.Services.AddSingleton<TimeLimitInterventionViewModel>();
 		builder.Services.AddSingleton<TimeLimitInterventionPage>();
+
+		// Statistics Services
+		builder.Services.AddSingleton<INotificationEventQueryRepository, NotificationEventQueryRepository>();
+        builder.Services.AddSingleton<IStatisticsService, StatisticsService>();	
+		builder.Services.AddSingleton<StatisticsViewModel>();
+		builder.Services.AddSingleton<StatisticsView>();
 
 		builder.Services.AddSingleton<AppShell>();
 

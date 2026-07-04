@@ -7,6 +7,7 @@
 	xmlns:home="clr-namespace:ReturnToMonkee"
 	xmlns:interventions="clr-namespace:ReturnToMonkee.Features.Interventions"
 	xmlns:personTest="clr-namespace:ReturnToMonkee.Features.PersonTest"
+    xmlns:statistics="clr-namespace:ReturnToMonkee.Features.Statistics"
 	xmlns:rules="clr-namespace:ReturnToMonkee.Features.Rules"
 	Title="ReturnToMonkee">
 
@@ -39,7 +40,13 @@
 		Route="TimeLimitInterventionPage"
 		ContentTemplate="{DataTemplate interventions:TimeLimitInterventionPage}" />
 
-	<ShellContent
+    <ShellContent 
+    x:Name="StatisticsShellContent"
+    Title="Statistiken" 
+    Route="statistics" 
+    ContentTemplate="{DataTemplate statistics:StatisticsView}" />
+
+    <ShellContent
 		x:Name="SettingsShellContent"
 		Title="Einstellungen"
 		Route="SettingsPage" />
