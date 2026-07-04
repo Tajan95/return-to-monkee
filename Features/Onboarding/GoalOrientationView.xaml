@@ -4,11 +4,11 @@
              x:Class="ReturnToMonkee.Features.Onboarding.GoalOrientationView"
              x:Name="OnboardingPage"
              Shell.FlyoutBehavior="Disabled"
-             Title="Onboarding"
+             Shell.NavBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}">
 
     <Grid RowDefinitions="*,Auto"
-          Padding="24,28"
+          Padding="24,44,24,28"
           RowSpacing="18">
 
         <ScrollView Grid.Row="0">
