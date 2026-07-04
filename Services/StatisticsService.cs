@@ -1,4 +1,4 @@
-﻿using ReturnToMonkee.Infrastructure.Persistence.Repositories;
+using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Models;
 
 namespace ReturnToMonkee.Services;
@@ -6,10 +6,14 @@ namespace ReturnToMonkee.Services;
 public class StatisticsService : IStatisticsService
 {
     private readonly INotificationEventQueryRepository notificationEventQueryRepository;
+    private readonly ITimeLimitRuleRepository timeLimitRuleRepository;
 
-    public StatisticsService(INotificationEventQueryRepository notificationEventQueryRepository)
+    public StatisticsService(
+        INotificationEventQueryRepository notificationEventQueryRepository,
+        ITimeLimitRuleRepository timeLimitRuleRepository)
     {
         this.notificationEventQueryRepository = notificationEventQueryRepository;
+        this.timeLimitRuleRepository = timeLimitRuleRepository;
     }
 
     public async Task<DailyStatistics> GetDailyStatisticsAsync(
@@ -24,7 +28,11 @@ public class StatisticsService : IStatisticsService
             endOfDay,
             cancellationToken);
 
-        return AggregateEvents(startOfDay, events);
+        var activeRuleCount = await GetActiveRuleCountAsync(cancellationToken);
+
+        var stats = AggregateEvents(startOfDay, events);
+        ApplyLimitsKept(stats, activeRuleCount);
+        return stats;
     }
 
     public async Task<IReadOnlyList<DailyStatistics>> GetSevenDayTrendAsync(
@@ -38,19 +46,47 @@ public class StatisticsService : IStatisticsService
             today,
             cancellationToken);
 
+        var activeRuleCount = await GetActiveRuleCountAsync(cancellationToken);
+
         var result = new List<DailyStatistics>();
 
+        // Neueste zuerst: heute oben, dann absteigend bis vor 6 Tagen.
         for (int i = 0; i < 7; i++)
         {
-            var date = sevenDaysAgo.AddDays(i);
+            var date = today.AddDays(-i);
             var dayEvents = events
                 .Where(e => e.Time.Date == date)
                 .ToList();
 
-            result.Add(AggregateEvents(date, dayEvents));
+            var stats = AggregateEvents(date, dayEvents);
+
+            // Eingehaltene Limits nur fuer heute ableiten. Fuer vergangene Tage existiert
+            // keine historische Regelbasis -> keine erfundenen "kept"-Werte; dort zaehlen
+            // nur die tatsaechlich erfassten Ereignisse (Ueberschreitungen, Reminder).
+            if (date == today)
+            {
+                ApplyLimitsKept(stats, activeRuleCount);
+            }
+
+            result.Add(stats);
         }
 
         return result.AsReadOnly();
+    }
+
+    // Anzahl aktuell aktiver Zeitlimit-Regeln als Tagesbasis fuer die eingehaltenen Limits.
+    // Bewusste MVP-Vereinfachung: die Historie der Regelanzahl wird nicht getrackt.
+    private async Task<int> GetActiveRuleCountAsync(CancellationToken cancellationToken)
+    {
+        var rules = await timeLimitRuleRepository.GetAllAsync(cancellationToken);
+        return rules.Count(rule => rule.IsEnabled);
+    }
+
+    // "Eingehalten" wird abgeleitet: aktive Regeln minus an diesem Tag ueberschrittene
+    // (min. 0). Ein ruhiger Tag = alle aktiven Limits eingehalten.
+    private static void ApplyLimitsKept(DailyStatistics stats, int activeRuleCount)
+    {
+        stats.LimitsKept = Math.Max(0, activeRuleCount - stats.LimitsExceeded);
     }
 
     private static DailyStatistics AggregateEvents(DateTime date, IReadOnlyList<NotificationEvent> events)
