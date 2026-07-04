@@ -15,6 +15,6 @@
         <Label x:Name="ConfirmationLabel"
                IsVisible="False"
                Text="Schlafenszeit gespeichert."
-               TextColor="Green" />
+               TextColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
     </VerticalStackLayout>
 </ContentPage>

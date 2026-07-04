@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ReturnToMonkee.Features.Onboarding.GoalOrientationView"
+             x:Name="OnboardingPage"
              Shell.FlyoutBehavior="Disabled"
              Title="Onboarding"
-             BackgroundColor="#F7F7F2">
+             BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}">
 
     <Grid RowDefinitions="*,Auto"
           Padding="24,28"
@@ -16,67 +17,135 @@
                 <VerticalStackLayout IsVisible="{Binding IsWelcomeStep}"
                                      Spacing="18"
                                      VerticalOptions="Center">
-                    <Border BackgroundColor="#1F5F4A"
-                            StrokeThickness="0"
-                            HeightRequest="92"
-                            WidthRequest="92"
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray900}}"
+                            Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
+                            StrokeThickness="1"
+                            HeightRequest="96"
+                            WidthRequest="96"
                             HorizontalOptions="Center">
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="46" />
+                            <RoundRectangle CornerRadius="48" />
                         </Border.StrokeShape>
-                        <Label Text="RTM"
-                               TextColor="White"
-                               FontSize="28"
-                               FontAttributes="Bold"
+                        <Image HeightRequest="42"
+                               WidthRequest="42"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center">
+                            <Image.Source>
+                                <FontImageSource FontFamily="FontAwesomeSolid"
+                                                 Glyph="{StaticResource IconSeedling}"
+                                                 Size="42"
+                                                 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                            </Image.Source>
+                        </Image>
                     </Border>
 
                     <Label Text="Willkommen bei Return To Monkee"
                            FontSize="30"
                            FontAttributes="Bold"
                            HorizontalTextAlignment="Center"
-                           TextColor="#1B1C1A" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
                     <Label Text="Richte in wenigen Schritten Ziele, Pausen, Zeitlimit und Schlafenszeit ein."
                            FontSize="16"
                            HorizontalTextAlignment="Center"
-                           TextColor="#51564F" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout IsVisible="{Binding IsGoalsStep}"
                                      Spacing="14">
+                    <Image HeightRequest="34"
+                           WidthRequest="34"
+                           HorizontalOptions="Start">
+                        <Image.Source>
+                            <FontImageSource FontFamily="FontAwesomeSolid"
+                                             Glyph="{StaticResource IconBullseye}"
+                                             Size="34"
+                                             Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                        </Image.Source>
+                    </Image>
+
                     <Label Text="Welche Ziele passen zu dir?"
                            FontSize="26"
                            FontAttributes="Bold"
-                           TextColor="#1B1C1A" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
                     <Label Text="Die Auswahl hilft Return To Monkee, deine Empfehlungen im MVP grob einzuordnen."
                            FontSize="14"
-                           TextColor="#51564F" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
                     <CollectionView ItemsSource="{Binding Goals}"
                                     SelectionMode="None">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border Stroke="#D7D9D2"
-                                        BackgroundColor="White"
+                                <Border Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}"
                                         StrokeThickness="1"
                                         Padding="14"
                                         Margin="0,5">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8" />
                                     </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.ToggleGoalCommand, Source={x:Reference OnboardingPage}}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border"
+                                                     Binding="{Binding IsSelected}"
+                                                     Value="True">
+                                            <Setter Property="Stroke" Value="{StaticResource WarmAccent}" />
+                                            <Setter Property="BackgroundColor" Value="{StaticResource WarmSurfaceAlt}" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
 
-                                    <Grid ColumnDefinitions="Auto,*"
+                                    <Grid ColumnDefinitions="32,*"
                                           ColumnSpacing="12">
-                                        <CheckBox IsChecked="{Binding IsSelected}" />
+                                        <Grid HeightRequest="28"
+                                              WidthRequest="28"
+                                              HorizontalOptions="Center"
+                                              VerticalOptions="Center">
+                                            <Image IsVisible="True"
+                                                   HeightRequest="22"
+                                                   WidthRequest="22">
+                                                <Image.Source>
+                                                    <FontImageSource FontFamily="FontAwesomeSolid"
+                                                                     Glyph="{StaticResource IconCircle}"
+                                                                     Size="22"
+                                                                     Color="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray500}}" />
+                                                </Image.Source>
+                                                <Image.Triggers>
+                                                    <DataTrigger TargetType="Image"
+                                                                 Binding="{Binding IsSelected}"
+                                                                 Value="True">
+                                                        <Setter Property="IsVisible" Value="False" />
+                                                    </DataTrigger>
+                                                </Image.Triggers>
+                                            </Image>
+
+                                            <Image IsVisible="False"
+                                                   HeightRequest="24"
+                                                   WidthRequest="24">
+                                                <Image.Source>
+                                                    <FontImageSource FontFamily="FontAwesomeSolid"
+                                                                     Glyph="{StaticResource IconCircleCheck}"
+                                                                     Size="24"
+                                                                     Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                                                </Image.Source>
+                                                <Image.Triggers>
+                                                    <DataTrigger TargetType="Image"
+                                                                 Binding="{Binding IsSelected}"
+                                                                 Value="True">
+                                                        <Setter Property="IsVisible" Value="True" />
+                                                    </DataTrigger>
+                                                </Image.Triggers>
+                                            </Image>
+                                        </Grid>
 
                                         <Label Grid.Column="1"
                                                Text="{Binding Title}"
                                                FontSize="16"
                                                VerticalOptions="Center"
-                                               TextColor="#252721" />
+                                               TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
                                     </Grid>
                                 </Border>
                             </DataTemplate>
@@ -86,47 +155,78 @@
 
                 <VerticalStackLayout IsVisible="{Binding IsMovementStep}"
                                      Spacing="16">
-                    <Label Text="Wie oft moechtest du eine Bewegungspause?"
+                    <Image HeightRequest="34"
+                           WidthRequest="34"
+                           HorizontalOptions="Start">
+                        <Image.Source>
+                            <FontImageSource FontFamily="FontAwesomeSolid"
+                                             Glyph="{StaticResource IconPersonWalking}"
+                                             Size="34"
+                                             Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Label Text="Wie oft möchtest du eine Bewegungspause?"
                            FontSize="26"
                            FontAttributes="Bold"
-                           TextColor="#1B1C1A" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
-                    <Label Text="Waehle ein Intervall, das sich realistisch in deinen Alltag einfuegt."
+                    <Label Text="Wähle ein Intervall, das sich realistisch in deinen Alltag einfügt."
                            FontSize="14"
-                           TextColor="#51564F" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
-                    <Border Stroke="#D7D9D2"
-                            BackgroundColor="White"
+                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}"
                             StrokeThickness="1"
                             Padding="16">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8" />
                         </Border.StrokeShape>
 
-                        <VerticalStackLayout Spacing="8">
+                        <VerticalStackLayout Spacing="10">
                             <Label Text="Intervall in Minuten"
                                    FontAttributes="Bold"
-                                   TextColor="#252721" />
+                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
-                            <Picker ItemsSource="{Binding MovementReminderIntervals}"
-                                    SelectedItem="{Binding SelectedMovementReminderInterval, Mode=TwoWay}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
+                                    Padding="12,0"
+                                    MinimumHeightRequest="48">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <Picker ItemsSource="{Binding MovementReminderIntervals}"
+                                        SelectedItem="{Binding SelectedMovementReminderInterval, Mode=TwoWay}"
+                                        Title="Intervall auswählen" />
+                            </Border>
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout IsVisible="{Binding IsTimeLimitStep}"
                                      Spacing="16">
+                    <Image HeightRequest="34"
+                           WidthRequest="34"
+                           HorizontalOptions="Start">
+                        <Image.Source>
+                            <FontImageSource FontFamily="FontAwesomeSolid"
+                                             Glyph="{StaticResource IconClock}"
+                                             Size="34"
+                                             Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                        </Image.Source>
+                    </Image>
+
                     <Label Text="Lege dein erstes Zeitlimit fest"
                            FontSize="26"
                            FontAttributes="Bold"
-                           TextColor="#1B1C1A" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
-                    <Label Text="Diese Regel erscheint spaeter in der Regeluebersicht und kann dort weiter bearbeitet werden."
+                    <Label Text="Diese Regel erscheint später in der Regelübersicht und kann dort weiter bearbeitet werden."
                            FontSize="14"
-                           TextColor="#51564F" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
-                    <Border Stroke="#D7D9D2"
-                            BackgroundColor="White"
+                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}"
                             StrokeThickness="1"
                             Padding="16">
                         <Border.StrokeShape>
@@ -136,51 +236,87 @@
                         <VerticalStackLayout Spacing="12">
                             <Label Text="Kategorie"
                                    FontAttributes="Bold"
-                                   TextColor="#252721" />
+                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
-                            <Picker ItemsSource="{Binding TimeLimitCategories}"
-                                    SelectedItem="{Binding SelectedTimeLimitCategory}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
+                                    Padding="12,0"
+                                    MinimumHeightRequest="48">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <Picker ItemsSource="{Binding TimeLimitCategories}"
+                                        SelectedItem="{Binding SelectedTimeLimitCategory}"
+                                        Title="Kategorie auswählen" />
+                            </Border>
 
-                            <Label Text="Taegliches Zeitlimit in Minuten"
+                            <Label Text="Tägliches Zeitlimit in Minuten"
                                    FontAttributes="Bold"
-                                   TextColor="#252721" />
+                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
-                            <Entry Text="{Binding TimeLimitMinutesText}"
-                                   Keyboard="Numeric"
-                                   Placeholder="z. B. 30" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
+                                    Padding="12,0"
+                                    MinimumHeightRequest="48">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding TimeLimitMinutesText}"
+                                       Keyboard="Numeric"
+                                       Placeholder="z. B. 30" />
+                            </Border>
                         </VerticalStackLayout>
                     </Border>
 
                     <Label Text="{Binding ValidationMessage}"
-                           TextColor="#B42318"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmDanger}, Dark=#FFB4AB}"
                            FontSize="14" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout IsVisible="{Binding IsSleepStep}"
                                      Spacing="16">
-                    <Label Text="Wann moechtest du schlafen gehen?"
+                    <Image HeightRequest="34"
+                           WidthRequest="34"
+                           HorizontalOptions="Start">
+                        <Image.Source>
+                            <FontImageSource FontFamily="FontAwesomeSolid"
+                                             Glyph="{StaticResource IconMoon}"
+                                             Size="34"
+                                             Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Label Text="Wann möchtest du schlafen gehen?"
                            FontSize="26"
                            FontAttributes="Bold"
-                           TextColor="#1B1C1A" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
-                    <Label Text="Diese Uhrzeit wird fuer deinen Schlafenszeit-Reminder verwendet."
+                    <Label Text="Diese Uhrzeit wird für deinen Schlafenszeit-Reminder verwendet."
                            FontSize="14"
-                           TextColor="#51564F" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
-                    <Border Stroke="#D7D9D2"
-                            BackgroundColor="White"
+                    <Border Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}"
                             StrokeThickness="1"
                             Padding="16">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8" />
                         </Border.StrokeShape>
 
-                        <VerticalStackLayout Spacing="8">
+                        <VerticalStackLayout Spacing="10">
                             <Label Text="Schlafenszeit"
                                    FontAttributes="Bold"
-                                   TextColor="#252721" />
+                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
-                            <TimePicker Time="{Binding SleepTime, Mode=TwoWay}" />
+                            <Border Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}"
+                                    Padding="12,0"
+                                    MinimumHeightRequest="48">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8" />
+                                </Border.StrokeShape>
+                                <TimePicker Time="{Binding SleepTime, Mode=TwoWay}" />
+                            </Border>
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
@@ -188,32 +324,38 @@
                 <VerticalStackLayout IsVisible="{Binding IsCompletedStep}"
                                      Spacing="18"
                                      VerticalOptions="Center">
-                    <Border BackgroundColor="#1F5F4A"
-                            StrokeThickness="0"
-                            HeightRequest="92"
-                            WidthRequest="92"
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray900}}"
+                            Stroke="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                            StrokeThickness="1"
+                            HeightRequest="96"
+                            WidthRequest="96"
                             HorizontalOptions="Center">
                         <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="46" />
+                            <RoundRectangle CornerRadius="48" />
                         </Border.StrokeShape>
-                        <Label Text="&#x2713;"
-                               TextColor="White"
-                               FontSize="46"
-                               FontAttributes="Bold"
+                        <Image HeightRequest="46"
+                               WidthRequest="46"
                                HorizontalOptions="Center"
-                               VerticalOptions="Center" />
+                               VerticalOptions="Center">
+                            <Image.Source>
+                                <FontImageSource FontFamily="FontAwesomeSolid"
+                                                 Glyph="{StaticResource IconCircleCheck}"
+                                                 Size="46"
+                                                 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                            </Image.Source>
+                        </Image>
                     </Border>
 
                     <Label Text="Onboarding abgeschlossen"
                            FontSize="28"
                            FontAttributes="Bold"
                            HorizontalTextAlignment="Center"
-                           TextColor="#1B1C1A" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
                     <Label Text="Deine ersten Einstellungen sind gespeichert. Jetzt kannst du auf dem Dashboard starten."
                            FontSize="16"
                            HorizontalTextAlignment="Center"
-                           TextColor="#51564F" />
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
@@ -222,28 +364,42 @@
         <VerticalStackLayout Grid.Row="1"
                              Spacing="10">
             <ProgressBar Progress="{Binding StepProgress}"
-                         ProgressColor="#1F5F4A"
+                         ProgressColor="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
                          IsVisible="{Binding IsProgressVisible}" />
 
             <Label Text="{Binding StepCounterText}"
                    FontSize="13"
                    HorizontalTextAlignment="Center"
-                   TextColor="#51564F" />
+                   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
             <Grid ColumnDefinitions="Auto,*"
                   ColumnSpacing="12">
-                <Button Text="Zurueck"
+                <Button Text="Zurück"
                         Command="{Binding BackCommand}"
                         IsVisible="{Binding IsBackVisible}"
-                        BackgroundColor="#E9ECE4"
-                        TextColor="#252721" />
+                        BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray900}}"
+                        TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="FontAwesomeSolid"
+                                         Glyph="{StaticResource IconBack}"
+                                         Size="14"
+                                         Color="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                    </Button.ImageSource>
+                </Button>
 
                 <Button Grid.Column="1"
                         Text="{Binding NextButtonText}"
                         Command="{Binding NextCommand}"
-                        BackgroundColor="#1F5F4A"
-                        TextColor="White"
-                        FontAttributes="Bold" />
+                        BackgroundColor="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                        TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource WarmText}}"
+                        FontAttributes="Bold">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="FontAwesomeSolid"
+                                         Glyph="{StaticResource IconCheck}"
+                                         Size="14"
+                                         Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource WarmText}}" />
+                    </Button.ImageSource>
+                </Button>
             </Grid>
         </VerticalStackLayout>
     </Grid>

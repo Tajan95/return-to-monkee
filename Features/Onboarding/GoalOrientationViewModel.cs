@@ -81,7 +81,7 @@ public partial class GoalOrientationViewModel : ObservableObject
     public string StepCounterText =>
         CurrentStepIndex switch
         {
-            WelcomeStep => $"Bereit fuer Schritt 1 von {SetupStepCount}",
+            WelcomeStep => $"Bereit für Schritt 1 von {SetupStepCount}",
             CompletedStep => "Onboarding abgeschlossen",
             _ => $"Schritt {CurrentStepIndex} von {SetupStepCount}"
         };
@@ -90,7 +90,7 @@ public partial class GoalOrientationViewModel : ObservableObject
         CurrentStepIndex switch
         {
             WelcomeStep => "Einrichtung starten",
-            SleepStep => "Onboarding abschliessen",
+            SleepStep => "Onboarding abschließen",
             CompletedStep => "Zum Dashboard",
             _ => "Weiter"
         };
@@ -147,6 +147,15 @@ public partial class GoalOrientationViewModel : ObservableObject
                 Title = goal.Title,
                 IsSelected = selectedIds.Contains(goal.Id)
             });
+        }
+    }
+
+    [RelayCommand]
+    private static void ToggleGoal(GoalItem? goal)
+    {
+        if (goal is not null)
+        {
+            goal.IsSelected = !goal.IsSelected;
         }
     }
 
@@ -227,14 +236,14 @@ public partial class GoalOrientationViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(SelectedTimeLimitCategory))
         {
-            ValidationMessage = "Bitte waehle eine Kategorie fuer deine erste Zeitlimit-Regel aus.";
+            ValidationMessage = "Bitte wähle eine Kategorie für deine erste Zeitlimit-Regel aus.";
             return false;
         }
 
         if (!int.TryParse(TimeLimitMinutesText, out timeLimitMinutes) ||
             timeLimitMinutes <= 0)
         {
-            ValidationMessage = "Bitte gib ein gueltiges Zeitlimit in Minuten ein.";
+            ValidationMessage = "Bitte gib ein gültiges Zeitlimit in Minuten ein.";
             return false;
         }
 
