@@ -73,8 +73,8 @@ namespace ReturnToMonkee.Services
 
             var confirmed = await notificationAdapter.PromptAsync(
                 "Bewegungs-Erinnerung",
-                "Zeit fuer eine kurze Bewegungspause.",
-                "Bestaetigen",
+                "Zeit für eine kurze Bewegungspause.",
+                "Bestätigen",
                 "Ignorieren",
                 cancellationToken);
 
@@ -126,8 +126,8 @@ namespace ReturnToMonkee.Services
 
             var confirmed = await notificationAdapter.PromptAsync(
                 "Bewegungs-Erinnerung",
-                "Zeit fuer eine kurze Bewegungspause.",
-                "Bestaetigen",
+                "Zeit für eine kurze Bewegungspause.",
+                "Bestätigen",
                 "Ignorieren");
 
             lastReminderAt = now;
@@ -170,7 +170,7 @@ namespace ReturnToMonkee.Services
             var confirmed = await notificationAdapter.PromptAsync(
                 "Schlafenszeit-Erinnerung",
                 "Es ist Zeit, schlafen zu gehen.",
-                "Bestaetigen",
+                "Bestätigen",
                 "Ignorieren",
                 cancellationToken);
 
@@ -190,7 +190,7 @@ namespace ReturnToMonkee.Services
                     Id = Guid.NewGuid(),
                     Time = DateTimeOffset.UtcNow,
                     Title = confirmed
-                        ? "Schlafenszeit bestaetigt"
+                        ? "Schlafenszeit bestätigt"
                         : "Schlafenszeit ignoriert",
                     Message = $"Schlafenszeit-Reminder um {sleepTime:hh\\:mm} Uhr wurde {status}.",
                     AppReference = $"return-to-monkee://sleep-reminder/{status}"
@@ -210,7 +210,7 @@ namespace ReturnToMonkee.Services
                     Id = Guid.NewGuid(),
                     Time = DateTimeOffset.UtcNow,
                     Title = confirmed
-                        ? "Bewegungspause bestaetigt"
+                        ? "Bewegungspause bestätigt"
                         : "Bewegungspause ignoriert",
                     Message = $"Bewegungs-Reminder nach {intervalMinutes} Minuten wurde {status}.",
                     AppReference = $"return-to-monkee://movement-reminder/{status}"

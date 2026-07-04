@@ -15,10 +15,15 @@ public partial class MovementReminderViewModel : ObservableObject
     private readonly IOnboardingRepository onboardingRepository;
     private readonly IReminderService reminderService;
 
+    // Zuletzt gespeicherter Wert — Grundlage fuer das Dirty-Tracking (Save nur aktiv,
+    // wenn die Auswahl davon abweicht).
+    private string loadedInterval = "60 Minuten";
+
     public ObservableCollection<string> MovementReminderIntervals { get; } =
         new() { "30 Minuten", "60 Minuten", "90 Minuten" };
 
     [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     private string selectedMovementReminderInterval = "60 Minuten";
 
     [ObservableProperty]
@@ -32,20 +37,32 @@ public partial class MovementReminderViewModel : ObservableObject
         this.reminderService = reminderService;
     }
 
+    private bool CanSave => SelectedMovementReminderInterval != loadedInterval;
+
     public async Task LoadAsync()
     {
         var intervalMinutes =
             await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
-        SelectedMovementReminderInterval = $"{intervalMinutes} Minuten";
+        loadedInterval = $"{intervalMinutes} Minuten";
+        SelectedMovementReminderInterval = loadedInterval;
         StatusMessage = string.Empty;
     }
 
-    [RelayCommand]
+    // Bei jeder Auswahl-Aenderung die "gespeichert"-Meldung zuruecksetzen.
+    // Der Save-Button-Zustand wird ueber NotifyCanExecuteChangedFor aktualisiert.
+    partial void OnSelectedMovementReminderIntervalChanged(string value)
+    {
+        StatusMessage = string.Empty;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task SaveAsync()
     {
         await onboardingRepository.SaveMovementReminderIntervalMinutesAsync(
             ParseIntervalMinutes(SelectedMovementReminderInterval));
+        loadedInterval = SelectedMovementReminderInterval;
         StatusMessage = "Intervall gespeichert.";
+        SaveCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]

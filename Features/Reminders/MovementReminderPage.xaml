@@ -43,11 +43,12 @@
 				</VerticalStackLayout>
 			</Border>
 
+			<!-- Bewusst ohne inline BackgroundColor/TextColor: der globale Button-Style
+			     (Resources/Styles/Styles.xaml) liefert Accent-Farbe UND den Disabled-Zustand.
+			     Inline gesetzte lokale Werte wuerden den VisualState "Disabled" ueberschreiben. -->
 			<Button Text="Speichern"
 					Command="{Binding SaveCommand}"
-					HorizontalOptions="Fill"
-					BackgroundColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}"
-					TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
+					HorizontalOptions="Fill" />
 
 			<Button Text="Bewegungs-Reminder jetzt testen"
 					Command="{Binding TestCommand}"

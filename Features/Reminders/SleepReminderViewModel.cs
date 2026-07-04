@@ -15,6 +15,8 @@ public partial class SleepReminderViewModel : ObservableObject
     private readonly IReminderService reminderService;
 
     private TimeSpan sleepTime = TimeSpan.FromHours(22);
+    // Zuletzt gespeicherter Wert — Grundlage fuer das Dirty-Tracking.
+    private TimeSpan loadedSleepTime = TimeSpan.FromHours(22);
 
     [ObservableProperty]
     private string statusMessage = string.Empty;
@@ -30,23 +32,35 @@ public partial class SleepReminderViewModel : ObservableObject
     public TimeSpan SleepTime
     {
         get => sleepTime;
-        set => SetProperty(ref sleepTime, value);
+        set
+        {
+            if (SetProperty(ref sleepTime, value))
+            {
+                StatusMessage = string.Empty;
+                SaveCommand.NotifyCanExecuteChanged();
+            }
+        }
     }
+
+    private bool CanSave => SleepTime != loadedSleepTime;
 
     public async Task LoadAsync()
     {
         var settings = await userSettingsRepository.GetAsync();
+        loadedSleepTime = settings.SleepTime;
         SleepTime = settings.SleepTime;
         StatusMessage = string.Empty;
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task SaveAsync()
     {
         var settings = await userSettingsRepository.GetAsync();
         settings.SleepTime = SleepTime;
         await userSettingsRepository.SaveAsync(settings);
+        loadedSleepTime = SleepTime;
         StatusMessage = "Schlafenszeit gespeichert.";
+        SaveCommand.NotifyCanExecuteChanged();
     }
 
     [RelayCommand]
