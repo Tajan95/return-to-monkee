@@ -26,6 +26,7 @@
     <Color x:Key="WarmMutedText">#6B6258</Color>
     <Color x:Key="WarmAccent">#A06A3B</Color>
     <Color x:Key="WarmAccentDark">#6F4525</Color>
+    <Color x:Key="WarmSelected">#5F6B4A</Color>
     <Color x:Key="WarmDanger">#9F3A2F</Color>
 
     <Color x:Key="Gray100">#E1E1E1</Color>

@@ -145,10 +145,21 @@ public partial class GoalOrientationViewModel : ObservableObject
             {
                 Id = goal.Id,
                 Title = goal.Title,
+                Icon = ResolveGoalIcon(goal.Title),
                 IsSelected = selectedIds.Contains(goal.Id)
             });
         }
     }
+
+    private static string ResolveGoalIcon(string title) =>
+        title switch
+        {
+            "Weniger Social Media" => char.ConvertFromUtf32(0xF3CF), // IconMobileScreen
+            "Mehr Fokus" => char.ConvertFromUtf32(0xF140),           // IconBullseye
+            "Besser schlafen" => char.ConvertFromUtf32(0xF186),      // IconMoon
+            "Mehr Energie" => char.ConvertFromUtf32(0xF4D8),         // IconSeedling
+            _ => char.ConvertFromUtf32(0xF140)                       // IconBullseye fallback
+        };
 
     [RelayCommand]
     private static void ToggleGoal(GoalItem? goal)
@@ -256,6 +267,8 @@ public partial class GoalItem : ObservableObject
     public int Id { get; set; }
 
     public string Title { get; set; } = string.Empty;
+
+    public string Icon { get; set; } = string.Empty;
 
     [ObservableProperty]
     private bool isSelected;

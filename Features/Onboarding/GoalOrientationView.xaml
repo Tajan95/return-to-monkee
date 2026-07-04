@@ -80,19 +80,23 @@
                            FontAttributes="Bold"
                            TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
 
-                    <Label Text="Die Auswahl hilft Return To Monkee, deine Empfehlungen im MVP grob einzuordnen."
+                    <Label Text="Deine Auswahl hilft Return To Monkee, dir passende Empfehlungen vorzuschlagen."
                            FontSize="14"
                            TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
                     <CollectionView ItemsSource="{Binding Goals}"
                                     SelectionMode="None">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical"
+                                               ItemSpacing="6" />
+                        </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Border Stroke="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}"
                                         BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}"
                                         StrokeThickness="1"
                                         Padding="14"
-                                        Margin="0,5">
+                                        Margin="0">
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="8" />
                                     </Border.StrokeShape>
@@ -104,12 +108,12 @@
                                         <DataTrigger TargetType="Border"
                                                      Binding="{Binding IsSelected}"
                                                      Value="True">
-                                            <Setter Property="Stroke" Value="{StaticResource WarmAccent}" />
-                                            <Setter Property="BackgroundColor" Value="{StaticResource WarmSurfaceAlt}" />
+                                            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource WarmSelected}}" />
                                         </DataTrigger>
                                     </Border.Triggers>
 
-                                    <Grid ColumnDefinitions="32,*"
+                                    <Grid ColumnDefinitions="32,26,*"
                                           ColumnSpacing="12">
                                         <Grid HeightRequest="28"
                                               WidthRequest="28"
@@ -152,7 +156,19 @@
                                             </Image>
                                         </Grid>
 
-                                        <Label Grid.Column="1"
+                                        <Image Grid.Column="1"
+                                               HeightRequest="20"
+                                               WidthRequest="20"
+                                               VerticalOptions="Center">
+                                            <Image.Source>
+                                                <FontImageSource FontFamily="FontAwesomeSolid"
+                                                                 Glyph="{Binding Icon}"
+                                                                 Size="20"
+                                                                 Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                                            </Image.Source>
+                                        </Image>
+
+                                        <Label Grid.Column="2"
                                                Text="{Binding Title}"
                                                FontSize="16"
                                                VerticalOptions="Center"
@@ -390,7 +406,9 @@
                         Command="{Binding BackCommand}"
                         IsVisible="{Binding IsBackVisible}"
                         BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray900}}"
-                        TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}">
+                        TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}"
+                        BorderColor="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray500}}"
+                        BorderWidth="1">
                     <Button.ImageSource>
                         <FontImageSource FontFamily="FontAwesomeSolid"
                                          Glyph="{StaticResource IconBack}"
