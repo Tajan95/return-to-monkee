@@ -50,15 +50,24 @@ public class StatisticsService : IStatisticsService
 
         var result = new List<DailyStatistics>();
 
+        // Neueste zuerst: heute oben, dann absteigend bis vor 6 Tagen.
         for (int i = 0; i < 7; i++)
         {
-            var date = sevenDaysAgo.AddDays(i);
+            var date = today.AddDays(-i);
             var dayEvents = events
                 .Where(e => e.Time.Date == date)
                 .ToList();
 
             var stats = AggregateEvents(date, dayEvents);
-            ApplyLimitsKept(stats, activeRuleCount);
+
+            // Eingehaltene Limits nur fuer heute ableiten. Fuer vergangene Tage existiert
+            // keine historische Regelbasis -> keine erfundenen "kept"-Werte; dort zaehlen
+            // nur die tatsaechlich erfassten Ereignisse (Ueberschreitungen, Reminder).
+            if (date == today)
+            {
+                ApplyLimitsKept(stats, activeRuleCount);
+            }
+
             result.Add(stats);
         }
 

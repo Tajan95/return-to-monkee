@@ -110,6 +110,25 @@ public sealed class StatisticsServiceTests
         Assert.Equal(0, stats.LimitsKept);
     }
 
+    [Fact]
+    public async Task GetSevenDayTrendAsync_TodayFirst_AndKeptOnlyForToday()
+    {
+        var service = new StatisticsService(
+            new StubQueryRepository(new List<NotificationEvent>()),
+            new StubTimeLimitRuleRepository(enabledRuleCount: 3));
+
+        var trend = await service.GetSevenDayTrendAsync();
+
+        Assert.Equal(7, trend.Count);
+        // Neueste zuerst.
+        Assert.Equal(DateTime.Today, trend[0].Date);
+        Assert.Equal(DateTime.Today.AddDays(-6), trend[6].Date);
+        // Heute: abgeleitete eingehaltene Limits.
+        Assert.Equal(3, trend[0].LimitsKept);
+        // Vergangene, nicht getrackte Tage: keine erfundenen "kept"-Werte.
+        Assert.All(trend.Skip(1), day => Assert.Equal(0, day.LimitsKept));
+    }
+
     private static NotificationEvent Evt(DateTime date, string appReference) => new()
     {
         Id = Guid.NewGuid(),
