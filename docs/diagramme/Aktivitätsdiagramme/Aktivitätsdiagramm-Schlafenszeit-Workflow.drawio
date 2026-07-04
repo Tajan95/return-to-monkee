@@ -1,0 +1,137 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2">
+  <diagram id="schlafenszeit-workflow" name="Schlafenszeit-Workflow">
+    <mxGraphModel dx="1028" dy="611" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="start" parent="1" style="ellipse;aspect=fixed;fillColor=#666666;strokeColor=#666666;fontColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="360" y="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="config_sleep" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=13;fontStyle=1;fontColor=#000000;" value="Schlafenszeit setzen&lt;div&gt;oder ändern&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="240" x="255" y="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="save_settings" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;fontColor=#000000;" value="Schlafenszeit speichern&lt;div&gt;in lokalen Einstellungen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="260" x="245" y="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="calculate_reminder" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#000000;" value="Reminder-Zeitpunkt&lt;div&gt;berechnen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="240" x="255" y="250" as="geometry" />
+        </mxCell>
+
+        <mxCell id="decision_time" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;fontColor=#000000;" value="Reminder-Zeitpunkt&lt;div&gt;erreicht?&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="170" x="290" y="340" as="geometry" />
+        </mxCell>
+
+        <mxCell id="send_reminder" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1;fontColor=#000000;" value="Schlafenszeit-Reminder&lt;div&gt;an Nutzer/in senden&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="260" x="245" y="470" as="geometry" />
+        </mxCell>
+
+        <mxCell id="decision_react" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;fontColor=#000000;" value="Nutzer/in&lt;div&gt;bestätigt?&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="170" x="290" y="570" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ignored" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;fontColor=#000000;" value="Reminder ignoriert&lt;div&gt;Ereignis erfassen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="190" x="60" y="585" as="geometry" />
+        </mxCell>
+
+        <mxCell id="confirmed" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#000000;" value="Reminder bestätigt&lt;div&gt;Ereignis erfassen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="190" x="560" y="585" as="geometry" />
+        </mxCell>
+
+        <mxCell id="update_stats" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=#000000;" value="Tagesauswertung&lt;div&gt;und Statistik aktualisieren&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="280" x="235" y="720" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dashboard" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;fontColor=#000000;" value="Dashboard aktualisieren&lt;div&gt;Status sichtbar machen&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="260" x="245" y="820" as="geometry" />
+        </mxCell>
+
+        <mxCell id="end" parent="1" style="ellipse;aspect=fixed;fillColor=#666666;strokeColor=#666666;fontColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="360" y="940" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" edge="1" parent="1" source="start" target="config_sleep" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e2" edge="1" parent="1" source="config_sleep" target="save_settings" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;" value="speichern">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e3" edge="1" parent="1" source="save_settings" target="calculate_reminder" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e4" edge="1" parent="1" source="calculate_reminder" target="decision_time" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e5" edge="1" parent="1" source="decision_time" target="send_reminder" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;fontColor=#000000;" value="ja">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e6" edge="1" parent="1" source="decision_time" target="decision_time" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;fontColor=#000000;" value="nein">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="385" />
+              <mxPoint x="130" y="280" />
+              <mxPoint x="255" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e7" edge="1" parent="1" source="send_reminder" target="decision_react" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e8" edge="1" parent="1" source="decision_react" target="ignored" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;fontColor=#000000;" value="nein / ignoriert">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="290" y="615" />
+              <mxPoint x="155" y="615" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e9" edge="1" parent="1" source="decision_react" target="confirmed" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=11;fontColor=#000000;" value="ja / bestätigt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="615" />
+              <mxPoint x="655" y="615" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e10" edge="1" parent="1" source="ignored" target="update_stats" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="155" y="690" />
+              <mxPoint x="375" y="690" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e11" edge="1" parent="1" source="confirmed" target="update_stats" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="655" y="690" />
+              <mxPoint x="375" y="690" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="e12" edge="1" parent="1" source="update_stats" target="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e13" edge="1" parent="1" source="dashboard" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,5 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using System.Collections.ObjectModel;
 
@@ -8,9 +9,11 @@ namespace ReturnToMonkee.Onboarding;
 public partial class GoalOrientationViewModel : ObservableObject
 {
     private readonly IGoalsRepository goalsRepository;
+    private readonly IOnboardingRepository onboardingRepository;
     private readonly ITimeLimitRuleRepository timeLimitRuleRepository;
 
     public ObservableCollection<GoalItem> Goals { get; } = new();
+    public ObservableCollection<int> MovementReminderIntervals { get; } = new() { 30, 60, 90 };
 
     public ObservableCollection<string> TimeLimitCategories { get; } =
         new()
@@ -20,6 +23,9 @@ public partial class GoalOrientationViewModel : ObservableObject
             "Gaming",
             "Sonstiges"
         };
+
+    [ObservableProperty]
+    private int selectedMovementReminderInterval = 60;
 
     [ObservableProperty]
     private string selectedTimeLimitCategory = "Social Media";
@@ -32,9 +38,11 @@ public partial class GoalOrientationViewModel : ObservableObject
 
     public GoalOrientationViewModel(
         IGoalsRepository goalsRepository,
+        IOnboardingRepository onboardingRepository,
         ITimeLimitRuleRepository timeLimitRuleRepository)
     {
         this.goalsRepository = goalsRepository;
+        this.onboardingRepository = onboardingRepository;
         this.timeLimitRuleRepository = timeLimitRuleRepository;
     }
 
@@ -44,16 +52,18 @@ public partial class GoalOrientationViewModel : ObservableObject
 
         var goals = await goalsRepository.GetAllGoalsAsync();
         var selectedIds = await goalsRepository.GetSelectedGoalIdsAsync();
+        SelectedMovementReminderInterval =
+            await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
 
         Goals.Clear();
 
-        foreach (var g in goals)
+        foreach (var goal in goals)
         {
             Goals.Add(new GoalItem
             {
-                Id = g.Id,
-                Title = g.Title,
-                IsSelected = selectedIds.Contains(g.Id)
+                Id = goal.Id,
+                Title = goal.Title,
+                IsSelected = selectedIds.Contains(goal.Id)
             });
         }
     }
@@ -65,30 +75,32 @@ public partial class GoalOrientationViewModel : ObservableObject
 
         if (string.IsNullOrWhiteSpace(SelectedTimeLimitCategory))
         {
-            ValidationMessage = "Bitte wähle eine Kategorie für deine erste Zeitlimit-Regel aus.";
+            ValidationMessage = "Bitte waehle eine Kategorie fuer deine erste Zeitlimit-Regel aus.";
             return;
         }
 
         if (!int.TryParse(TimeLimitMinutesText, out var timeLimitMinutes) ||
             timeLimitMinutes <= 0)
         {
-            ValidationMessage = "Bitte gib ein gültiges Zeitlimit in Minuten ein.";
+            ValidationMessage = "Bitte gib ein gueltiges Zeitlimit in Minuten ein.";
             return;
         }
 
         var selectedGoalIds = Goals
-            .Where(x => x.IsSelected)
-            .Select(x => x.Id)
+            .Where(goal => goal.IsSelected)
+            .Select(goal => goal.Id)
             .ToList();
 
         await goalsRepository.SaveSelectedGoalsAsync(selectedGoalIds);
-
+        await onboardingRepository.SaveGoalOrientationAsync(
+            selectedGoalIds.Count > 0 ? string.Join(",", selectedGoalIds) : "none");
+        await onboardingRepository.SaveMovementReminderIntervalMinutesAsync(
+            SelectedMovementReminderInterval);
         await timeLimitRuleRepository.SaveInitialTimeLimitRuleAsync(
             SelectedTimeLimitCategory,
             timeLimitMinutes);
 
-        // Todo: anpassen wenn die nächste Onboarding-Seite da ist.
-        await Shell.Current.GoToAsync("//home");
+        await Shell.Current.GoToAsync(nameof(OnboardingStep2Page));
     }
 }
 

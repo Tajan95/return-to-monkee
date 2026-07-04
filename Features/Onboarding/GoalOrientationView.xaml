@@ -8,7 +8,7 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="16">
 
-            <Label Text="Wähle deine Ziele"
+            <Label Text="Waehle deine Ziele"
                    FontSize="24"
                    FontAttributes="Bold" />
 
@@ -44,11 +44,24 @@
                      BackgroundColor="LightGray"
                      Margin="0,8" />
 
+            <Label Text="Bewegungserinnerung"
+                   FontSize="20"
+                   FontAttributes="Bold" />
+
+            <Label Text="Intervall in Minuten" />
+
+            <Picker ItemsSource="{Binding MovementReminderIntervals}"
+                    SelectedItem="{Binding SelectedMovementReminderInterval, Mode=TwoWay}" />
+
+            <BoxView HeightRequest="1"
+                     BackgroundColor="LightGray"
+                     Margin="0,8" />
+
             <Label Text="Erste Zeitlimit-Regel"
                    FontSize="22"
                    FontAttributes="Bold" />
 
-            <Label Text="Lege eine erste aktive Regel an, die später in der Regelübersicht angezeigt und weiter bearbeitet werden kann."
+            <Label Text="Lege eine erste aktive Regel an, die spaeter in der Regeluebersicht angezeigt und weiter bearbeitet werden kann."
                    FontSize="14"
                    TextColor="Gray" />
 
@@ -58,7 +71,7 @@
             <Picker ItemsSource="{Binding TimeLimitCategories}"
                     SelectedItem="{Binding SelectedTimeLimitCategory}" />
 
-            <Label Text="Tägliches Zeitlimit in Minuten"
+            <Label Text="Taegliches Zeitlimit in Minuten"
                    FontAttributes="Bold" />
 
             <Entry Text="{Binding TimeLimitMinutesText}"
