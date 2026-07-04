@@ -43,6 +43,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<DemoDataSeeder>();
 		builder.Services.AddSingleton<IOnboardingRepository, OnboardingRepository>();
 		builder.Services.AddSingleton<IGoalsRepository, GoalsRepository>();
+		builder.Services.AddSingleton<ITimeLimitRuleRepository, TimeLimitRuleRepository>();
 		builder.Services.AddSingleton<IUserSettingsRepository, UserSettingsRepository>();
 
 		// Seiten
