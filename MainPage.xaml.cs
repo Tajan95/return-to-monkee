@@ -1,52 +1,204 @@
+using System.Collections.ObjectModel;
 using Microsoft.Extensions.Logging;
 using ReturnToMonkee.Infrastructure.Persistence;
+using ReturnToMonkee.Infrastructure.Persistence.Repositories;
+using ReturnToMonkee.Services;
 
 namespace ReturnToMonkee;
 
 public partial class MainPage : ContentPage
 {
-	private readonly ILocalDatabase localDatabase;
-	private readonly DemoDataSeeder demoDataSeeder;
-	private readonly ILogger<MainPage> logger;
+    private readonly ILocalDatabase localDatabase;
+    private readonly DemoDataSeeder demoDataSeeder;
+    private readonly ILogger<MainPage> logger;
+    private readonly IStatisticsService statisticsService;
+    private readonly IUserSettingsRepository userSettingsRepository;
+    private readonly IOnboardingRepository onboardingRepository;
 
-	public MainPage(ILocalDatabase localDatabase, DemoDataSeeder demoDataSeeder, ILogger<MainPage> logger)
-	{
-		InitializeComponent();
-		this.localDatabase = localDatabase;
-		this.demoDataSeeder = demoDataSeeder;
-		this.logger = logger;
-	}
+    private readonly ObservableCollection<DashboardRuleItem> activeRules = new();
 
+    public MainPage(
+        ILocalDatabase localDatabase,
+        DemoDataSeeder demoDataSeeder,
+        ILogger<MainPage> logger,
+        IStatisticsService statisticsService,
+        IUserSettingsRepository userSettingsRepository,
+        IOnboardingRepository onboardingRepository)
+    {
+        InitializeComponent();
 
+        this.localDatabase = localDatabase;
+        this.demoDataSeeder = demoDataSeeder;
+        this.logger = logger;
+        this.statisticsService = statisticsService;
+        this.userSettingsRepository = userSettingsRepository;
+        this.onboardingRepository = onboardingRepository;
 
-    // Wird aufgerufen, wenn die Seite sichtbar wird, und startet dann die Datenbankprüfung.
+        ActiveRulesCollection.ItemsSource = activeRules;
+    }
+
     protected override async void OnAppearing()
-	{
-		base.OnAppearing();
-		await UpdateDatabaseStatusAsync();
-	}
+    {
+        base.OnAppearing();
+        await RefreshDashboardAsync();
+    }
 
+    private async void OnRefreshClicked(object sender, EventArgs e)
+    {
+        await RefreshDashboardAsync();
+    }
 
+    private async Task RefreshDashboardAsync()
+    {
+        try
+        {
+            RefreshButton.IsEnabled = false;
+            ErrorLabel.IsVisible = false;
+            ErrorLabel.Text = string.Empty;
 
-    // Fragt den Datenbankstatus ab, zeigt ihn im Label an und loggt Fehler für Entwickler.
+            await UpdateDatabaseStatusAsync();
+            await LoadActiveRulesAsync();
+            await LoadReminderStatusAsync();
+            await LoadTodayStatisticsAsync();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Failed to refresh dashboard");
+            ErrorLabel.Text = $"Dashboard konnte nicht geladen werden: {exception.Message}";
+            ErrorLabel.IsVisible = true;
+        }
+        finally
+        {
+            RefreshButton.IsEnabled = true;
+        }
+    }
+
     private async Task UpdateDatabaseStatusAsync()
-	{
-		try
-		{
-			var seedEntityCount = await demoDataSeeder.EnsureSeedDataAsync();
-			var health = await localDatabase.CheckHealthAsync();
+    {
+        var seedEntityCount = await demoDataSeeder.EnsureSeedDataAsync();
+        var health = await localDatabase.CheckHealthAsync();
 
-			DatabaseStatusLabel.Text = $"{health.Message}\n{seedEntityCount} seed entities ready";
+        DatabaseStatusLabel.Text =
+            $"{health.Message} · {seedEntityCount} Seed-Datensätze verfügbar";
 
-			if (!health.IsReady)
-			{
-				logger.LogWarning("SQLite healthcheck failed: {Details}", health.Details);
-			}
-		}
-		catch (Exception exception)
-		{
-			logger.LogError(exception, "Failed to refresh database status");
-			DatabaseStatusLabel.Text = "Datenbankstatus konnte nicht geladen werden.";
-		}
-	}
+        if (!health.IsReady)
+        {
+            logger.LogWarning("SQLite healthcheck failed: {Details}", health.Details);
+        }
+    }
+
+    private async Task LoadActiveRulesAsync()
+    {
+        var connection = await localDatabase.GetConnectionAsync();
+
+        await connection.CreateTableAsync<global::TimeLimitRule>();
+        await connection.CreateTableAsync<global::Reminder>();
+
+        var timeLimitRules = await connection.Table<global::TimeLimitRule>()
+            .ToListAsync();
+
+        var reminders = await connection.Table<global::Reminder>()
+            .ToListAsync();
+
+        activeRules.Clear();
+
+        foreach (var rule in timeLimitRules.Where(rule => rule.IsEnabled))
+        {
+            activeRules.Add(new DashboardRuleItem
+            {
+                Title = string.IsNullOrWhiteSpace(rule.Title)
+                    ? $"{rule.TargetApplication} begrenzen"
+                    : rule.Title,
+                Description = $"{rule.TargetApplication}: {rule.TimeLimitMinutes} Minuten pro Tag",
+                Kind = "Zeitlimit"
+            });
+        }
+
+        foreach (var reminder in reminders.Where(reminder => reminder.IsEnabled))
+        {
+            activeRules.Add(new DashboardRuleItem
+            {
+                Title = string.IsNullOrWhiteSpace(reminder.Title)
+                    ? "Aktiver Reminder"
+                    : reminder.Title,
+                Description = $"Intervall / Regel: {reminder.Interval}",
+                Kind = "Reminder"
+            });
+        }
+
+        ActiveRulesEmptyLabel.IsVisible = activeRules.Count == 0;
+        ActiveRulesCollection.IsVisible = activeRules.Count > 0;
+    }
+
+    private async Task LoadReminderStatusAsync()
+    {
+        var now = DateTime.Now;
+
+        var userSettings = await userSettingsRepository.GetAsync();
+        var sleepTime = userSettings.SleepTime;
+        var nextSleepReminder = GetNextOccurrence(sleepTime, now);
+
+        SleepReminderLabel.Text =
+            $"Schlafenszeit: {sleepTime:hh\\:mm} Uhr · nächster Reminder: {FormatReminderDate(nextSleepReminder, now)}";
+
+        var movementIntervalMinutes =
+            await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
+
+        var nextMovementReminder = now.AddMinutes(movementIntervalMinutes);
+
+        MovementReminderLabel.Text =
+            $"Bewegung: alle {movementIntervalMinutes} Minuten · nächster Reminder ca. {nextMovementReminder:HH:mm} Uhr";
+    }
+
+    private async Task LoadTodayStatisticsAsync()
+    {
+        var todayStatistics =
+            await statisticsService.GetDailyStatisticsAsync(DateTime.Today);
+
+        TodaySummaryLabel.Text =
+            $"Heute: {todayStatistics.TotalReminders} Reminder, {todayStatistics.LimitsExceeded} Zeitlimit-Überschreitung(en)";
+
+        ReminderStatsLabel.Text =
+            $"Reminder bestätigt: {todayStatistics.MovementRemindersConfirmed + todayStatistics.SleepRemindersConfirmed} · " +
+            $"ignoriert: {todayStatistics.MovementRemindersIgnored + todayStatistics.SleepRemindersIgnored} · " +
+            $"Bestätigungsrate: {todayStatistics.ReminderConfirmationRate:F0}%";
+
+        LimitStatsLabel.Text =
+            $"Zeitlimits eingehalten: {todayStatistics.LimitsKept} · " +
+            $"überschritten: {todayStatistics.LimitsExceeded} · " +
+            $"Einhaltungsrate: {todayStatistics.LimitKeptRate:F0}%";
+    }
+
+    private static DateTime GetNextOccurrence(TimeSpan timeOfDay, DateTime now)
+    {
+        var todayOccurrence = now.Date.Add(timeOfDay);
+
+        return todayOccurrence >= now
+            ? todayOccurrence
+            : todayOccurrence.AddDays(1);
+    }
+
+    private static string FormatReminderDate(DateTime reminderTime, DateTime now)
+    {
+        if (reminderTime.Date == now.Date)
+        {
+            return $"heute um {reminderTime:HH:mm} Uhr";
+        }
+
+        if (reminderTime.Date == now.Date.AddDays(1))
+        {
+            return $"morgen um {reminderTime:HH:mm} Uhr";
+        }
+
+        return reminderTime.ToString("dd.MM.yyyy HH:mm");
+    }
+
+    private sealed class DashboardRuleItem
+    {
+        public string Title { get; set; } = string.Empty;
+
+        public string Description { get; set; } = string.Empty;
+
+        public string Kind { get; set; } = string.Empty;
+    }
 }
