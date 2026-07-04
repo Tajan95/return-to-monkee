@@ -88,10 +88,19 @@
 	  <MauiXaml Update="Features\Interventions\TimeLimitInterventionPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Features\Statistics\StatisticsView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Infrastructure\Database\Models\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Features\Statistics\StatisticsView.xaml.cs">
+	    <DependentUpon>StatisticsView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>
