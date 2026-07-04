@@ -14,6 +14,11 @@ namespace ReturnToMonkee.Services
         private readonly IUserSettingsRepository userSettingsRepository;
         private Timer? timer;
         private readonly TimeSpan checkInterval = TimeSpan.FromMinutes(1);
+        // Erster Tick bewusst verzoegert: beim App-Start ist die UI (XamlRoot) noch nicht
+        // gerootet. Ein sofort faelliger Reminder wuerde sonst DisplayAlert/ContentDialog
+        // ohne XamlRoot aufrufen und auf WinUI crashen (#59). Der NotificationAdapter
+        // ueberspringt zusaetzlich, falls trotzdem noch keine Page bereitsteht.
+        private readonly TimeSpan startupDelay = TimeSpan.FromSeconds(3);
         private DateTime lastReminderAt = DateTime.Now;
         private DateOnly? lastSleepReminderDate;
         private TimeSpan? lastSleepReminderSleepTime;
@@ -35,7 +40,7 @@ namespace ReturnToMonkee.Services
         public Task StartAsync()
         {
             // Start timer that checks every checkInterval
-            timer = new Timer(async _ => await CheckDueAsync(), null, TimeSpan.Zero, checkInterval);
+            timer = new Timer(async _ => await CheckDueAsync(), null, startupDelay, checkInterval);
             return Task.CompletedTask;
         }
 

@@ -64,7 +64,7 @@ public partial class SettingsPage : ContentPage
     // die App mit dem Onboarding neu.
     private async void OnResetAllDataClicked(object sender, EventArgs e)
     {
-        var confirmed = await DisplayAlert(
+        var confirmed = await DisplayAlertAsync(
             "Alle Daten zurücksetzen?",
             "Alle Ziele, Regeln, Einstellungen und Verlaufsdaten werden dauerhaft gelöscht. " +
             "Die App startet danach mit dem Onboarding neu. Dies kann nicht rückgängig gemacht werden.",
