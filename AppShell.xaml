@@ -9,6 +9,7 @@
 	xmlns:personTest="clr-namespace:ReturnToMonkee.Features.PersonTest"
 	xmlns:rules="clr-namespace:ReturnToMonkee.Features.Rules"
 	Title="ReturnToMonkee"
+	FlyoutBackdrop="Transparent"
 	FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray950}}">
 
 	<Shell.Resources>
@@ -35,12 +36,25 @@
 		</Style>
 	</Shell.Resources>
 
-	<ShellContent
-		x:Name="PersonListShellContent"
-		Title="Personen"
-		Route="PersonListPage"
-		FlyoutItemIsVisible="False"
-		ContentTemplate="{DataTemplate personTest:PersonListPage}" />
+	<!-- Header verhindert, dass die Flyout-Eintraege unter die Android-Statusbar rutschen
+	     (Top-Padding = Statusbar-Inset) und gibt dem Menue einen sauberen Kopfbereich. -->
+	<Shell.FlyoutHeader>
+		<Grid Padding="20,12,20,16"
+			  ColumnDefinitions="Auto,*"
+			  ColumnSpacing="12"
+			  BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray950}}">
+			<Image Source="monkey_face_svgrepo.png"
+				   HeightRequest="40"
+				   WidthRequest="40"
+				   VerticalOptions="Center" />
+			<Label Grid.Column="1"
+				   Text="Return to Monkee"
+				   FontSize="18"
+				   FontAttributes="Bold"
+				   VerticalOptions="Center"
+				   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+		</Grid>
+	</Shell.FlyoutHeader>
 
 	<ShellContent
 		Route="onboarding"
@@ -69,5 +83,14 @@
 		x:Name="SettingsShellContent"
 		Title="Einstellungen"
 		Route="SettingsPage" />
+
+	<!-- Test-Feature: aus dem Menue ausgeblendet, bleibt aber als Route erreichbar.
+	     Bewusst als letzte ShellContent, damit sie nicht als Startseite aufblitzt. -->
+	<ShellContent
+		x:Name="PersonListShellContent"
+		Title="Personen"
+		Route="PersonListPage"
+		FlyoutItemIsVisible="False"
+		ContentTemplate="{DataTemplate personTest:PersonListPage}" />
 
 </Shell>

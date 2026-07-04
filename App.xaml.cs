@@ -13,6 +13,10 @@ public partial class App : Microsoft.Maui.Controls.Application
 		// sodass deren StaticResources bereits verfuegbar sind.
 		InitializeComponent();
 		this.services = services;
+
+		// App ist dunkel-designt (warmes Dunkel + Salbei/Beige-Akzent). Theme erzwingen, damit
+		// Android/iOS nicht der hellen OS-Einstellung folgen und die Light-Variante zeigen.
+		UserAppTheme = AppTheme.Dark;
 	}
 
     protected override Window CreateWindow(IActivationState? activationState)
