@@ -39,8 +39,10 @@ public sealed class MockNotificationAdapter : INotificationAdapter
 
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            if (Application.Current?.MainPage is { } page)
-                await page.DisplayAlert(title, message, "OK");
+            // Nur anzeigen, wenn eine gerootete Page (gueltiger XamlRoot) existiert.
+            // Andernfalls still ueberspringen statt auf WinUI zu crashen (#59).
+            if (GetActivePage() is { } page)
+                await page.DisplayAlertAsync(title, message, "OK");
         });
     }
 
@@ -59,9 +61,26 @@ public sealed class MockNotificationAdapter : INotificationAdapter
 
         return await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            if (Application.Current?.MainPage is { } page)
-                return await page.DisplayAlert(title, message, confirmButton, dismissButton);
+            // Kein gerooteter XamlRoot (z.B. faelliger Reminder direkt beim App-Start,
+            // bevor das Fenster aufgebaut ist) -> Dialog ueberspringen statt crashen (#59).
+            // Der Reminder bleibt faellig und wird beim naechsten Tick erneut versucht.
+            if (GetActivePage() is { } page)
+                return await page.DisplayAlertAsync(title, message, confirmButton, dismissButton);
+
             return false;
         });
+    }
+
+    /// <summary>
+    /// Liefert die aktuell sichtbare, an die Plattform gebundene Page oder null.
+    /// Bewusst ohne das deprecatete <c>Application.MainPage</c>: es kann waehrend des
+    /// Starts eine Page ohne gueltigen <c>XamlRoot</c> liefern, was auf WinUI beim
+    /// <c>ContentDialog.ShowAsync</c> eine ArgumentException wirft. Ein vorhandener
+    /// <c>Handler</c> ist der Indikator, dass die Page tatsaechlich im Visual Tree haengt.
+    /// </summary>
+    private static Page? GetActivePage()
+    {
+        var window = Application.Current?.Windows.FirstOrDefault(w => w.Page?.Handler is not null);
+        return window?.Page;
     }
 }
