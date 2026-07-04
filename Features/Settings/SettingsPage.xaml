@@ -4,37 +4,84 @@
              x:Class="ReturnToMonkee.Features.Settings.SettingsPage"
              Title="Einstellungen"
              BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}">
-    <VerticalStackLayout Padding="24" Spacing="20">
-        <Label Text="Einstellungen"
-               FontSize="22"
-               FontAttributes="Bold"
-               TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+
+    <ContentPage.Resources>
+        <!-- Trennlinie zwischen den Einstellungs-Optionen -->
+        <Style x:Key="SettingsDivider" TargetType="BoxView">
+            <Setter Property="HeightRequest" Value="1" />
+            <Setter Property="Margin" Value="0,14" />
+            <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}" />
+        </Style>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout Padding="24" Spacing="0">
 
         <!-- Entwickler-Option: Onboarding erneut anzeigen -->
-        <HorizontalStackLayout Spacing="8">
-            <CheckBox x:Name="ShowOnboardingOnStartupCheckBox"
-                      CheckedChanged="OnShowOnboardingOnStartupCheckedChanged" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Padding="0,4">
             <Label Text="Onboarding beim App-Start anzeigen (Entwicklung)"
+                   LineBreakMode="WordWrap"
                    VerticalOptions="Center"
                    TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+            <Switch x:Name="ShowOnboardingOnStartupSwitch"
+                    Grid.Column="1"
+                    VerticalOptions="Center"
+                    OnColor="{StaticResource WarmSelected}"
+                    Toggled="OnShowOnboardingOnStartupToggled" />
+        </Grid>
+
+        <BoxView Style="{StaticResource SettingsDivider}" />
+
+        <!-- Diagnose: DB-Status als Badge -->
+        <HorizontalStackLayout Padding="0,4" Spacing="10" VerticalOptions="Center">
+            <Label Text="Datenbank"
+                   VerticalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+            <Border x:Name="DatabaseStatusBadge"
+                    VerticalOptions="Center"
+                    Padding="10,4"
+                    BackgroundColor="{StaticResource WarmSelected}"
+                    StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <Label x:Name="DatabaseStatusLabel"
+                       Text="DB wird geprüft…"
+                       FontSize="12"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource White}" />
+            </Border>
         </HorizontalStackLayout>
 
-        <!-- Diagnose: DB-Status + Seed-Datensaetze (aus dem Dashboard hierher verschoben) -->
-        <Label x:Name="DatabaseStatusLabel"
-               Text="DB wird geprüft..."
+        <BoxView Style="{StaticResource SettingsDivider}" />
+
+        <!-- Entwickler-Werkzeug: Beispiel-Zeitlimit-Regeln zum Testen anlegen (nur auf Knopfdruck) -->
+        <Label Text="Beispiel-Zeitlimit-Regeln zum Testen anlegen (Social Media, Video/Streaming, Gaming)."
+               Padding="0,4"
                FontSize="13"
                TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
-        <!-- Werkseinstellungen: alle Daten löschen -->
-        <BoxView HeightRequest="1"
-                 Margin="0,8"
-                 Color="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}" />
+        <Button x:Name="SeedRulesButton"
+                Text="Demo-Regeln anlegen"
+                Margin="0,4,0,0"
+                HorizontalOptions="Fill"
+                Clicked="OnSeedRulesClicked" />
 
+        <Label x:Name="SeedStatusLabel"
+               Margin="0,6,0,0"
+               FontSize="13"
+               IsVisible="False"
+               TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+
+        <BoxView Style="{StaticResource SettingsDivider}" />
+
+        <!-- Werkseinstellungen: alle Daten löschen -->
         <Label Text="Alle App-Daten (Ziele, Regeln, Einstellungen, Verlauf) löschen und mit dem Onboarding neu starten."
+               Padding="0,4"
                FontSize="13"
                TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
 
         <Button Text="Alle Daten zurücksetzen"
+                Margin="0,8,0,0"
                 HorizontalOptions="Fill"
                 BackgroundColor="{StaticResource WarmDanger}"
                 TextColor="{StaticResource White}"

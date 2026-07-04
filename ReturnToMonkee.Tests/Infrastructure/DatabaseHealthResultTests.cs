@@ -27,7 +27,7 @@ public sealed class DatabaseHealthResultTests
 
         // Assert
         Assert.False(result.IsReady);
-        Assert.Equal("DB nicht verfuegbar", result.Message);
+        Assert.Equal("DB nicht verfügbar", result.Message);
         Assert.Equal(errorDetails, result.Details);
     }
 }

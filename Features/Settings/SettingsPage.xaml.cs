@@ -32,27 +32,67 @@ public partial class SettingsPage : ContentPage
         base.OnAppearing();
         var settings = await userSettingsRepository.GetAsync();
 
-        // Verhindert, dass das Setzen von IsChecked beim Laden den CheckedChanged-Handler auslöst
+        // Verhindert, dass das Setzen von IsToggled beim Laden den Toggled-Handler auslöst
         // und den geladenen Wert sofort wieder (unnötig) zurückschreibt.
         isLoadingSettings = true;
-        ShowOnboardingOnStartupCheckBox.IsChecked = settings.ShowOnboardingOnStartup;
+        ShowOnboardingOnStartupSwitch.IsToggled = settings.ShowOnboardingOnStartup;
         isLoadingSettings = false;
 
         await UpdateDatabaseStatusAsync();
+        await UpdateSeedButtonStateAsync();
     }
 
-    // Diagnose-Anzeige (aus dem Dashboard hierher verschoben): stellt Seed-Daten sicher
-    // und zeigt Healthcheck + Anzahl Seed-Datensätze.
+    // Seed-Button deaktivieren, solange die Demo-Regeln schon vorhanden sind.
+    private async Task UpdateSeedButtonStateAsync()
+    {
+        var alreadySeeded = await demoDataSeeder.AreDemoRulesPresentAsync();
+        SeedRulesButton.IsEnabled = !alreadySeeded;
+
+        // Seite ist ein Singleton -> Label bei jedem Besuch neu setzen, damit nach einem Reset
+        // keine veraltete "bereits vorhanden"-Meldung stehen bleibt.
+        if (alreadySeeded)
+        {
+            SeedStatusLabel.Text = "Demo-Regeln sind bereits vorhanden.";
+            SeedStatusLabel.IsVisible = true;
+        }
+        else
+        {
+            SeedStatusLabel.Text = string.Empty;
+            SeedStatusLabel.IsVisible = false;
+        }
+    }
+
+    // Diagnose-Badge: Healthcheck der lokalen DB (grün = bereit, rot = nicht verfügbar).
     private async Task UpdateDatabaseStatusAsync()
     {
-        var seedEntityCount = await demoDataSeeder.EnsureSeedDataAsync();
         var health = await localDatabase.CheckHealthAsync();
 
-        DatabaseStatusLabel.Text =
-            $"{health.Message} · {seedEntityCount} Seed-Datensätze verfügbar";
+        DatabaseStatusLabel.Text = health.Message;
+        DatabaseStatusBadge.BackgroundColor = health.IsReady
+            ? GetColor("WarmSelected")
+            : GetColor("WarmDanger");
     }
 
-    private async void OnShowOnboardingOnStartupCheckedChanged(object sender, CheckedChangedEventArgs e)
+    private static Color GetColor(string key) =>
+        Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+            ? color
+            : Colors.Gray;
+
+    // Entwickler-Werkzeug: legt Demo-Zeitlimit-Regeln an (idempotent) und meldet das Ergebnis.
+    private async void OnSeedRulesClicked(object sender, EventArgs e)
+    {
+        var created = await demoDataSeeder.SeedRulesAsync();
+
+        SeedStatusLabel.Text = created > 0
+            ? $"{created} Demo-Regel(n) angelegt."
+            : "Demo-Regeln waren bereits vorhanden.";
+        SeedStatusLabel.IsVisible = true;
+
+        // Idempotent — nach dem Anlegen ist ein erneutes Seeden ein No-Op, Button deaktivieren.
+        SeedRulesButton.IsEnabled = false;
+    }
+
+    private async void OnShowOnboardingOnStartupToggled(object sender, ToggledEventArgs e)
     {
         if (isLoadingSettings)
         {
