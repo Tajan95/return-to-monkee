@@ -21,4 +21,10 @@ public interface ILocalDatabase
 	/// Gibt eine initialisierte SQLite-Verbindung fuer einfache Repository-Klassen zurueck.
 	/// </summary>
 	Task<SQLiteAsyncConnection> GetConnectionAsync(CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// Setzt die App auf Werkseinstellungen zurueck: loescht alle Datensaetze aus allen
+	/// Tabellen (Ziele, Regeln, Einstellungen, Onboarding-Status, Verlauf). Nicht umkehrbar.
+	/// </summary>
+	Task ResetAllDataAsync(CancellationToken cancellationToken = default);
 }
