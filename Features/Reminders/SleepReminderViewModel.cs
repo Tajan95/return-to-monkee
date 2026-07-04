@@ -18,6 +18,10 @@ public partial class SleepReminderViewModel : ObservableObject
     // Zuletzt gespeicherter Wert — Grundlage fuer das Dirty-Tracking.
     private TimeSpan loadedSleepTime = TimeSpan.FromHours(22);
 
+    // Blendet die Bestaetigungsmeldung nach kurzer Zeit wieder aus; wird bei jeder neuen
+    // Meldung/Aenderung abgebrochen, damit kein alter Timer eine neue Meldung loescht.
+    private CancellationTokenSource? statusResetCts;
+
     [ObservableProperty]
     private string statusMessage = string.Empty;
 
@@ -36,6 +40,7 @@ public partial class SleepReminderViewModel : ObservableObject
         {
             if (SetProperty(ref sleepTime, value))
             {
+                statusResetCts?.Cancel();
                 StatusMessage = string.Empty;
                 SaveCommand.NotifyCanExecuteChanged();
             }
@@ -59,13 +64,34 @@ public partial class SleepReminderViewModel : ObservableObject
         settings.SleepTime = SleepTime;
         await userSettingsRepository.SaveAsync(settings);
         loadedSleepTime = SleepTime;
-        StatusMessage = "Schlafenszeit gespeichert.";
         SaveCommand.NotifyCanExecuteChanged();
+        ShowTransientStatus("Schlafenszeit gespeichert.");
     }
 
     [RelayCommand]
     private async Task TestAsync()
     {
         await reminderService.TriggerSleepReminderAsync();
+    }
+
+    // Zeigt eine Meldung und blendet sie nach kurzer Zeit wieder aus.
+    private async void ShowTransientStatus(string message)
+    {
+        statusResetCts?.Cancel();
+        var cts = new CancellationTokenSource();
+        statusResetCts = cts;
+
+        StatusMessage = message;
+
+        try
+        {
+            await Task.Delay(2500, cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        StatusMessage = string.Empty;
     }
 }

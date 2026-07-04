@@ -19,6 +19,10 @@ public partial class MovementReminderViewModel : ObservableObject
     // wenn die Auswahl davon abweicht).
     private string loadedInterval = "60 Minuten";
 
+    // Blendet die Bestaetigungsmeldung nach kurzer Zeit wieder aus; wird bei jeder neuen
+    // Meldung/Aenderung abgebrochen, damit kein alter Timer eine neue Meldung loescht.
+    private CancellationTokenSource? statusResetCts;
+
     public ObservableCollection<string> MovementReminderIntervals { get; } =
         new() { "30 Minuten", "60 Minuten", "90 Minuten" };
 
@@ -52,6 +56,7 @@ public partial class MovementReminderViewModel : ObservableObject
     // Der Save-Button-Zustand wird ueber NotifyCanExecuteChangedFor aktualisiert.
     partial void OnSelectedMovementReminderIntervalChanged(string value)
     {
+        statusResetCts?.Cancel();
         StatusMessage = string.Empty;
     }
 
@@ -61,8 +66,29 @@ public partial class MovementReminderViewModel : ObservableObject
         await onboardingRepository.SaveMovementReminderIntervalMinutesAsync(
             ParseIntervalMinutes(SelectedMovementReminderInterval));
         loadedInterval = SelectedMovementReminderInterval;
-        StatusMessage = "Intervall gespeichert.";
         SaveCommand.NotifyCanExecuteChanged();
+        ShowTransientStatus("Intervall gespeichert.");
+    }
+
+    // Zeigt eine Meldung und blendet sie nach kurzer Zeit wieder aus.
+    private async void ShowTransientStatus(string message)
+    {
+        statusResetCts?.Cancel();
+        var cts = new CancellationTokenSource();
+        statusResetCts = cts;
+
+        StatusMessage = message;
+
+        try
+        {
+            await Task.Delay(2500, cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        StatusMessage = string.Empty;
     }
 
     [RelayCommand]
