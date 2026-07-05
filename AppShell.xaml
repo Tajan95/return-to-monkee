@@ -67,12 +67,12 @@
 
 	<ShellContent
 		x:Name="HomeShellContent"
-		Title="Home"
+		Title="Dashboard"
 		Route="home"
 		ContentTemplate="{DataTemplate home:MainPage}">
 		<ShellContent.Icon>
 			<FontImageSource FontFamily="FontAwesomeSolid"
-							 Glyph="{StaticResource IconHome}"
+							 Glyph="{StaticResource IconGauge}"
 							 Size="18"
 							 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource White}}" />
 		</ShellContent.Icon>

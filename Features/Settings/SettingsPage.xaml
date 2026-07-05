@@ -14,6 +14,25 @@
         </Style>
     </ContentPage.Resources>
 
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Padding="8,0,0,0" VerticalOptions="Center">
+            <Image HeightRequest="24" WidthRequest="24" VerticalOptions="Center">
+                <Image.Source>
+                    <FontImageSource FontFamily="FontAwesomeSolid"
+                                     Glyph="{StaticResource IconSettings}"
+                                     Size="22"
+                                     Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                </Image.Source>
+            </Image>
+            <Label Grid.Column="1"
+                   Text="Einstellungen"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+        </Grid>
+    </Shell.TitleView>
+
     <VerticalStackLayout Padding="24" Spacing="0">
 
         <!-- Entwickler-Option: Onboarding erneut anzeigen -->

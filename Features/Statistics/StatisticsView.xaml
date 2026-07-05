@@ -35,6 +35,25 @@
 		</Style>
 	</ContentPage.Resources>
 
+	<Shell.TitleView>
+		<Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Padding="8,0,0,0" VerticalOptions="Center">
+			<Image HeightRequest="24" WidthRequest="24" VerticalOptions="Center">
+				<Image.Source>
+					<FontImageSource FontFamily="FontAwesomeSolid"
+									 Glyph="{StaticResource IconChartLine}"
+									 Size="22"
+									 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+				</Image.Source>
+			</Image>
+			<Label Grid.Column="1"
+				   Text="Statistiken"
+				   FontSize="24"
+				   FontAttributes="Bold"
+				   VerticalOptions="Center"
+				   TextColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+		</Grid>
+	</Shell.TitleView>
+
 	<Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="14">
 
 		<!-- Heute-Sektion -->
