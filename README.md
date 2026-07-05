@@ -2,6 +2,60 @@
 
 Return To Monkee ist eine .NET-MAUI-App fuer digitale Gesundheit mit Fokus auf bewussteren Medienkonsum, Zeitlimits, Schlafenszeit-Erinnerungen, Bewegungspausen und einfache Fortschrittsstatistiken.
 
+## Voraussetzungen
+
+Die App ist eine **.NET 10 MAUI**-App (Single Project). Zum Bauen und Ausfuehren wird benoetigt:
+
+- **.NET SDK 10.0** oder neuer — Pruefen mit `dotnet --version`.
+- **.NET MAUI Workload** — einmalig installieren:
+  ```bash
+  dotnet workload install maui
+  ```
+- **Pro Zielplattform:**
+  - **Windows** (empfohlen fuer die Demo): Windows 10 Version 1809 (Build 17763) oder neuer. Der WinUI-Build ist unpackaged (`WindowsPackageType=None`), es wird kein Store-Paket benoetigt.
+  - **Android**: Android SDK + ein Emulator **oder** ein per USB verbundenes Geraet (min. **Android 5.0 / API 21**). Android-SDK und JDK kommen ueber die MAUI-Workload bzw. Visual Studio mit.
+- **Optional, aber am einfachsten:** Visual Studio 2022 (17.x) mit der Workload **".NET Multi-platform App UI development"**. Dann laesst sich alles per Auswahl des Zielgeraets und `F5` starten.
+
+> Hinweis: iOS/macOS-Targets werden nur auf macOS gebaut und sind fuer die Abgabe nicht erforderlich.
+
+## Projekt starten (Build & Run)
+
+Alle Befehle werden aus dem Ordner `ReturnToMonkee/` (dieser Ordner, in dem die `ReturnToMonkee.csproj` liegt) ausgefuehrt.
+
+1. **Abhaengigkeiten wiederherstellen:**
+   ```bash
+   dotnet restore ReturnToMonkee.csproj
+   ```
+
+2. **Auf Windows starten (WinUI):**
+   ```bash
+   dotnet build ReturnToMonkee.csproj -t:Run -f net10.0-windows10.0.19041.0
+   ```
+
+3. **Auf Android starten (Emulator muss laufen bzw. Geraet verbunden):**
+   ```bash
+   dotnet build ReturnToMonkee.csproj -t:Run -f net10.0-android
+   ```
+
+**Mit Visual Studio 2022:** Projekt `ReturnToMonkee.csproj` oeffnen, oben das Zielgeraet waehlen (**Windows Machine** oder ein **Android Emulator**) und mit `F5` starten.
+
+Das Projekt ist mehrfach-getargetet (`net10.0` fuer die Test-Bibliothek, `net10.0-android`, unter Windows zusaetzlich `net10.0-windows10.0.19041.0`). Beim Bauen/Starten daher immer das gewuenschte Framework mit `-f` angeben. Eine `.sln` gibt es nicht — es wird direkt gegen die `.csproj` gebaut.
+
+## Tests ausfuehren
+
+```bash
+dotnet test ReturnToMonkee.Tests/ReturnToMonkee.Tests.csproj
+```
+
+Die Tests laufen gegen das `net10.0`-Target (reine .NET-Bibliothek, kein Geraet/Emulator noetig).
+
+## Fehlerbehebung
+
+- **`MSB3021` / `MSB3027` ("Datei wird von einem anderen Prozess verwendet", `ReturnToMonkee.exe`)** beim Windows-Build: die App laeuft noch. Vor dem erneuten Bauen die laufende App schliessen.
+- **`maui`-Workload fehlt / Build findet MAUI nicht:** `dotnet workload install maui` ausfuehren (ggf. `dotnet workload update`).
+- **Android-Build startet nicht auf dem Geraet:** pruefen, ob ein Emulator laeuft (`adb devices`) bzw. USB-Debugging am Geraet aktiv ist.
+- **Erster Android-Build ist langsam:** das ist normal (Ressourcen-/Package-Aufbau); Folgebuilds sind deutlich schneller.
+
 ## Projektstatus
 
 - MVP-Backlog ist als kleine, umsetzbare Issues geschnitten.
