@@ -23,7 +23,7 @@ Die Diagramme sind nach Diagrammtyp in eigene Ordner aufgeteilt, damit der Ordne
 - [Fachliches Datenmodell / Klassendiagramm](Klassendiagramm/domain_model_class-diagram.drawio)
 - [Aktivitaetsdiagramm Zeitlimit-Workflow](Aktivitätsdiagramme/Aktivitätsdiagramm-Zeitlimit-Workflow.drawio)
 - [Aktivitaetsdiagramm Schlafenszeit-Workflow](Aktivitätsdiagramme/Aktivitätsdiagramm-Schlafenszeit-Workflow.drawio)
-- [Aktivitaetsdiagramm Bewegungspausen-Workflow](Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungs-Workflow.drawio)
+- [Aktivitaetsdiagramm Reminder-Statistik-Workflow](Aktivitätsdiagramme/Aktivitätsdiagramm-Reminder-Statistik-Workflow.drawio)
 
 ## Hinweis
 
