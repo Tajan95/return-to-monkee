@@ -17,6 +17,7 @@ public partial class SleepReminderViewModel : ObservableObject
     private TimeSpan sleepTime = TimeSpan.FromHours(22);
     // Zuletzt gespeicherter Wert — Grundlage fuer das Dirty-Tracking.
     private TimeSpan loadedSleepTime = TimeSpan.FromHours(22);
+    private bool loadedIsSleepReminderEnabled = true;
 
     // Blendet die Bestaetigungsmeldung nach kurzer Zeit wieder aus; wird bei jeder neuen
     // Meldung/Aenderung abgebrochen, damit kein alter Timer eine neue Meldung loescht.
@@ -24,6 +25,10 @@ public partial class SleepReminderViewModel : ObservableObject
 
     [ObservableProperty]
     private string statusMessage = string.Empty;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    private bool isSleepReminderEnabled = true;
 
     public SleepReminderViewModel(
         IUserSettingsRepository userSettingsRepository,
@@ -47,13 +52,23 @@ public partial class SleepReminderViewModel : ObservableObject
         }
     }
 
-    private bool CanSave => SleepTime != loadedSleepTime;
+    private bool CanSave =>
+        SleepTime != loadedSleepTime ||
+        IsSleepReminderEnabled != loadedIsSleepReminderEnabled;
 
     public async Task LoadAsync()
     {
         var settings = await userSettingsRepository.GetAsync();
         loadedSleepTime = settings.SleepTime;
+        loadedIsSleepReminderEnabled = settings.SleepReminderEnabled;
         SleepTime = settings.SleepTime;
+        IsSleepReminderEnabled = settings.SleepReminderEnabled;
+        StatusMessage = string.Empty;
+    }
+
+    partial void OnIsSleepReminderEnabledChanged(bool value)
+    {
+        statusResetCts?.Cancel();
         StatusMessage = string.Empty;
     }
 
@@ -62,10 +77,12 @@ public partial class SleepReminderViewModel : ObservableObject
     {
         var settings = await userSettingsRepository.GetAsync();
         settings.SleepTime = SleepTime;
+        settings.SleepReminderEnabled = IsSleepReminderEnabled;
         await userSettingsRepository.SaveAsync(settings);
         loadedSleepTime = SleepTime;
+        loadedIsSleepReminderEnabled = IsSleepReminderEnabled;
         SaveCommand.NotifyCanExecuteChanged();
-        ShowTransientStatus("Schlafenszeit gespeichert.");
+        ShowTransientStatus("Schlafenszeit-Reminder gespeichert.");
     }
 
     [RelayCommand]

@@ -10,13 +10,24 @@ public sealed class ReminderServiceTests
     private static ReminderService CreateService(
         RecordingNotificationAdapter adapter,
         RecordingNotificationEventRepository eventRepository,
-        TimeSpan sleepTime)
+        TimeSpan sleepTime,
+        bool sleepReminderEnabled = true,
+        bool movementReminderEnabled = true,
+        int movementIntervalMinutes = 100_000)
     {
         return new ReminderService(
-            new StubOnboardingRepository(),
+            new StubOnboardingRepository
+            {
+                MovementReminderEnabled = movementReminderEnabled,
+                MovementReminderIntervalMinutes = movementIntervalMinutes
+            },
             eventRepository,
             adapter,
-            new StubUserSettingsRepository { SleepTime = sleepTime });
+            new StubUserSettingsRepository
+            {
+                SleepTime = sleepTime,
+                SleepReminderEnabled = sleepReminderEnabled
+            });
     }
 
     [Fact]
@@ -127,6 +138,44 @@ public sealed class ReminderServiceTests
         var eventRepository = new RecordingNotificationEventRepository();
         var service = CreateService(adapter, eventRepository, sleepTime: new TimeSpan(22, 0, 0));
         var now = new DateTime(2026, 7, 2, 21, 0, 0);
+
+        await service.CheckDueAsync(now);
+
+        Assert.Empty(adapter.PromptCalls);
+        Assert.Empty(eventRepository.SavedEvents);
+    }
+
+    [Fact]
+    public async Task CheckDueAsync_DoesNotTriggerSleepReminder_WhenSleepReminderIsDisabled()
+    {
+        var adapter = new RecordingNotificationAdapter(promptResult: true);
+        var eventRepository = new RecordingNotificationEventRepository();
+        var service = CreateService(
+            adapter,
+            eventRepository,
+            sleepTime: new TimeSpan(22, 0, 0),
+            sleepReminderEnabled: false);
+        var now = new DateTime(2026, 7, 2, 22, 0, 0);
+
+        await service.CheckDueAsync(now);
+
+        Assert.Empty(adapter.PromptCalls);
+        Assert.Empty(eventRepository.SavedEvents);
+    }
+
+    [Fact]
+    public async Task CheckDueAsync_DoesNotTriggerMovementReminder_WhenMovementReminderIsDisabled()
+    {
+        var adapter = new RecordingNotificationAdapter(promptResult: true);
+        var eventRepository = new RecordingNotificationEventRepository();
+        var service = CreateService(
+            adapter,
+            eventRepository,
+            sleepTime: new TimeSpan(23, 0, 0),
+            sleepReminderEnabled: false,
+            movementReminderEnabled: false,
+            movementIntervalMinutes: 30);
+        var now = DateTime.Now.AddMinutes(31);
 
         await service.CheckDueAsync(now);
 
@@ -272,18 +321,28 @@ public sealed class ReminderServiceTests
 
     private sealed class StubOnboardingRepository : IOnboardingRepository
     {
+        public bool MovementReminderEnabled { get; set; } = true;
+
+        public int MovementReminderIntervalMinutes { get; set; } = 100_000;
+
         public Task<string?> GetGoalOrientationAsync(CancellationToken cancellationToken = default)
             => Task.FromResult<string?>(null);
 
         // Large enough that it never fires within the offsets used by these tests,
         // keeping the movement-reminder check fully isolated from sleep-reminder assertions.
         public Task<int> GetMovementReminderIntervalMinutesAsync(CancellationToken cancellationToken = default)
-            => Task.FromResult(100_000);
+            => Task.FromResult(MovementReminderIntervalMinutes);
+
+        public Task<bool> GetMovementReminderEnabledAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(MovementReminderEnabled);
 
         public Task SaveGoalOrientationAsync(string goalOrientation, CancellationToken cancellationToken = default)
             => Task.CompletedTask;
 
         public Task SaveMovementReminderIntervalMinutesAsync(int intervalMinutes, CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
+
+        public Task SaveMovementReminderEnabledAsync(bool isEnabled, CancellationToken cancellationToken = default)
             => Task.CompletedTask;
 
         public Task<bool> IsOnboardingCompletedAsync(CancellationToken cancellationToken = default)
@@ -294,8 +353,14 @@ public sealed class ReminderServiceTests
     {
         public TimeSpan SleepTime { get; set; } = new(22, 0, 0);
 
+        public bool SleepReminderEnabled { get; set; } = true;
+
         public Task<UserSettingsEntity> GetAsync(CancellationToken cancellationToken = default)
-            => Task.FromResult(new UserSettingsEntity { SleepTime = SleepTime });
+            => Task.FromResult(new UserSettingsEntity
+            {
+                SleepTime = SleepTime,
+                SleepReminderEnabled = SleepReminderEnabled
+            });
 
         public Task SaveAsync(UserSettingsEntity settings, CancellationToken cancellationToken = default)
             => Task.CompletedTask;

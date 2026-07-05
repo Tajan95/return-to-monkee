@@ -26,6 +26,12 @@ public class UserSettingsEntity
     /// </summary>
     public int SleepTimeMinutes { get; set; } = 22 * 60;
 
+    /// <summary>
+    /// Aktiviert den automatischen Schlafenszeit-Reminder. Testtrigger duerfen unabhaengig
+    /// davon weiterhin manuell ausgeloest werden.
+    /// </summary>
+    public bool SleepReminderEnabled { get; set; } = true;
+
     // Platzhalter für #18: public int MovementIntervalMinutes { get; set; } = 60;
 
     /// <summary>

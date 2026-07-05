@@ -10,6 +10,25 @@
                FontAttributes="Bold" />
         <Label Text="Diese Zeit wird für deinen Schlafenszeit-Reminder verwendet." />
         <TimePicker x:Name="SleepTimePicker" />
+
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <Label Text="Schlafenszeit-Reminder aktiv"
+                   VerticalOptions="Center" />
+            <Switch x:Name="SleepReminderEnabledSwitch"
+                    Grid.Column="1"
+                    IsToggled="True"
+                    OnColor="{StaticResource WarmSelected}" />
+        </Grid>
+
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <Label Text="Bewegungs-Reminder aktiv"
+                   VerticalOptions="Center" />
+            <Switch x:Name="MovementReminderEnabledSwitch"
+                    Grid.Column="1"
+                    IsToggled="True"
+                    OnColor="{StaticResource WarmSelected}" />
+        </Grid>
+
         <Button Text="Speichern"
                 Clicked="OnSaveClicked" />
         <Label x:Name="ConfirmationLabel"

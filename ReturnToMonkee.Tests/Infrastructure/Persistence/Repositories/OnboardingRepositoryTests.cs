@@ -31,4 +31,25 @@ public sealed class OnboardingRepositoryTests
 
         Assert.True(isCompleted);
     }
+
+    [Fact]
+    public async Task GetMovementReminderEnabledAsync_ReturnsTrue_WhenNothingPersisted()
+    {
+        var repository = CreateRepository();
+
+        var isEnabled = await repository.GetMovementReminderEnabledAsync();
+
+        Assert.True(isEnabled);
+    }
+
+    [Fact]
+    public async Task SaveMovementReminderEnabledAsync_PersistsValue()
+    {
+        var repository = CreateRepository();
+
+        await repository.SaveMovementReminderEnabledAsync(false);
+        var isEnabled = await repository.GetMovementReminderEnabledAsync();
+
+        Assert.False(isEnabled);
+    }
 }

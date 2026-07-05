@@ -17,10 +17,17 @@
 				</Image.Source>
 			</Image>
 
-			<Label Text="Schlafenszeit"
-				   FontSize="26"
-				   FontAttributes="Bold"
-				   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+			<Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+				<Label Text="Schlafenszeit"
+					   FontSize="26"
+					   FontAttributes="Bold"
+					   VerticalOptions="Center"
+					   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+				<Switch Grid.Column="1"
+						IsToggled="{Binding IsSleepReminderEnabled, Mode=TwoWay}"
+						VerticalOptions="Center"
+						OnColor="{StaticResource WarmSelected}" />
+			</Grid>
 
 			<Label Text="Diese Uhrzeit wird für deinen Schlafenszeit-Reminder verwendet."
 				   FontSize="14"

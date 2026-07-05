@@ -22,6 +22,9 @@ public partial class OnboardingStep2Page : ContentPage
         ConfirmationLabel.IsVisible = false;
         var settings = await userSettingsRepository.GetAsync();
         SleepTimePicker.Time = settings.SleepTime;
+        SleepReminderEnabledSwitch.IsToggled = settings.SleepReminderEnabled;
+        MovementReminderEnabledSwitch.IsToggled =
+            await onboardingRepository.GetMovementReminderEnabledAsync();
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -34,7 +37,9 @@ public partial class OnboardingStep2Page : ContentPage
 
         var settings = await userSettingsRepository.GetAsync();
         settings.SleepTime = SleepTimePicker.Time ?? settings.SleepTime;
+        settings.SleepReminderEnabled = SleepReminderEnabledSwitch.IsToggled;
         await userSettingsRepository.SaveAsync(settings);
+        await onboardingRepository.SaveMovementReminderEnabledAsync(MovementReminderEnabledSwitch.IsToggled);
 
         // Step 2 ist aktuell der letzte Onboarding-Schritt (#18 fügt Step 3 hinzu) —
         // markiert das Onboarding hier als abgeschlossen, damit es nicht bei jedem

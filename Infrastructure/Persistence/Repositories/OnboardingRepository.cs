@@ -81,6 +81,36 @@ public sealed class OnboardingRepository : IOnboardingRepository
             : 60;
     }
 
+    public async Task<bool> GetMovementReminderEnabledAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var connection =
+            await localDatabase.GetConnectionAsync(cancellationToken);
+
+        await EnsureSettingsTableAsync(connection);
+
+        var settings =
+            await connection.Table<OnboardingSettingsEntity>()
+                .FirstOrDefaultAsync();
+
+        return settings?.MovementReminderEnabled ?? true;
+    }
+
+    public async Task SaveMovementReminderEnabledAsync(
+        bool isEnabled,
+        CancellationToken cancellationToken = default)
+    {
+        var connection =
+            await localDatabase.GetConnectionAsync(cancellationToken);
+
+        await EnsureSettingsTableAsync(connection);
+
+        var settings = await GetOrCreateSettingsAsync(connection);
+        settings.MovementReminderEnabled = isEnabled;
+
+        await connection.InsertOrReplaceAsync(settings);
+    }
+
     public async Task<bool> IsOnboardingCompletedAsync(
     CancellationToken cancellationToken = default)
     {
@@ -108,6 +138,12 @@ public sealed class OnboardingRepository : IOnboardingRepository
         {
             await connection.ExecuteAsync(
                 $"ALTER TABLE OnboardingSettings ADD COLUMN {nameof(OnboardingSettingsEntity.MovementReminderIntervalMinutes)} INTEGER NOT NULL DEFAULT 60");
+        }
+
+        if (columns.All(column => column.Name != nameof(OnboardingSettingsEntity.MovementReminderEnabled)))
+        {
+            await connection.ExecuteAsync(
+                $"ALTER TABLE OnboardingSettings ADD COLUMN {nameof(OnboardingSettingsEntity.MovementReminderEnabled)} INTEGER NOT NULL DEFAULT 1");
         }
     }
 

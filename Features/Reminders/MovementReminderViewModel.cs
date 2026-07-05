@@ -18,6 +18,7 @@ public partial class MovementReminderViewModel : ObservableObject
     // Zuletzt gespeicherter Wert — Grundlage fuer das Dirty-Tracking (Save nur aktiv,
     // wenn die Auswahl davon abweicht).
     private string loadedInterval = "60 Minuten";
+    private bool loadedIsMovementReminderEnabled = true;
 
     // Blendet die Bestaetigungsmeldung nach kurzer Zeit wieder aus; wird bei jeder neuen
     // Meldung/Aenderung abgebrochen, damit kein alter Timer eine neue Meldung loescht.
@@ -33,6 +34,10 @@ public partial class MovementReminderViewModel : ObservableObject
     [ObservableProperty]
     private string statusMessage = string.Empty;
 
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    private bool isMovementReminderEnabled = true;
+
     public MovementReminderViewModel(
         IOnboardingRepository onboardingRepository,
         IReminderService reminderService)
@@ -41,14 +46,19 @@ public partial class MovementReminderViewModel : ObservableObject
         this.reminderService = reminderService;
     }
 
-    private bool CanSave => SelectedMovementReminderInterval != loadedInterval;
+    private bool CanSave =>
+        SelectedMovementReminderInterval != loadedInterval ||
+        IsMovementReminderEnabled != loadedIsMovementReminderEnabled;
 
     public async Task LoadAsync()
     {
         var intervalMinutes =
             await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
         loadedInterval = $"{intervalMinutes} Minuten";
+        loadedIsMovementReminderEnabled =
+            await onboardingRepository.GetMovementReminderEnabledAsync();
         SelectedMovementReminderInterval = loadedInterval;
+        IsMovementReminderEnabled = loadedIsMovementReminderEnabled;
         StatusMessage = string.Empty;
     }
 
@@ -60,14 +70,22 @@ public partial class MovementReminderViewModel : ObservableObject
         StatusMessage = string.Empty;
     }
 
+    partial void OnIsMovementReminderEnabledChanged(bool value)
+    {
+        statusResetCts?.Cancel();
+        StatusMessage = string.Empty;
+    }
+
     [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task SaveAsync()
     {
         await onboardingRepository.SaveMovementReminderIntervalMinutesAsync(
             ParseIntervalMinutes(SelectedMovementReminderInterval));
+        await onboardingRepository.SaveMovementReminderEnabledAsync(IsMovementReminderEnabled);
         loadedInterval = SelectedMovementReminderInterval;
+        loadedIsMovementReminderEnabled = IsMovementReminderEnabled;
         SaveCommand.NotifyCanExecuteChanged();
-        ShowTransientStatus("Intervall gespeichert.");
+        ShowTransientStatus("Bewegungs-Reminder gespeichert.");
     }
 
     // Zeigt eine Meldung und blendet sie nach kurzer Zeit wieder aus.
