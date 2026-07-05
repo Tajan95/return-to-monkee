@@ -22,4 +22,5 @@
     <x:String x:Key="IconPersonWalking">&#xf554;</x:String>
     <x:String x:Key="IconSeedling">&#xf4d8;</x:String>
     <x:String x:Key="IconMobileScreen">&#xf3cf;</x:String>
+    <x:String x:Key="IconChartLine">&#xf201;</x:String>
 </ResourceDictionary>

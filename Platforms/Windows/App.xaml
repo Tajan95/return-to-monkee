@@ -23,14 +23,23 @@
             <SolidColorBrush x:Key="TimePickerFlyoutPresenterHighlightFill" Color="#5F6B4A" />
             <SolidColorBrush x:Key="DatePickerFlyoutPresenterHighlightFill" Color="#5F6B4A" />
 
-            <!-- Shell-Flyout (WinUI NavigationView): blauer Marker + Auswahl in Salbei -->
-            <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="#5F6B4A" />
+            <!-- Shell-Flyout (WinUI NavigationView): natives Item-Chrome liefert die volle
+                 Item-Breite/-Form fuer ALLE Zustaende (eine Ebene). Selected und Selected+Hover
+                 bewusst FARBGLEICH -> beim Hovern ueber das aktive Item entsteht KEIN hellerer
+                 Innen-Kasten. Kein Marker. -->
+            <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="Transparent" />
             <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="#5F6B4A" />
-            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="#6B7856" />
-            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPressed" Color="#556042" />
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPointerOver" Color="#5F6B4A" />
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundSelectedPressed" Color="#5F6B4A" />
             <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="White" />
             <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPointerOver" Color="White" />
             <SolidColorBrush x:Key="NavigationViewItemForegroundSelectedPressed" Color="White" />
+
+            <!-- Nicht-selektierter Hover/Pressed: dezentes warmes Grau (volle Item-Breite/-Form). -->
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundPointerOver" Color="#3D372F" />
+            <SolidColorBrush x:Key="NavigationViewItemBackgroundPressed" Color="#4A4238" />
+            <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOver" Color="White" />
+            <SolidColorBrush x:Key="NavigationViewItemForegroundPressed" Color="White" />
         </ResourceDictionary>
     </maui:MauiWinUIApplication.Resources>
 
