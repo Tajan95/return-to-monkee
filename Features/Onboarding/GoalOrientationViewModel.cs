@@ -219,11 +219,19 @@ public partial class GoalOrientationViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private static void ToggleGoal(GoalItem? goal)
+    private void ToggleGoal(GoalItem? goal)
     {
-        if (goal is not null)
+        if (goal is null)
         {
-            goal.IsSelected = !goal.IsSelected;
+            return;
+        }
+
+        goal.IsSelected = !goal.IsSelected;
+
+        // Sobald mindestens ein Ziel gewaehlt ist, den Validierungshinweis wieder ausblenden.
+        if (Goals.Any(item => item.IsSelected))
+        {
+            ValidationMessage = string.Empty;
         }
     }
 
@@ -235,6 +243,13 @@ public partial class GoalOrientationViewModel : ObservableObject
         if (CurrentStepIndex == CompletedStep)
         {
             await Shell.Current.GoToAsync("//home");
+            return;
+        }
+
+        // Ziel-Schritt: mindestens ein Ziel ist Pflicht (analog zur Zeitlimit-Validierung).
+        if (CurrentStepIndex == GoalsStep && !Goals.Any(goal => goal.IsSelected))
+        {
+            ValidationMessage = "Bitte wähle mindestens ein Ziel aus, um fortzufahren.";
             return;
         }
 

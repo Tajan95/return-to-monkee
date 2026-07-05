@@ -14,8 +14,10 @@ public partial class MainPage : ContentPage
     private readonly IUserSettingsRepository userSettingsRepository;
     private readonly IOnboardingRepository onboardingRepository;
     private readonly IReminderService reminderService;
+    private readonly IGoalsRepository goalsRepository;
 
     private readonly ObservableCollection<DashboardRuleItem> activeRules = new();
+    private readonly ObservableCollection<DashboardGoalItem> selectedGoals = new();
 
     public MainPage(
         ILocalDatabase localDatabase,
@@ -23,7 +25,8 @@ public partial class MainPage : ContentPage
         IStatisticsService statisticsService,
         IUserSettingsRepository userSettingsRepository,
         IOnboardingRepository onboardingRepository,
-        IReminderService reminderService)
+        IReminderService reminderService,
+        IGoalsRepository goalsRepository)
     {
         InitializeComponent();
 
@@ -33,8 +36,10 @@ public partial class MainPage : ContentPage
         this.userSettingsRepository = userSettingsRepository;
         this.onboardingRepository = onboardingRepository;
         this.reminderService = reminderService;
+        this.goalsRepository = goalsRepository;
 
         ActiveRulesCollection.ItemsSource = activeRules;
+        GoalsCollection.ItemsSource = selectedGoals;
     }
 
     protected override async void OnAppearing()
@@ -56,6 +61,7 @@ public partial class MainPage : ContentPage
             ErrorLabel.IsVisible = false;
             ErrorLabel.Text = string.Empty;
 
+            await LoadSelectedGoalsAsync();
             await LoadActiveRulesAsync();
             await LoadReminderStatusAsync();
             await LoadTodayStatisticsAsync();
@@ -71,6 +77,37 @@ public partial class MainPage : ContentPage
             RefreshButton.IsEnabled = true;
         }
     }
+
+    private async Task LoadSelectedGoalsAsync()
+    {
+        var allGoals = await goalsRepository.GetAllGoalsAsync();
+        var selectedIds = await goalsRepository.GetSelectedGoalIdsAsync();
+
+        selectedGoals.Clear();
+
+        foreach (var goal in allGoals.Where(goal => selectedIds.Contains(goal.Id)))
+        {
+            selectedGoals.Add(new DashboardGoalItem
+            {
+                Title = goal.Title,
+                Glyph = ResolveGoalIcon(goal.Title)
+            });
+        }
+
+        GoalsEmptyLabel.IsVisible = selectedGoals.Count == 0;
+        GoalsCollection.IsVisible = selectedGoals.Count > 0;
+    }
+
+    // Gleiche Zuordnung Ziel-Titel -> FontAwesome-Glyph wie im Onboarding (GoalOrientationViewModel).
+    private static string ResolveGoalIcon(string title) =>
+        title switch
+        {
+            "Weniger Social Media" => char.ConvertFromUtf32(0xF3CF), // IconMobileScreen
+            "Mehr Fokus" => char.ConvertFromUtf32(0xF140),           // IconBullseye
+            "Besser schlafen" => char.ConvertFromUtf32(0xF186),      // IconMoon
+            "Mehr Energie" => char.ConvertFromUtf32(0xF4D8),         // IconSeedling
+            _ => char.ConvertFromUtf32(0xF140)                       // IconBullseye fallback
+        };
 
     private async Task LoadActiveRulesAsync()
     {
@@ -167,5 +204,12 @@ public partial class MainPage : ContentPage
         public string Description { get; set; } = string.Empty;
 
         public string Kind { get; set; } = string.Empty;
+    }
+
+    private sealed class DashboardGoalItem
+    {
+        public string Title { get; set; } = string.Empty;
+
+        public string Glyph { get; set; } = string.Empty;
     }
 }

@@ -180,6 +180,11 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
+
+                    <Label Text="{Binding ValidationMessage}"
+                           IsVisible="{Binding IsGoalsStep}"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmDanger}, Dark=#FFB4AB}"
+                           FontSize="14" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout IsVisible="{Binding IsMovementStep}"
