@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Handlers;
 using ReturnToMonkee.Features.Onboarding;
 using ReturnToMonkee.Features.PersonTest;
 using ReturnToMonkee.Features.Reminders;
@@ -18,6 +19,16 @@ public static class MauiProgram
 	public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
+
+#if WINDOWS
+        SwitchHandler.Mapper.AppendToMapping("CompactWindowsSwitch", (handler, _) =>
+        {
+            handler.PlatformView.MinWidth = 0;
+            handler.PlatformView.Width = 52;
+            handler.PlatformView.OnContent = null;
+            handler.PlatformView.OffContent = null;
+        });
+#endif
 
 		builder
 			.UseMauiApp<App>()
