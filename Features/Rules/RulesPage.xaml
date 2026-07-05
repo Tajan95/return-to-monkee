@@ -14,13 +14,15 @@
         <CollectionView.ItemTemplate>
             <DataTemplate>
                 <Grid Padding="12" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
-                    <Grid.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="Item_Tapped" />
-                    </Grid.GestureRecognizers>
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="{Binding Title}" FontAttributes="Bold" />
-                        <Label Text="{Binding Description}" FontSize="Small" />
-                    </VerticalStackLayout>
+                    <Grid Grid.Column="0" BackgroundColor="Transparent">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="Item_Tapped" />
+                        </Grid.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Title}" FontAttributes="Bold" />
+                            <Label Text="{Binding Description}" FontSize="Small" />
+                        </VerticalStackLayout>
+                    </Grid>
 
                     <Switch Grid.Column="1" IsToggled="{Binding IsEnabled}" Toggled="Switch_Toggled" />
 

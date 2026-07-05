@@ -58,7 +58,7 @@ public partial class RulesPage : ContentPage
 
     private async void Item_Tapped(object sender, TappedEventArgs e)
     {
-        if (sender is Grid grid && grid.BindingContext is RulesViewModel.RuleItem item)
+        if (sender is BindableObject bindable && bindable.BindingContext is RulesViewModel.RuleItem item)
         {
             if (item.IsTimeLimitRule)
             {
