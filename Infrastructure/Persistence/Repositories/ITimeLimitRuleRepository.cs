@@ -9,4 +9,10 @@ public interface ITimeLimitRuleRepository
 
     Task<List<global::TimeLimitRule>> GetAllAsync(
         CancellationToken cancellationToken = default);
+
+    Task AddAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default);
+    
+    Task UpdateAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default);
+    
+    Task DeleteAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default);
 }

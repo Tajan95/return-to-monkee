@@ -60,6 +60,7 @@ public static class MauiProgram
 		// Regeln
 		builder.Services.AddSingleton<RulesViewModel>();
 		builder.Services.AddSingleton<RulesPage>();
+		builder.Services.AddTransient<EditTimeLimitRulePage>();
 
 		// Reminder-Pages (Bewegung / Schlaf)
 		builder.Services.AddTransient<MovementReminderViewModel>();

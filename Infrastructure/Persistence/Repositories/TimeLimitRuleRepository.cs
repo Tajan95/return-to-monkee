@@ -62,4 +62,25 @@ public sealed class TimeLimitRuleRepository : ITimeLimitRuleRepository
         return await connection.Table<global::TimeLimitRule>()
             .ToListAsync();
     }
+
+    public async Task AddAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default)
+    {
+        var connection = await localDatabase.GetConnectionAsync(cancellationToken);
+        await connection.CreateTableAsync<global::TimeLimitRule>();
+        await connection.InsertAsync(rule);
+    }
+
+    public async Task UpdateAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default)
+    {
+        var connection = await localDatabase.GetConnectionAsync(cancellationToken);
+        await connection.CreateTableAsync<global::TimeLimitRule>();
+        await connection.UpdateAsync(rule);
+    }
+
+    public async Task DeleteAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default)
+    {
+        var connection = await localDatabase.GetConnectionAsync(cancellationToken);
+        await connection.CreateTableAsync<global::TimeLimitRule>();
+        await connection.DeleteAsync(rule);
+    }
 }

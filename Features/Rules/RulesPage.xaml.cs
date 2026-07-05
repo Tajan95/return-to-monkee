@@ -49,4 +49,36 @@ public partial class RulesPage : ContentPage
             // ignore for now
         }
     }
+
+    private async void AddRule_Clicked(object sender, EventArgs e)
+    {
+        var repository = IPlatformApplication.Current.Services.GetService<ReturnToMonkee.Infrastructure.Persistence.Repositories.ITimeLimitRuleRepository>();
+        await Navigation.PushAsync(new EditTimeLimitRulePage(repository));
+    }
+
+    private async void EditRule_Clicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.BindingContext is RulesViewModel.RuleItem item)
+        {
+            if (item.IsTimeLimitRule)
+            {
+                var repository = IPlatformApplication.Current.Services.GetService<ReturnToMonkee.Infrastructure.Persistence.Repositories.ITimeLimitRuleRepository>();
+                var rule = new TimeLimitRule
+                {
+                    Id = item.Id,
+                    Title = item.Title,
+                    Description = item.Description,
+                    TargetApplication = item.TargetApplication,
+                    TimeLimitMinutes = item.TimeLimitMinutes,
+                    IsEnabled = item.IsEnabled
+                };
+                await Navigation.PushAsync(new EditTimeLimitRulePage(repository, rule));
+            }
+            else
+            {
+                // To avoid mixing TimeLimit rules and Reminders in the same Edit flow
+                await DisplayAlert("Hinweis", "Diese Regel kann hier nicht bearbeitet werden.", "OK");
+            }
+        }
+    }
 }

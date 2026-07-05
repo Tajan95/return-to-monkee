@@ -157,22 +157,32 @@ public sealed class StatisticsServiceTests
 
     private sealed class StubTimeLimitRuleRepository : ITimeLimitRuleRepository
     {
-        private readonly List<TimeLimitRule> rules;
+        private readonly int enabledRuleCount;
 
         public StubTimeLimitRuleRepository(int enabledRuleCount)
         {
-            rules = Enumerable.Range(0, enabledRuleCount)
-                .Select(_ => new TimeLimitRule { Id = Guid.NewGuid(), IsEnabled = true })
-                .ToList();
+            this.enabledRuleCount = enabledRuleCount;
         }
 
-        public Task SaveInitialTimeLimitRuleAsync(
-            string category,
-            int timeLimitMinutes,
-            CancellationToken cancellationToken = default)
-            => Task.CompletedTask;
+        public Task SaveInitialTimeLimitRuleAsync(string category, int timeLimitMinutes, CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
 
-        public Task<List<TimeLimitRule>> GetAllAsync(CancellationToken cancellationToken = default)
-            => Task.FromResult(rules);
+        public Task<List<global::TimeLimitRule>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            var rules = new List<global::TimeLimitRule>();
+            for (int i = 0; i < enabledRuleCount; i++)
+            {
+                rules.Add(new global::TimeLimitRule { IsEnabled = true });
+            }
+            return Task.FromResult(rules);
+        }
+
+        public Task AddAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        
+        public Task UpdateAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        
+        public Task DeleteAsync(global::TimeLimitRule rule, CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 }
