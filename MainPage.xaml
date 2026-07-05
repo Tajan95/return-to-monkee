@@ -25,6 +25,47 @@
                     Padding="16">
 
                 <VerticalStackLayout Spacing="8">
+                    <Label Text="Deine Ziele"
+                           FontSize="20"
+                           FontAttributes="Bold" />
+
+                    <Label x:Name="GoalsEmptyLabel"
+                           Text="Noch keine Ziele ausgewählt."
+                           TextColor="Gray" />
+
+                    <CollectionView x:Name="GoalsCollection">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="Auto,*"
+                                      ColumnSpacing="10"
+                                      Padding="0,4">
+                                    <Image HeightRequest="20"
+                                           WidthRequest="20"
+                                           VerticalOptions="Center">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="FontAwesomeSolid"
+                                                             Glyph="{Binding Glyph}"
+                                                             Size="18"
+                                                             Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                                        </Image.Source>
+                                    </Image>
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Title}"
+                                           FontSize="15"
+                                           VerticalOptions="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Stroke="LightGray"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="16">
+
+                <VerticalStackLayout Spacing="8">
                     <Label Text="Aktive Regeln"
                            FontSize="20"
                            FontAttributes="Bold" />
