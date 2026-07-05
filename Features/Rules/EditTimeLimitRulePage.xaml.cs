@@ -9,6 +9,7 @@ public partial class EditTimeLimitRulePage : ContentPage
     private readonly ITimeLimitRuleRepository repository;
     private TimeLimitRule rule;
     private bool isNew;
+    private bool isClosing;
 
     public EditTimeLimitRulePage(ITimeLimitRuleRepository repository, TimeLimitRule rule = null)
     {
@@ -64,12 +65,12 @@ public partial class EditTimeLimitRulePage : ContentPage
             await repository.UpdateAsync(rule);
         }
 
-        await Navigation.PopModalAsync();
+        await CloseModalAsync();
     }
 
     private async void Cancel_Clicked(object sender, EventArgs e)
     {
-        await Navigation.PopModalAsync();
+        await CloseModalAsync();
     }
 
     private async void Delete_Clicked(object sender, EventArgs e)
@@ -80,7 +81,22 @@ public partial class EditTimeLimitRulePage : ContentPage
         if (confirm)
         {
             await repository.DeleteAsync(rule);
-            await Navigation.PopModalAsync();
+            await CloseModalAsync();
         }
+    }
+
+    private async Task CloseModalAsync()
+    {
+        if (isClosing)
+        {
+            return;
+        }
+
+        isClosing = true;
+        IsEnabledSwitch.Unfocus();
+        IsEnabledSwitch.IsEnabled = false;
+
+        await Task.Yield();
+        await Navigation.PopModalAsync();
     }
 }
