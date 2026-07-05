@@ -4,6 +4,7 @@
              x:Class="ReturnToMonkee.Features.Rules.EditTimeLimitRulePage"
              Title="Zeitlimit-Regel">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Abbrechen" Clicked="Cancel_Clicked" />
         <ToolbarItem Text="Speichern" Clicked="Save_Clicked" />
     </ContentPage.ToolbarItems>
     <ScrollView Padding="16">

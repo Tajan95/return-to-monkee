@@ -64,7 +64,12 @@ public partial class EditTimeLimitRulePage : ContentPage
             await repository.UpdateAsync(rule);
         }
 
-        await Navigation.PopAsync();
+        await Navigation.PopModalAsync();
+    }
+
+    private async void Cancel_Clicked(object sender, EventArgs e)
+    {
+        await Navigation.PopModalAsync();
     }
 
     private async void Delete_Clicked(object sender, EventArgs e)
@@ -75,7 +80,7 @@ public partial class EditTimeLimitRulePage : ContentPage
         if (confirm)
         {
             await repository.DeleteAsync(rule);
-            await Navigation.PopAsync();
+            await Navigation.PopModalAsync();
         }
     }
 }
