@@ -4,12 +4,33 @@
              x:Class="ReturnToMonkee.Features.Rules.RulesPage"
              Title="Regeln">
     <ContentPage.Resources>
+        <!-- Karte im App-Stil: gleicher dunkler Grund wie die Page, nur beige Border grenzt ab. -->
         <Style x:Key="RuleCard" TargetType="Border">
-            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}" />
-            <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}" />
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource Gray950}}" />
+            <Setter Property="Stroke" Value="{StaticResource WarmStroke}" />
             <Setter Property="StrokeThickness" Value="1" />
-            <Setter Property="Padding" Value="14" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+        </Style>
+
+        <!-- Pillen-Badge (z. B. Limit "30 Min/Tag"). -->
+        <Style x:Key="Pill" TargetType="Border">
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="Padding" Value="10,4" />
             <Setter Property="StrokeShape" Value="RoundRectangle 12" />
+            <Setter Property="HorizontalOptions" Value="Start" />
+        </Style>
+
+        <!-- Umriss-Button fuer Karten-Aktionen (Bearbeiten / Intervention). -->
+        <Style x:Key="CardActionButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="BorderWidth" Value="1" />
+            <Setter Property="BorderColor" Value="{StaticResource WarmStroke}" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="HeightRequest" Value="36" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="6,0" />
         </Style>
     </ContentPage.Resources>
 
@@ -34,63 +55,102 @@
 
     <Grid RowDefinitions="*,Auto" Padding="16" RowSpacing="12">
         <CollectionView Grid.Row="0" ItemsSource="{Binding Rules}" SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="12" />
+            </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Style="{StaticResource RuleCard}" Margin="0,0,0,12">
-                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
-                            <Grid Grid.Column="0" BackgroundColor="Transparent">
-                                <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="Item_Tapped" />
-                                </Grid.GestureRecognizers>
-                                <VerticalStackLayout Spacing="4">
-                                    <Label Text="{Binding Title}" FontAttributes="Bold" />
-                                    <Label Text="{Binding Description}" FontSize="Small" />
-                                </VerticalStackLayout>
-                            </Grid>
+                    <Border Style="{StaticResource RuleCard}">
+                        <VerticalStackLayout Spacing="14">
 
-                            <Switch Grid.Column="1"
-                                    IsToggled="{Binding IsEnabled}"
-                                    VerticalOptions="Center"
-                                    HorizontalOptions="End"
-                                    WidthRequest="52"
-                                    OnColor="{StaticResource WarmSelected}"
-                                    Toggled="Switch_Toggled" />
+                            <!-- Kopf: Uhr-Icon + Titel/Badge + Aktiv-Schalter -->
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Image HeightRequest="22" WidthRequest="22" VerticalOptions="Center">
+                                    <Image.Source>
+                                        <FontImageSource FontFamily="FontAwesomeSolid"
+                                                         Glyph="{StaticResource IconClock}"
+                                                         Size="20"
+                                                         Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                                    </Image.Source>
+                                </Image>
 
-                            <Button Grid.Row="1" Grid.ColumnSpan="2"
-                                    Text=" Zeitlimit testen"
-                                    BackgroundColor="Transparent"
-                                    TextColor="{AppThemeBinding Light=#888888, Dark=#AAAAAA}"
-                                    HorizontalOptions="Start"
-                                    Padding="8,0"
-                                    HeightRequest="32"
-                                    IsVisible="{Binding IsTimeLimitRule}"
-                                    Clicked="TestTimeLimit_Clicked">
-                                <Button.ImageSource>
-                                    <FontImageSource FontFamily="FontAwesomeSolid" Glyph="&#xf0ad;" Size="16" Color="{AppThemeBinding Light=#888888, Dark=#AAAAAA}" />
-                                </Button.ImageSource>
-                            </Button>
-
-                            <Border Grid.Row="2"
-                                    Grid.ColumnSpan="2"
-                                    IsVisible="{Binding IsSoftInterventionVisible}"
-                                    Stroke="{AppThemeBinding Light=#D6D3D1, Dark=#6E6E6E}"
-                                    StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 8"
-                                    Padding="12"
-                                    BackgroundColor="{AppThemeBinding Light=#F7F7F2, Dark=#2A2A2A}">
-                                <VerticalStackLayout Spacing="6">
-                                    <Label Text="Soft-Intervention"
+                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <Label Text="{Binding Title}"
                                            FontAttributes="Bold"
                                            FontSize="16"
-                                           TextColor="{AppThemeBinding Light=#212121, Dark=#FFFFFF}" />
+                                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                                    <Border Style="{StaticResource Pill}"
+                                            BackgroundColor="{StaticResource WarmSelected}">
+                                        <Label Text="{Binding LimitBadge}"
+                                               FontSize="12"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource White}" />
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <Switch Grid.Column="2"
+                                        IsToggled="{Binding IsEnabled}"
+                                        VerticalOptions="Center"
+                                        HorizontalOptions="End"
+                                        WidthRequest="52"
+                                        OnColor="{StaticResource WarmSelected}"
+                                        Toggled="Switch_Toggled" />
+                            </Grid>
+
+                            <!-- Aktionen: Bearbeiten + Intervention, sauber nebeneinander -->
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <Button Grid.Column="0"
+                                        Text="Bearbeiten"
+                                        Style="{StaticResource CardActionButton}"
+                                        Clicked="EditRule_Clicked">
+                                    <Button.ImageSource>
+                                        <FontImageSource FontFamily="FontAwesomeSolid" Glyph="&#xf044;" Size="14"
+                                                         Color="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                                    </Button.ImageSource>
+                                </Button>
+                                <Button Grid.Column="1"
+                                        Text="Intervention testen"
+                                        Style="{StaticResource CardActionButton}"
+                                        IsVisible="{Binding IsTimeLimitRule}"
+                                        Clicked="TestTimeLimit_Clicked">
+                                    <Button.ImageSource>
+                                        <FontImageSource FontFamily="FontAwesomeSolid" Glyph="&#xf071;" Size="14"
+                                                         Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                                    </Button.ImageSource>
+                                </Button>
+                            </Grid>
+
+                            <!-- Soft-Intervention (nach Ausloesen sichtbar), minimal: transparent, duenne Border -->
+                            <Border IsVisible="{Binding IsSoftInterventionVisible}"
+                                    Stroke="{StaticResource WarmStroke}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 10"
+                                    Padding="10"
+                                    BackgroundColor="Transparent">
+                                <VerticalStackLayout Spacing="6">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                        <Image HeightRequest="16" WidthRequest="16" VerticalOptions="Center">
+                                            <Image.Source>
+                                                <FontImageSource FontFamily="FontAwesomeSolid" Glyph="&#xf071;" Size="14"
+                                                                 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                                            </Image.Source>
+                                        </Image>
+                                        <Label Grid.Column="1"
+                                               Text="Soft-Intervention"
+                                               FontAttributes="Bold"
+                                               FontSize="14"
+                                               VerticalOptions="Center"
+                                               TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                                    </Grid>
                                     <Label Text="{Binding InterventionMessage}"
-                                           TextColor="{AppThemeBinding Light=#212121, Dark=#FFFFFF}" />
+                                           FontSize="13"
+                                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
                                     <Label Text="{Binding StatusMessage}"
-                                           FontSize="Small"
-                                           TextColor="{AppThemeBinding Light=#404040, Dark=#E1E1E1}" />
+                                           FontSize="12"
+                                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
                                 </VerticalStackLayout>
                             </Border>
-                        </Grid>
+                        </VerticalStackLayout>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

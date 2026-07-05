@@ -56,7 +56,7 @@ public partial class RulesPage : ContentPage
         await Navigation.PushModalAsync(new NavigationPage(new EditTimeLimitRulePage(repository)));
     }
 
-    private async void Item_Tapped(object sender, TappedEventArgs e)
+    private async void EditRule_Clicked(object sender, EventArgs e)
     {
         if (sender is BindableObject bindable && bindable.BindingContext is RulesViewModel.RuleItem item)
         {
