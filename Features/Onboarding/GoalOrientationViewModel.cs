@@ -39,6 +39,15 @@ public partial class GoalOrientationViewModel : ObservableObject
     [ObservableProperty]
     private string selectedMovementReminderInterval = "60 Minuten";
 
+    // Aktivierungs-Schalter fuer die Reminder: solange "aus", bleibt der jeweilige
+    // Konfigurationsbereich im Onboarding ausgegraut und gesperrt.
+    // Beim ersten Onboarding bewusst deaktiviert — der Nutzer aktiviert bewusst.
+    [ObservableProperty]
+    private bool isMovementReminderEnabled;
+
+    [ObservableProperty]
+    private bool isSleepReminderEnabled;
+
     [ObservableProperty]
     private string selectedTimeLimitCategory = "Social Media";
 
@@ -138,6 +147,8 @@ public partial class GoalOrientationViewModel : ObservableObject
             await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
         SelectedMovementReminderInterval = $"{movementIntervalMinutes} Minuten";
         SleepTime = settings.SleepTime;
+        // Reminder-Schalter werden im Onboarding bewusst NICHT aus dem Speicher
+        // vorbelegt — sie starten deaktiviert und werden aktiv gewaehlt.
 
         Goals.Clear();
 
@@ -236,12 +247,14 @@ public partial class GoalOrientationViewModel : ObservableObject
             selectedGoalIds.Count > 0 ? string.Join(",", selectedGoalIds) : "none");
         await onboardingRepository.SaveMovementReminderIntervalMinutesAsync(
             ParseIntervalMinutes(SelectedMovementReminderInterval));
+        await onboardingRepository.SaveMovementReminderEnabledAsync(IsMovementReminderEnabled);
         await timeLimitRuleRepository.SaveInitialTimeLimitRuleAsync(
             SelectedTimeLimitCategory,
             timeLimitMinutes);
 
         var settings = await userSettingsRepository.GetAsync();
         settings.SleepTime = SleepTime;
+        settings.SleepReminderEnabled = IsSleepReminderEnabled;
         settings.ShowOnboardingOnStartup = false;
         await userSettingsRepository.SaveAsync(settings);
 

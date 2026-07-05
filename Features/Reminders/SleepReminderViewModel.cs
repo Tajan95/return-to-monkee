@@ -17,7 +17,9 @@ public partial class SleepReminderViewModel : ObservableObject
     private TimeSpan sleepTime = TimeSpan.FromHours(22);
     // Zuletzt gespeicherter Wert — Grundlage fuer das Dirty-Tracking.
     private TimeSpan loadedSleepTime = TimeSpan.FromHours(22);
-    private bool loadedIsSleepReminderEnabled = true;
+    private bool isLoading;
+    private int enabledSaveRequestVersion;
+    private readonly SemaphoreSlim settingsSaveLock = new(1, 1);
 
     // Blendet die Bestaetigungsmeldung nach kurzer Zeit wieder aus; wird bei jeder neuen
     // Meldung/Aenderung abgebrochen, damit kein alter Timer eine neue Meldung loescht.
@@ -28,6 +30,7 @@ public partial class SleepReminderViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    [NotifyCanExecuteChangedFor(nameof(TestCommand))]
     private bool isSleepReminderEnabled = true;
 
     public SleepReminderViewModel(
@@ -53,39 +56,93 @@ public partial class SleepReminderViewModel : ObservableObject
     }
 
     private bool CanSave =>
-        SleepTime != loadedSleepTime ||
-        IsSleepReminderEnabled != loadedIsSleepReminderEnabled;
+        IsSleepReminderEnabled &&
+        SleepTime != loadedSleepTime;
 
     public async Task LoadAsync()
     {
-        var settings = await userSettingsRepository.GetAsync();
-        loadedSleepTime = settings.SleepTime;
-        loadedIsSleepReminderEnabled = settings.SleepReminderEnabled;
-        SleepTime = settings.SleepTime;
-        IsSleepReminderEnabled = settings.SleepReminderEnabled;
-        StatusMessage = string.Empty;
+        isLoading = true;
+        try
+        {
+            var settings = await userSettingsRepository.GetAsync();
+            loadedSleepTime = settings.SleepTime;
+            SleepTime = settings.SleepTime;
+            IsSleepReminderEnabled = settings.SleepReminderEnabled;
+            StatusMessage = string.Empty;
+        }
+        finally
+        {
+            isLoading = false;
+            SaveCommand.NotifyCanExecuteChanged();
+            TestCommand.NotifyCanExecuteChanged();
+        }
     }
 
     partial void OnIsSleepReminderEnabledChanged(bool value)
     {
         statusResetCts?.Cancel();
         StatusMessage = string.Empty;
+
+        if (isLoading)
+        {
+            return;
+        }
+
+        SaveCommand.NotifyCanExecuteChanged();
+        _ = SaveSleepReminderEnabledAsync(value, ++enabledSaveRequestVersion);
     }
 
     [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task SaveAsync()
     {
-        var settings = await userSettingsRepository.GetAsync();
-        settings.SleepTime = SleepTime;
-        settings.SleepReminderEnabled = IsSleepReminderEnabled;
-        await userSettingsRepository.SaveAsync(settings);
+        await settingsSaveLock.WaitAsync();
+        try
+        {
+            var settings = await userSettingsRepository.GetAsync();
+            settings.SleepTime = SleepTime;
+            settings.SleepReminderEnabled = IsSleepReminderEnabled;
+            await userSettingsRepository.SaveAsync(settings);
+        }
+        finally
+        {
+            settingsSaveLock.Release();
+        }
+
         loadedSleepTime = SleepTime;
-        loadedIsSleepReminderEnabled = IsSleepReminderEnabled;
         SaveCommand.NotifyCanExecuteChanged();
         ShowTransientStatus("Schlafenszeit-Reminder gespeichert.");
     }
 
-    [RelayCommand]
+    private async Task SaveSleepReminderEnabledAsync(bool isEnabled, int requestVersion)
+    {
+        await settingsSaveLock.WaitAsync();
+        try
+        {
+            if (requestVersion != enabledSaveRequestVersion)
+            {
+                return;
+            }
+
+            var settings = await userSettingsRepository.GetAsync();
+            settings.SleepReminderEnabled = isEnabled;
+            await userSettingsRepository.SaveAsync(settings);
+        }
+        finally
+        {
+            settingsSaveLock.Release();
+        }
+
+        if (requestVersion == enabledSaveRequestVersion)
+        {
+            SaveCommand.NotifyCanExecuteChanged();
+            ShowTransientStatus(isEnabled
+                ? "Schlafenszeit-Reminder aktiviert."
+                : "Schlafenszeit-Reminder deaktiviert.");
+        }
+    }
+
+    // Testen nur bei aktivem Reminder — deaktiviert sonst auch den Button in der UI.
+    [RelayCommand(CanExecute = nameof(IsSleepReminderEnabled))]
     private async Task TestAsync()
     {
         await reminderService.TriggerSleepReminderAsync();
