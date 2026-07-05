@@ -127,7 +127,7 @@ public partial class MainPage : ContentPage
                 Title = string.IsNullOrWhiteSpace(rule.Title)
                     ? $"{rule.TargetApplication} begrenzen"
                     : rule.Title,
-                Description = $"{rule.TargetApplication}: {rule.TimeLimitMinutes} Minuten pro Tag",
+                Description = $"{rule.TimeLimitMinutes} Minuten pro Tag",
                 Kind = "Zeitlimit"
             });
         }
@@ -145,9 +145,10 @@ public partial class MainPage : ContentPage
         // Naechsten Reminder-Zeitpunkt inkl. Vorlauf zentral vom ReminderService holen.
         var nextSleepReminder = await reminderService.GetNextSleepReminderTimeAsync();
 
-        SleepReminderDetailLabel.Text = userSettings.SleepReminderLeadMinutes > 0
-            ? $"Zu Bett um {sleepTime:hh\\:mm} Uhr · {userSettings.SleepReminderLeadMinutes} Min Vorlauf"
-            : $"Zu Bett um {sleepTime:hh\\:mm} Uhr";
+        SleepReminderDetailLabel.Text = $"Zu Bett um {sleepTime:hh\\:mm} Uhr";
+        // Vorlauf auf eigener Zeile, damit nichts umbricht.
+        SleepReminderLeadLabel.IsVisible = userSettings.SleepReminderLeadMinutes > 0;
+        SleepReminderLeadLabel.Text = $"{userSettings.SleepReminderLeadMinutes} Min Vorlauf";
         SetReminderBadge(
             SleepReminderBadge,
             SleepReminderBadgeLabel,

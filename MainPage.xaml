@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ReturnToMonkee.MainPage"
              Title="Dashboard"
-             BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource Gray950}}">
 
     <ContentPage.Resources>
         <!-- Karten und Ueberschriften im App-Stil (warmes Beige / Salbei, Dark-first),
@@ -85,15 +85,13 @@
                     Text="Dashboard aktualisieren"
                     Clicked="OnRefreshClicked"
                     HorizontalOptions="Fill"
-                    BackgroundColor="Transparent"
-                    BorderWidth="1"
-                    BorderColor="{StaticResource WarmStroke}"
-                    TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}">
+                    BackgroundColor="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}"
+                    TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
                 <Button.ImageSource>
                     <FontImageSource FontFamily="FontAwesomeSolid"
                                      Glyph="&#xf021;"
                                      Size="14"
-                                     Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                                     Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
                 </Button.ImageSource>
             </Button>
 
@@ -144,23 +142,23 @@
                            Style="{StaticResource CardMuted}" />
 
                     <CollectionView x:Name="ActiveRulesCollection">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical" ItemSpacing="2" />
+                        </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Border BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray950}}"
                                         Stroke="{StaticResource WarmStroke}"
                                         StrokeThickness="1"
                                         StrokeShape="RoundRectangle 10"
-                                        Padding="12"
-                                        Margin="0,4">
+                                        Padding="12">
 
                                     <Grid ColumnDefinitions="Auto,*,Auto"
                                           ColumnSpacing="12">
 
-                                        <Image Grid.RowSpan="2"
-                                               HeightRequest="20"
+                                        <Image HeightRequest="20"
                                                WidthRequest="20"
-                                               VerticalOptions="Start"
-                                               Margin="0,2,0,0">
+                                               VerticalOptions="Center">
                                             <Image.Source>
                                                 <FontImageSource FontFamily="FontAwesomeSolid"
                                                                  Glyph="&#xf017;"
@@ -169,10 +167,10 @@
                                             </Image.Source>
                                         </Image>
 
-                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                                             <Label Text="{Binding Title}"
                                                    FontAttributes="Bold"
-                                                   FontSize="16"
+                                                   FontSize="15"
                                                    TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
                                             <Label Text="{Binding Description}"
                                                    FontSize="13"
@@ -214,6 +212,7 @@
                         <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
                             <Label Text="Schlafenszeit" Style="{StaticResource CardBody}" FontAttributes="Bold" />
                             <Label x:Name="SleepReminderDetailLabel" Style="{StaticResource CardMuted}" />
+                            <Label x:Name="SleepReminderLeadLabel" Style="{StaticResource CardMuted}" IsVisible="False" />
                         </VerticalStackLayout>
                         <Border x:Name="SleepReminderBadge" Grid.Column="2" Style="{StaticResource Pill}">
                             <Label x:Name="SleepReminderBadgeLabel" FontSize="13" FontAttributes="Bold" />
@@ -251,17 +250,19 @@
                     <!-- Reminder -->
                     <Label Text="Reminder" Style="{StaticResource CardMuted}" FontAttributes="Bold" />
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                        <Border Grid.Column="0" Style="{StaticResource StatTile}">
+                        <Border Grid.Column="0" Style="{StaticResource StatTile}"
+                                Stroke="{StaticResource WarmSelected}" StrokeThickness="1.5">
                             <VerticalStackLayout Spacing="4">
-                                <Label Text="✓ Bestätigt" Style="{StaticResource TileCaption}" />
+                                <Label Text="Bestätigt" Style="{StaticResource TileCaption}" />
                                 <Label x:Name="StatReminderConfirmed"
                                        Style="{StaticResource TileValue}"
                                        TextColor="{StaticResource WarmSelected}" />
                             </VerticalStackLayout>
                         </Border>
-                        <Border Grid.Column="1" Style="{StaticResource StatTile}">
+                        <Border Grid.Column="1" Style="{StaticResource StatTile}"
+                                Stroke="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" StrokeThickness="1.5">
                             <VerticalStackLayout Spacing="4">
-                                <Label Text="✕ Ignoriert" Style="{StaticResource TileCaption}" />
+                                <Label Text="Ignoriert" Style="{StaticResource TileCaption}" />
                                 <Label x:Name="StatReminderIgnored"
                                        Style="{StaticResource TileValue}"
                                        TextColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
@@ -280,17 +281,19 @@
                     <!-- Zeitlimits -->
                     <Label Text="Zeitlimits" Style="{StaticResource CardMuted}" FontAttributes="Bold" />
                     <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                        <Border Grid.Column="0" Style="{StaticResource StatTile}">
+                        <Border Grid.Column="0" Style="{StaticResource StatTile}"
+                                Stroke="{StaticResource WarmSelected}" StrokeThickness="1.5">
                             <VerticalStackLayout Spacing="4">
-                                <Label Text="✓ Eingehalten" Style="{StaticResource TileCaption}" />
+                                <Label Text="Eingehalten" Style="{StaticResource TileCaption}" />
                                 <Label x:Name="StatLimitsKept"
                                        Style="{StaticResource TileValue}"
                                        TextColor="{StaticResource WarmSelected}" />
                             </VerticalStackLayout>
                         </Border>
-                        <Border Grid.Column="1" Style="{StaticResource StatTile}">
+                        <Border Grid.Column="1" Style="{StaticResource StatTile}"
+                                Stroke="{StaticResource WarmDanger}" StrokeThickness="1.5">
                             <VerticalStackLayout Spacing="4">
-                                <Label Text="✕ Überschritten" Style="{StaticResource TileCaption}" />
+                                <Label Text="Überschritten" Style="{StaticResource TileCaption}" />
                                 <Label x:Name="StatLimitsExceeded"
                                        Style="{StaticResource TileValue}"
                                        TextColor="{StaticResource WarmDanger}" />
