@@ -3,22 +3,42 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ReturnToMonkee.Features.Rules.RulesPage"
              Title="Regeln">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Neu" Clicked="AddRule_Clicked">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FontAwesomeSolid" Glyph="&#xf067;" Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
     <CollectionView ItemsSource="{Binding Rules}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <Grid Padding="12" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="{Binding Title}" FontAttributes="Bold" />
-                        <Label Text="{Binding Description}" FontSize="Small" />
-                    </VerticalStackLayout>
+                <Grid Padding="12" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                    <Grid Grid.Column="0" BackgroundColor="Transparent">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="Item_Tapped" />
+                        </Grid.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Title}" FontAttributes="Bold" />
+                            <Label Text="{Binding Description}" FontSize="Small" />
+                        </VerticalStackLayout>
+                    </Grid>
 
                     <Switch Grid.Column="1" IsToggled="{Binding IsEnabled}" Toggled="Switch_Toggled" />
 
-                    <Button Grid.Row="1"
-                            Grid.ColumnSpan="2"
-                            Text="Zeitlimit testen"
+                    <Button Grid.Row="1" Grid.ColumnSpan="2"
+                            Text=" Zeitlimit testen"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light=#888888, Dark=#AAAAAA}"
+                            HorizontalOptions="Start"
+                            Padding="8,0"
+                            HeightRequest="32"
                             IsVisible="{Binding IsTimeLimitRule}"
-                            Clicked="TestTimeLimit_Clicked" />
+                            Clicked="TestTimeLimit_Clicked">
+                        <Button.ImageSource>
+                            <FontImageSource FontFamily="FontAwesomeSolid" Glyph="&#xf0ad;" Size="16" Color="{AppThemeBinding Light=#888888, Dark=#AAAAAA}" />
+                        </Button.ImageSource>
+                    </Button>
 
                     <Border Grid.Row="2"
                             Grid.ColumnSpan="2"
