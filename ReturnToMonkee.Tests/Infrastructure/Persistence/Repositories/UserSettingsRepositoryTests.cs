@@ -64,6 +64,29 @@ public sealed class UserSettingsRepositoryTests
     }
 
     [Fact]
+    public async Task GetAsync_ReturnsSleepReminderLeadMinutesOfZero_WhenNothingPersisted()
+    {
+        var repo = CreateRepository();
+
+        var settings = await repo.GetAsync();
+
+        Assert.Equal(0, settings.SleepReminderLeadMinutes);
+    }
+
+    [Fact]
+    public async Task SaveAsync_PersistsSleepReminderLeadMinutes()
+    {
+        var repo = CreateRepository();
+        var settings = await repo.GetAsync();
+        settings.SleepReminderLeadMinutes = 30;
+
+        await repo.SaveAsync(settings);
+        var reloaded = await repo.GetAsync();
+
+        Assert.Equal(30, reloaded.SleepReminderLeadMinutes);
+    }
+
+    [Fact]
     public async Task SaveAsync_OverwritesPreviousValue_WhenCalledTwice()
     {
         // Arrange

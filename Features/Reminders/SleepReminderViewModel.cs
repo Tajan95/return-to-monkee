@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ReturnToMonkee.Infrastructure.Persistence.Repositories;
 using ReturnToMonkee.Services;
+using System.Collections.ObjectModel;
 
 namespace ReturnToMonkee.Features.Reminders;
 
@@ -14,9 +15,19 @@ public partial class SleepReminderViewModel : ObservableObject
     private readonly IUserSettingsRepository userSettingsRepository;
     private readonly IReminderService reminderService;
 
+    // Vorlauf-Optionen (Anzeige-Text) und ihre Minuten-Werte. Reihenfolge = Picker-Reihenfolge.
+    private static readonly (string Label, int Minutes)[] LeadOptions =
+    {
+        ("Zur Schlafenszeit", 0),
+        ("15 Minuten vorher", 15),
+        ("30 Minuten vorher", 30),
+        ("60 Minuten vorher", 60)
+    };
+
     private TimeSpan sleepTime = TimeSpan.FromHours(22);
     // Zuletzt gespeicherter Wert — Grundlage fuer das Dirty-Tracking.
     private TimeSpan loadedSleepTime = TimeSpan.FromHours(22);
+    private string loadedSleepReminderLead = LeadOptions[0].Label;
     private bool isLoading;
     private int enabledSaveRequestVersion;
     private readonly SemaphoreSlim settingsSaveLock = new(1, 1);
@@ -32,6 +43,13 @@ public partial class SleepReminderViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
     [NotifyCanExecuteChangedFor(nameof(TestCommand))]
     private bool isSleepReminderEnabled = true;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
+    private string selectedSleepReminderLead = LeadOptions[0].Label;
+
+    public ObservableCollection<string> SleepReminderLeadOptions { get; } =
+        new(LeadOptions.Select(option => option.Label));
 
     public SleepReminderViewModel(
         IUserSettingsRepository userSettingsRepository,
@@ -57,7 +75,8 @@ public partial class SleepReminderViewModel : ObservableObject
 
     private bool CanSave =>
         IsSleepReminderEnabled &&
-        SleepTime != loadedSleepTime;
+        (SleepTime != loadedSleepTime ||
+         SelectedSleepReminderLead != loadedSleepReminderLead);
 
     public async Task LoadAsync()
     {
@@ -66,7 +85,9 @@ public partial class SleepReminderViewModel : ObservableObject
         {
             var settings = await userSettingsRepository.GetAsync();
             loadedSleepTime = settings.SleepTime;
+            loadedSleepReminderLead = FormatLead(settings.SleepReminderLeadMinutes);
             SleepTime = settings.SleepTime;
+            SelectedSleepReminderLead = loadedSleepReminderLead;
             IsSleepReminderEnabled = settings.SleepReminderEnabled;
             StatusMessage = string.Empty;
         }
@@ -92,6 +113,13 @@ public partial class SleepReminderViewModel : ObservableObject
         _ = SaveSleepReminderEnabledAsync(value, ++enabledSaveRequestVersion);
     }
 
+    // Vorlauf gehoert zum Speichern-Button (kein Auto-Save wie der Aktiv-Schalter).
+    partial void OnSelectedSleepReminderLeadChanged(string value)
+    {
+        statusResetCts?.Cancel();
+        StatusMessage = string.Empty;
+    }
+
     [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task SaveAsync()
     {
@@ -100,6 +128,7 @@ public partial class SleepReminderViewModel : ObservableObject
         {
             var settings = await userSettingsRepository.GetAsync();
             settings.SleepTime = SleepTime;
+            settings.SleepReminderLeadMinutes = ParseLeadMinutes(SelectedSleepReminderLead);
             settings.SleepReminderEnabled = IsSleepReminderEnabled;
             await userSettingsRepository.SaveAsync(settings);
         }
@@ -109,6 +138,7 @@ public partial class SleepReminderViewModel : ObservableObject
         }
 
         loadedSleepTime = SleepTime;
+        loadedSleepReminderLead = SelectedSleepReminderLead;
         SaveCommand.NotifyCanExecuteChanged();
         ShowTransientStatus("Schlafenszeit-Reminder gespeichert.");
     }
@@ -146,6 +176,28 @@ public partial class SleepReminderViewModel : ObservableObject
     private async Task TestAsync()
     {
         await reminderService.TriggerSleepReminderAsync();
+    }
+
+    private static int ParseLeadMinutes(string label)
+    {
+        foreach (var option in LeadOptions)
+        {
+            if (option.Label == label)
+                return option.Minutes;
+        }
+
+        return 0;
+    }
+
+    private static string FormatLead(int minutes)
+    {
+        foreach (var option in LeadOptions)
+        {
+            if (option.Minutes == minutes)
+                return option.Label;
+        }
+
+        return LeadOptions[0].Label;
     }
 
     // Zeigt eine Meldung und blendet sie nach kurzer Zeit wieder aus.

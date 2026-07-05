@@ -21,7 +21,8 @@ namespace ReturnToMonkee.Services
         private readonly TimeSpan startupDelay = TimeSpan.FromSeconds(3);
         private DateTime lastReminderAt = DateTime.Now;
         private DateOnly? lastSleepReminderDate;
-        private TimeSpan? lastSleepReminderSleepTime;
+        // Effektiver Faelligkeitszeitpunkt (SleepTime - Vorlauf), zu dem zuletzt erinnert wurde.
+        private TimeSpan? lastSleepReminderTime;
         private bool isChecking;
         private bool disposedValue;
 
@@ -91,6 +92,17 @@ namespace ReturnToMonkee.Services
             return lastReminderAt + TimeSpan.FromMinutes(intervalMinutes);
         }
 
+        /// <inheritdoc/>
+        public async Task<DateTime> GetNextSleepReminderTimeAsync(CancellationToken cancellationToken = default)
+        {
+            var settings = await userSettingsRepository.GetAsync(cancellationToken);
+            var reminderTime = ComputeSleepReminderTime(settings.SleepTime, settings.SleepReminderLeadMinutes);
+
+            var now = DateTime.Now;
+            var todayOccurrence = now.Date.Add(reminderTime);
+            return todayOccurrence >= now ? todayOccurrence : todayOccurrence.AddDays(1);
+        }
+
         private Task CheckDueAsync() => CheckDueAsync(DateTime.Now);
 
         internal async Task CheckDueAsync(DateTime now)
@@ -144,31 +156,47 @@ namespace ReturnToMonkee.Services
             if (!settings.SleepReminderEnabled)
                 return;
 
-            if (!IsSleepReminderDue(settings.SleepTime, now, lastSleepReminderDate, lastSleepReminderSleepTime))
+            if (!IsSleepReminderDue(settings.SleepTime, settings.SleepReminderLeadMinutes, now, lastSleepReminderDate, lastSleepReminderTime))
                 return;
 
             await SendSleepReminderAsync(settings.SleepTime);
             lastSleepReminderDate = DateOnly.FromDateTime(now);
-            lastSleepReminderSleepTime = settings.SleepTime;
+            lastSleepReminderTime = ComputeSleepReminderTime(settings.SleepTime, settings.SleepReminderLeadMinutes);
         }
 
         /// <summary>
-        /// Ermittelt, ob der Schlafenszeit-Reminder faellig ist: die aktuelle Uhrzeit hat die
-        /// konfigurierte Schlafenszeit erreicht oder ueberschritten, und entweder wurde er an
-        /// diesem Kalendertag noch nicht ausgeloest, oder die Schlafenszeit wurde seit dem
-        /// letzten Ausloesen geaendert (z.B. weil der Reminder beim App-Start sofort fuer eine
-        /// bereits verstrichene alte Schlafenszeit feuerte, bevor der Nutzer sie auf einen
-        /// spaeteren, ebenfalls schon erreichten Wert aktualisiert hat).
+        /// Effektiver Reminder-Zeitpunkt: Schlafenszeit minus Vorlauf (FR-04 / §8.4). Bei einem
+        /// Vorlauf, der ueber Mitternacht zuruecklaeuft, wird auf den Vortag umgeschlagen.
+        /// </summary>
+        internal static TimeSpan ComputeSleepReminderTime(TimeSpan sleepTime, int leadMinutes)
+        {
+            var reminderTime = sleepTime - TimeSpan.FromMinutes(leadMinutes);
+            if (reminderTime < TimeSpan.Zero)
+                reminderTime += TimeSpan.FromDays(1);
+            return reminderTime;
+        }
+
+        /// <summary>
+        /// Ermittelt, ob der Schlafenszeit-Reminder faellig ist: die aktuelle Uhrzeit hat den
+        /// effektiven Reminder-Zeitpunkt (Schlafenszeit minus Vorlauf) erreicht oder
+        /// ueberschritten, und entweder wurde er an diesem Kalendertag noch nicht fuer genau
+        /// diesen Zeitpunkt ausgeloest, oder Schlafenszeit/Vorlauf wurden seit dem letzten
+        /// Ausloesen geaendert (z.B. weil der Reminder beim App-Start sofort fuer einen bereits
+        /// verstrichenen alten Zeitpunkt feuerte, bevor der Nutzer ihn auf einen spaeteren,
+        /// ebenfalls schon erreichten Wert aktualisiert hat).
         /// </summary>
         internal static bool IsSleepReminderDue(
             TimeSpan sleepTime,
+            int leadMinutes,
             DateTime now,
             DateOnly? lastTriggeredDate,
-            TimeSpan? lastTriggeredSleepTime)
+            TimeSpan? lastTriggeredReminderTime)
         {
+            var reminderTime = ComputeSleepReminderTime(sleepTime, leadMinutes);
             var today = DateOnly.FromDateTime(now);
-            var alreadyTriggeredForThisSleepTimeToday = lastTriggeredDate == today && lastTriggeredSleepTime == sleepTime;
-            return now.TimeOfDay >= sleepTime && !alreadyTriggeredForThisSleepTimeToday;
+            var alreadyTriggeredForThisReminderTimeToday =
+                lastTriggeredDate == today && lastTriggeredReminderTime == reminderTime;
+            return now.TimeOfDay >= reminderTime && !alreadyTriggeredForThisReminderTimeToday;
         }
 
         private async Task SendSleepReminderAsync(TimeSpan sleepTime, CancellationToken cancellationToken = default)

@@ -381,13 +381,27 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="8" />
                         </Border.StrokeShape>
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="Schlafenszeit"
-                                   FontSize="13"
-                                   FontAttributes="Bold"
-                                   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
-                            <TimePicker Time="{Binding SleepTime, Mode=TwoWay}"
-                                        Format="HH:mm" />
+                        <VerticalStackLayout Spacing="12">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Schlafenszeit"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                                <TimePicker Time="{Binding SleepTime, Mode=TwoWay}"
+                                            Format="HH:mm" />
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Reminder-Vorlauf"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                                <Picker ItemsSource="{Binding SleepReminderLeadOptionLabels}"
+                                        SelectedItem="{Binding SelectedSleepReminderLead, Mode=TwoWay}" />
+                                <Label Text="Wann vor der Schlafenszeit möchtest du erinnert werden?"
+                                       FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
