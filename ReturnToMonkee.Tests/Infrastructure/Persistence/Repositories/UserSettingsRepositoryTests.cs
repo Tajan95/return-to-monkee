@@ -24,6 +24,16 @@ public sealed class UserSettingsRepositoryTests
     }
 
     [Fact]
+    public async Task GetAsync_ReturnsSleepReminderEnabled_WhenNothingPersisted()
+    {
+        var repo = CreateRepository();
+
+        var settings = await repo.GetAsync();
+
+        Assert.True(settings.SleepReminderEnabled);
+    }
+
+    [Fact]
     public async Task SaveAsync_PersistsSleepTime_AndGetAsyncReturnsIt()
     {
         // Arrange
@@ -38,6 +48,19 @@ public sealed class UserSettingsRepositoryTests
 
         // Assert
         Assert.Equal(expected, reloaded.SleepTime);
+    }
+
+    [Fact]
+    public async Task SaveAsync_PersistsSleepReminderEnabled()
+    {
+        var repo = CreateRepository();
+        var settings = await repo.GetAsync();
+        settings.SleepReminderEnabled = false;
+
+        await repo.SaveAsync(settings);
+        var reloaded = await repo.GetAsync();
+
+        Assert.False(reloaded.SleepReminderEnabled);
     }
 
     [Fact]

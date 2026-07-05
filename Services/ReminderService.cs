@@ -117,6 +117,9 @@ namespace ReturnToMonkee.Services
 
         private async Task CheckMovementReminderAsync(DateTime now)
         {
+            if (!await onboardingRepository.GetMovementReminderEnabledAsync())
+                return;
+
             var intervalMinutes =
                 await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
             var reminderInterval = TimeSpan.FromMinutes(intervalMinutes);
@@ -137,6 +140,9 @@ namespace ReturnToMonkee.Services
         private async Task CheckSleepReminderAsync(DateTime now)
         {
             var settings = await userSettingsRepository.GetAsync();
+
+            if (!settings.SleepReminderEnabled)
+                return;
 
             if (!IsSleepReminderDue(settings.SleepTime, now, lastSleepReminderDate, lastSleepReminderSleepTime))
                 return;

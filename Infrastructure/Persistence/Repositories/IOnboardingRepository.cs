@@ -10,12 +10,19 @@ public interface IOnboardingRepository
     Task<int> GetMovementReminderIntervalMinutesAsync(
         CancellationToken cancellationToken = default);
 
+    Task<bool> GetMovementReminderEnabledAsync(
+        CancellationToken cancellationToken = default);
+
     Task SaveGoalOrientationAsync(
         string goalOrientation,
         CancellationToken cancellationToken = default);
 
     Task SaveMovementReminderIntervalMinutesAsync(
         int intervalMinutes,
+        CancellationToken cancellationToken = default);
+
+    Task SaveMovementReminderEnabledAsync(
+        bool isEnabled,
         CancellationToken cancellationToken = default);
 
     Task<bool> IsOnboardingCompletedAsync(

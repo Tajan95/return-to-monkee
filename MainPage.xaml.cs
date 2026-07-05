@@ -107,18 +107,22 @@ public partial class MainPage : ContentPage
         var sleepTime = userSettings.SleepTime;
         var nextSleepReminder = GetNextOccurrence(sleepTime, now);
 
-        SleepReminderLabel.Text =
-            $"Schlafenszeit: {sleepTime:hh\\:mm} Uhr · nächster Reminder: {FormatReminderDate(nextSleepReminder, now)}";
+        SleepReminderLabel.Text = userSettings.SleepReminderEnabled
+            ? $"Schlafenszeit: {sleepTime:hh\\:mm} Uhr · nächster Reminder: {FormatReminderDate(nextSleepReminder, now)}"
+            : $"Schlafenszeit: {sleepTime:hh\\:mm} Uhr · Reminder deaktiviert";
 
         var movementIntervalMinutes =
             await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
+        var movementReminderEnabled =
+            await onboardingRepository.GetMovementReminderEnabledAsync();
 
         // Echten naechsten Zeitpunkt vom ReminderService holen (letzter Reminder + Intervall),
         // statt faelschlich immer "jetzt + Intervall" anzuzeigen.
         var nextMovementReminder = await reminderService.GetNextMovementReminderTimeAsync();
 
-        MovementReminderLabel.Text =
-            $"Bewegung: alle {movementIntervalMinutes} Minuten · nächster Reminder {FormatReminderDate(nextMovementReminder, now)}";
+        MovementReminderLabel.Text = movementReminderEnabled
+            ? $"Bewegung: alle {movementIntervalMinutes} Minuten · nächster Reminder {FormatReminderDate(nextMovementReminder, now)}"
+            : $"Bewegung: alle {movementIntervalMinutes} Minuten · Reminder deaktiviert";
     }
 
     private async Task LoadTodayStatisticsAsync()
