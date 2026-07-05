@@ -24,7 +24,13 @@
                         </VerticalStackLayout>
                     </Grid>
 
-                    <Switch Grid.Column="1" IsToggled="{Binding IsEnabled}" Toggled="Switch_Toggled" />
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding IsEnabled}"
+                            VerticalOptions="Center"
+                            HorizontalOptions="End"
+                            WidthRequest="52"
+                            OnColor="{StaticResource WarmSelected}"
+                            Toggled="Switch_Toggled" />
 
                     <Button Grid.Row="1" Grid.ColumnSpan="2"
                             Text=" Zeitlimit testen"

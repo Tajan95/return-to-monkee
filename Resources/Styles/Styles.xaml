@@ -327,7 +327,7 @@
     </Style>
 
     <Style TargetType="Switch">
-        <Setter Property="OnColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+        <Setter Property="OnColor" Value="{StaticResource WarmSelected}" />
         <Setter Property="ThumbColor" Value="{StaticResource White}" />
         <Setter Property="MinimumWidthRequest" Value="0" />
         <Setter Property="WidthRequest" Value="52" />
