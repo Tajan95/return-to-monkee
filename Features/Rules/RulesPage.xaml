@@ -63,32 +63,42 @@
                     <Border Style="{StaticResource RuleCard}">
                         <VerticalStackLayout Spacing="14">
 
-                            <!-- Kopf: Uhr-Icon + Titel/Badge + Aktiv-Schalter -->
-                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                                <Image HeightRequest="22" WidthRequest="22" VerticalOptions="Center">
-                                    <Image.Source>
-                                        <FontImageSource FontFamily="FontAwesomeSolid"
-                                                         Glyph="{StaticResource IconClock}"
-                                                         Size="20"
-                                                         Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
-                                    </Image.Source>
-                                </Image>
+                            <!-- Kopf: Uhr-Icon + Titel/Badge (dimmbar) + Aktiv-Schalter (bleibt aktiv) -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <!-- Nur dieser Zweig wird bei deaktivierter Regel ausgegraut,
+                                     der Switch liegt bewusst ausserhalb. -->
+                                <Grid Grid.Column="0" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                    <Grid.Triggers>
+                                        <DataTrigger TargetType="Grid" Binding="{Binding IsEnabled}" Value="False">
+                                            <Setter Property="Opacity" Value="0.4" />
+                                        </DataTrigger>
+                                    </Grid.Triggers>
 
-                                <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
-                                    <Label Text="{Binding Title}"
-                                           FontAttributes="Bold"
-                                           FontSize="16"
-                                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
-                                    <Border Style="{StaticResource Pill}"
-                                            BackgroundColor="{StaticResource WarmSelected}">
-                                        <Label Text="{Binding LimitBadge}"
-                                               FontSize="12"
+                                    <Image HeightRequest="22" WidthRequest="22" VerticalOptions="Center">
+                                        <Image.Source>
+                                            <FontImageSource FontFamily="FontAwesomeSolid"
+                                                             Glyph="{StaticResource IconClock}"
+                                                             Size="20"
+                                                             Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                                        </Image.Source>
+                                    </Image>
+
+                                    <VerticalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                        <Label Text="{Binding Title}"
                                                FontAttributes="Bold"
-                                               TextColor="{StaticResource White}" />
-                                    </Border>
-                                </VerticalStackLayout>
+                                               FontSize="16"
+                                               TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                                        <Border Style="{StaticResource Pill}"
+                                                BackgroundColor="{StaticResource WarmSelected}">
+                                            <Label Text="{Binding LimitBadge}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource White}" />
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </Grid>
 
-                                <Switch Grid.Column="2"
+                                <Switch Grid.Column="1"
                                         IsToggled="{Binding IsEnabled}"
                                         VerticalOptions="Center"
                                         HorizontalOptions="End"
@@ -97,8 +107,15 @@
                                         Toggled="Switch_Toggled" />
                             </Grid>
 
-                            <!-- Aktionen: Bearbeiten + Intervention, sauber nebeneinander -->
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <!-- Aktionen: Bearbeiten + Intervention, sauber nebeneinander.
+                                 Bei deaktivierter Regel ausgegraut UND gesperrt. -->
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+                                  IsEnabled="{Binding IsEnabled}">
+                                <Grid.Triggers>
+                                    <DataTrigger TargetType="Grid" Binding="{Binding IsEnabled}" Value="False">
+                                        <Setter Property="Opacity" Value="0.4" />
+                                    </DataTrigger>
+                                </Grid.Triggers>
                                 <Button Grid.Column="0"
                                         Text="Bearbeiten"
                                         Style="{StaticResource CardActionButton}"
@@ -127,6 +144,11 @@
                                     StrokeShape="RoundRectangle 10"
                                     Padding="10"
                                     BackgroundColor="Transparent">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding IsEnabled}" Value="False">
+                                        <Setter Property="Opacity" Value="0.4" />
+                                    </DataTrigger>
+                                </Border.Triggers>
                                 <VerticalStackLayout Spacing="6">
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
                                         <Image HeightRequest="16" WidthRequest="16" VerticalOptions="Center">
