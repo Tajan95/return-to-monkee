@@ -105,7 +105,8 @@ public partial class MainPage : ContentPage
 
         var userSettings = await userSettingsRepository.GetAsync();
         var sleepTime = userSettings.SleepTime;
-        var nextSleepReminder = GetNextOccurrence(sleepTime, now);
+        // Naechsten Reminder-Zeitpunkt inkl. Vorlauf zentral vom ReminderService holen.
+        var nextSleepReminder = await reminderService.GetNextSleepReminderTimeAsync();
 
         SleepReminderLabel.Text = userSettings.SleepReminderEnabled
             ? $"Schlafenszeit: {sleepTime:hh\\:mm} Uhr · nächster Reminder: {FormatReminderDate(nextSleepReminder, now)}"
@@ -142,15 +143,6 @@ public partial class MainPage : ContentPage
             $"Zeitlimits eingehalten: {todayStatistics.LimitsKept} · " +
             $"überschritten: {todayStatistics.LimitsExceeded} · " +
             $"Einhaltungsrate: {todayStatistics.LimitKeptRate:F0}%";
-    }
-
-    private static DateTime GetNextOccurrence(TimeSpan timeOfDay, DateTime now)
-    {
-        var todayOccurrence = now.Date.Add(timeOfDay);
-
-        return todayOccurrence >= now
-            ? todayOccurrence
-            : todayOccurrence.AddDays(1);
     }
 
     private static string FormatReminderDate(DateTime reminderTime, DateTime now)

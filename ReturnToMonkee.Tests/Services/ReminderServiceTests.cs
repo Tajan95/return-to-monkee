@@ -13,7 +13,8 @@ public sealed class ReminderServiceTests
         TimeSpan sleepTime,
         bool sleepReminderEnabled = true,
         bool movementReminderEnabled = true,
-        int movementIntervalMinutes = 100_000)
+        int movementIntervalMinutes = 100_000,
+        int sleepReminderLeadMinutes = 0)
     {
         return new ReminderService(
             new StubOnboardingRepository
@@ -26,7 +27,8 @@ public sealed class ReminderServiceTests
             new StubUserSettingsRepository
             {
                 SleepTime = sleepTime,
-                SleepReminderEnabled = sleepReminderEnabled
+                SleepReminderEnabled = sleepReminderEnabled,
+                SleepReminderLeadMinutes = sleepReminderLeadMinutes
             });
     }
 
@@ -36,7 +38,7 @@ public sealed class ReminderServiceTests
         var sleepTime = new TimeSpan(22, 0, 0);
         var now = new DateTime(2026, 7, 2, 22, 0, 0);
 
-        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: null, lastTriggeredSleepTime: null);
+        var result = ReminderService.IsSleepReminderDue(sleepTime, leadMinutes: 0, now, lastTriggeredDate: null, lastTriggeredReminderTime: null);
 
         Assert.True(result);
     }
@@ -47,7 +49,7 @@ public sealed class ReminderServiceTests
         var sleepTime = new TimeSpan(22, 0, 0);
         var now = new DateTime(2026, 7, 2, 21, 59, 0);
 
-        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: null, lastTriggeredSleepTime: null);
+        var result = ReminderService.IsSleepReminderDue(sleepTime, leadMinutes: 0, now, lastTriggeredDate: null, lastTriggeredReminderTime: null);
 
         Assert.False(result);
     }
@@ -59,7 +61,7 @@ public sealed class ReminderServiceTests
         var now = new DateTime(2026, 7, 2, 23, 0, 0);
         var today = DateOnly.FromDateTime(now);
 
-        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: today, lastTriggeredSleepTime: sleepTime);
+        var result = ReminderService.IsSleepReminderDue(sleepTime, leadMinutes: 0, now, lastTriggeredDate: today, lastTriggeredReminderTime: sleepTime);
 
         Assert.False(result);
     }
@@ -71,7 +73,7 @@ public sealed class ReminderServiceTests
         var yesterday = new DateOnly(2026, 7, 1);
         var now = new DateTime(2026, 7, 2, 22, 0, 0);
 
-        var result = ReminderService.IsSleepReminderDue(sleepTime, now, lastTriggeredDate: yesterday, lastTriggeredSleepTime: sleepTime);
+        var result = ReminderService.IsSleepReminderDue(sleepTime, leadMinutes: 0, now, lastTriggeredDate: yesterday, lastTriggeredReminderTime: sleepTime);
 
         Assert.True(result);
     }
@@ -89,11 +91,109 @@ public sealed class ReminderServiceTests
 
         var result = ReminderService.IsSleepReminderDue(
             newSleepTime,
+            leadMinutes: 0,
             now,
             lastTriggeredDate: today,
-            lastTriggeredSleepTime: oldSleepTime);
+            lastTriggeredReminderTime: oldSleepTime);
 
         Assert.True(result);
+    }
+
+    [Fact]
+    public void ComputeSleepReminderTime_SubtractsLeadFromSleepTime()
+    {
+        var reminderTime = ReminderService.ComputeSleepReminderTime(new TimeSpan(22, 0, 0), leadMinutes: 30);
+
+        Assert.Equal(new TimeSpan(21, 30, 0), reminderTime);
+    }
+
+    [Fact]
+    public void ComputeSleepReminderTime_WrapsAroundMidnight_WhenLeadExceedsSleepTime()
+    {
+        // Schlafenszeit 00:30, Vorlauf 60 Min -> 23:30 des Vortags.
+        var reminderTime = ReminderService.ComputeSleepReminderTime(new TimeSpan(0, 30, 0), leadMinutes: 60);
+
+        Assert.Equal(new TimeSpan(23, 30, 0), reminderTime);
+    }
+
+    [Fact]
+    public void IsSleepReminderDue_FiresAtSleepTimeMinusLead_NotAtSleepTime()
+    {
+        var sleepTime = new TimeSpan(22, 0, 0);
+        // Reminder mit 30 Min Vorlauf ist um 21:30 faellig.
+        var atLeadTime = new DateTime(2026, 7, 2, 21, 30, 0);
+
+        var result = ReminderService.IsSleepReminderDue(
+            sleepTime, leadMinutes: 30, atLeadTime, lastTriggeredDate: null, lastTriggeredReminderTime: null);
+
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsSleepReminderDue_ReturnsFalse_BeforeLeadTime()
+    {
+        var sleepTime = new TimeSpan(22, 0, 0);
+        // Eine Minute vor dem Vorlauf-Zeitpunkt (21:30) -> noch nicht faellig.
+        var beforeLeadTime = new DateTime(2026, 7, 2, 21, 29, 0);
+
+        var result = ReminderService.IsSleepReminderDue(
+            sleepTime, leadMinutes: 30, beforeLeadTime, lastTriggeredDate: null, lastTriggeredReminderTime: null);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public void IsSleepReminderDue_ReturnsFalse_AtSleepTime_WhenAlreadyFiredAtLeadTimeToday()
+    {
+        var sleepTime = new TimeSpan(22, 0, 0);
+        var atSleepTime = new DateTime(2026, 7, 2, 22, 0, 0);
+        var today = DateOnly.FromDateTime(atSleepTime);
+        var leadTime = new TimeSpan(21, 30, 0);
+
+        var result = ReminderService.IsSleepReminderDue(
+            sleepTime, leadMinutes: 30, atSleepTime, lastTriggeredDate: today, lastTriggeredReminderTime: leadTime);
+
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task CheckDueAsync_TriggersAtLeadTime_WhenLeadOffsetConfigured()
+    {
+        var adapter = new RecordingNotificationAdapter(promptResult: true);
+        var eventRepository = new RecordingNotificationEventRepository();
+        var service = CreateService(
+            adapter,
+            eventRepository,
+            sleepTime: new TimeSpan(22, 0, 0),
+            sleepReminderLeadMinutes: 30);
+        // 21:30 = 22:00 minus 30 Min Vorlauf.
+        var atLeadTime = new DateTime(2026, 7, 2, 21, 30, 0);
+
+        await service.CheckDueAsync(atLeadTime);
+
+        var savedEvent = Assert.Single(
+            eventRepository.SavedEvents,
+            e => e.AppReference == "return-to-monkee://sleep-reminder/confirmed");
+        Assert.NotNull(savedEvent);
+    }
+
+    [Fact]
+    public async Task CheckDueAsync_DoesNotTriggerBeforeLeadTime_WhenLeadOffsetConfigured()
+    {
+        var adapter = new RecordingNotificationAdapter(promptResult: true);
+        var eventRepository = new RecordingNotificationEventRepository();
+        var service = CreateService(
+            adapter,
+            eventRepository,
+            sleepTime: new TimeSpan(22, 0, 0),
+            sleepReminderLeadMinutes: 30);
+        // 21:29 = eine Minute vor dem Vorlauf-Zeitpunkt.
+        var beforeLeadTime = new DateTime(2026, 7, 2, 21, 29, 0);
+
+        await service.CheckDueAsync(beforeLeadTime);
+
+        Assert.Empty(adapter.PromptCalls);
+        Assert.Empty(eventRepository.SavedEvents);
     }
 
     [Fact]
@@ -355,11 +455,14 @@ public sealed class ReminderServiceTests
 
         public bool SleepReminderEnabled { get; set; } = true;
 
+        public int SleepReminderLeadMinutes { get; set; }
+
         public Task<UserSettingsEntity> GetAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(new UserSettingsEntity
             {
                 SleepTime = SleepTime,
-                SleepReminderEnabled = SleepReminderEnabled
+                SleepReminderEnabled = SleepReminderEnabled,
+                SleepReminderLeadMinutes = SleepReminderLeadMinutes
             });
 
         public Task SaveAsync(UserSettingsEntity settings, CancellationToken cancellationToken = default)

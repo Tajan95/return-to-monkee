@@ -32,6 +32,13 @@ public class UserSettingsEntity
     /// </summary>
     public bool SleepReminderEnabled { get; set; } = true;
 
+    /// <summary>
+    /// Vorlauf in Minuten: Der Reminder feuert diese Zeitspanne VOR der Schlafenszeit
+    /// (Lastenheft FR-04 / §8.4: "Vor dieser Zeit erfolgt ein Reminder"). Faelligkeit =
+    /// <c>SleepTime - SleepReminderLeadMinutes</c>. Standard 0 = zur Schlafenszeit (bisheriges Verhalten).
+    /// </summary>
+    public int SleepReminderLeadMinutes { get; set; }
+
     // Platzhalter für #18: public int MovementIntervalMinutes { get; set; } = 60;
 
     /// <summary>

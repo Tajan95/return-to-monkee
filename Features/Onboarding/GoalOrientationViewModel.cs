@@ -36,8 +36,23 @@ public partial class GoalOrientationViewModel : ObservableObject
 
     private int currentStepIndex;
 
+    // Vorlauf-Optionen fuer den Schlafenszeit-Reminder (Anzeige-Text -> Minuten).
+    private static readonly (string Label, int Minutes)[] SleepReminderLeadOptions =
+    {
+        ("Zur Schlafenszeit", 0),
+        ("15 Minuten vorher", 15),
+        ("30 Minuten vorher", 30),
+        ("60 Minuten vorher", 60)
+    };
+
+    public ObservableCollection<string> SleepReminderLeadOptionLabels { get; } =
+        new(SleepReminderLeadOptions.Select(option => option.Label));
+
     [ObservableProperty]
     private string selectedMovementReminderInterval = "60 Minuten";
+
+    [ObservableProperty]
+    private string selectedSleepReminderLead = SleepReminderLeadOptions[0].Label;
 
     // Aktivierungs-Schalter fuer die Reminder: solange "aus", bleibt der jeweilige
     // Konfigurationsbereich im Onboarding ausgegraut und gesperrt.
@@ -147,6 +162,7 @@ public partial class GoalOrientationViewModel : ObservableObject
             await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
         SelectedMovementReminderInterval = $"{movementIntervalMinutes} Minuten";
         SleepTime = settings.SleepTime;
+        SelectedSleepReminderLead = FormatSleepReminderLead(settings.SleepReminderLeadMinutes);
         // Reminder-Schalter werden im Onboarding bewusst NICHT aus dem Speicher
         // vorbelegt — sie starten deaktiviert und werden aktiv gewaehlt.
 
@@ -178,6 +194,28 @@ public partial class GoalOrientationViewModel : ObservableObject
     {
         var digits = new string(value.TakeWhile(char.IsDigit).ToArray());
         return int.TryParse(digits, out var minutes) ? minutes : 60;
+    }
+
+    private static int ParseSleepReminderLeadMinutes(string label)
+    {
+        foreach (var option in SleepReminderLeadOptions)
+        {
+            if (option.Label == label)
+                return option.Minutes;
+        }
+
+        return 0;
+    }
+
+    private static string FormatSleepReminderLead(int minutes)
+    {
+        foreach (var option in SleepReminderLeadOptions)
+        {
+            if (option.Minutes == minutes)
+                return option.Label;
+        }
+
+        return SleepReminderLeadOptions[0].Label;
     }
 
     [RelayCommand]
@@ -254,6 +292,7 @@ public partial class GoalOrientationViewModel : ObservableObject
 
         var settings = await userSettingsRepository.GetAsync();
         settings.SleepTime = SleepTime;
+        settings.SleepReminderLeadMinutes = ParseSleepReminderLeadMinutes(SelectedSleepReminderLead);
         settings.SleepReminderEnabled = IsSleepReminderEnabled;
         settings.ShowOnboardingOnStartup = false;
         await userSettingsRepository.SaveAsync(settings);

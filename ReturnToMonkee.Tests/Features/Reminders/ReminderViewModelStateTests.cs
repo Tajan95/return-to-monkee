@@ -189,5 +189,8 @@ public sealed class ReminderViewModelStateTests
 
         public Task<DateTime> GetNextMovementReminderTimeAsync(CancellationToken cancellationToken = default)
             => Task.FromResult(DateTime.Now);
+
+        public Task<DateTime> GetNextSleepReminderTimeAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult(DateTime.Now);
     }
 }

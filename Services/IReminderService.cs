@@ -25,5 +25,11 @@ namespace ReturnToMonkee.Services
         /// (letzter Reminder bzw. App-Start + konfiguriertes Intervall).
         /// </summary>
         Task<DateTime> GetNextMovementReminderTimeAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Liefert den naechsten Zeitpunkt des automatischen Schlafenszeit-Reminders unter
+        /// Beruecksichtigung des Vorlaufs (Schlafenszeit minus Vorlauf).
+        /// </summary>
+        Task<DateTime> GetNextSleepReminderTimeAsync(CancellationToken cancellationToken = default);
     }
 }
