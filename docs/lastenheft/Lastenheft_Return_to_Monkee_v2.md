@@ -406,11 +406,11 @@ Fachliche Kernaussagen:
 
 ### 16.5 Aktivitätsdiagramm Bewegungspausen-Workflow
 
-![Aktivitätsdiagramm Bewegungspausen-Workflow](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungs-Workflow.drawio.svg)
+![Aktivitätsdiagramm Reminder-Statistik-Workflow](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Reminder-Statistik-Workflow.svg)
 
 Quelle:
 
-- [Aktivitätsdiagramm-Bewegungs-Workflow.drawio](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Bewegungs-Workflow.drawio)
+- [Aktivitätsdiagramm-Reminder-Statistik-Workflow.drawio](../diagramme/Aktivitätsdiagramme/Aktivitätsdiagramm-Reminder-Statistik-Workflow.drawio)
 
 Das Aktivitätsdiagramm beschreibt den fachlichen Ablauf für Bewegungspausen-Erinnerungen. Es zeigt, wie geplante oder konfigurierte Pausen in eine Benachrichtigung und eine einfache Nutzerreaktion überführt werden.
 
