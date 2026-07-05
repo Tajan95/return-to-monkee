@@ -145,9 +145,14 @@ public partial class MainPage : ContentPage
         // Naechsten Reminder-Zeitpunkt inkl. Vorlauf zentral vom ReminderService holen.
         var nextSleepReminder = await reminderService.GetNextSleepReminderTimeAsync();
 
-        SleepReminderLabel.Text = userSettings.SleepReminderEnabled
-            ? $"Schlafenszeit: {sleepTime:hh\\:mm} Uhr · nächster Reminder: {FormatReminderDate(nextSleepReminder, now)}"
-            : $"Schlafenszeit: {sleepTime:hh\\:mm} Uhr · Reminder deaktiviert";
+        SleepReminderDetailLabel.Text = userSettings.SleepReminderLeadMinutes > 0
+            ? $"Zu Bett um {sleepTime:hh\\:mm} Uhr · {userSettings.SleepReminderLeadMinutes} Min Vorlauf"
+            : $"Zu Bett um {sleepTime:hh\\:mm} Uhr";
+        SetReminderBadge(
+            SleepReminderBadge,
+            SleepReminderBadgeLabel,
+            userSettings.SleepReminderEnabled,
+            FormatReminderBadge(nextSleepReminder, now));
 
         var movementIntervalMinutes =
             await onboardingRepository.GetMovementReminderIntervalMinutesAsync();
@@ -158,9 +163,12 @@ public partial class MainPage : ContentPage
         // statt faelschlich immer "jetzt + Intervall" anzuzeigen.
         var nextMovementReminder = await reminderService.GetNextMovementReminderTimeAsync();
 
-        MovementReminderLabel.Text = movementReminderEnabled
-            ? $"Bewegung: alle {movementIntervalMinutes} Minuten · nächster Reminder {FormatReminderDate(nextMovementReminder, now)}"
-            : $"Bewegung: alle {movementIntervalMinutes} Minuten · Reminder deaktiviert";
+        MovementReminderDetailLabel.Text = $"Alle {movementIntervalMinutes} Minuten";
+        SetReminderBadge(
+            MovementReminderBadge,
+            MovementReminderBadgeLabel,
+            movementReminderEnabled,
+            FormatReminderBadge(nextMovementReminder, now));
     }
 
     private async Task LoadTodayStatisticsAsync()
@@ -168,34 +176,54 @@ public partial class MainPage : ContentPage
         var todayStatistics =
             await statisticsService.GetDailyStatisticsAsync(DateTime.Today);
 
-        TodaySummaryLabel.Text =
-            $"Heute: {todayStatistics.TotalReminders} Reminder, {todayStatistics.LimitsExceeded} Zeitlimit-Überschreitung(en)";
+        StatReminderConfirmed.Text =
+            (todayStatistics.MovementRemindersConfirmed + todayStatistics.SleepRemindersConfirmed).ToString();
+        StatReminderIgnored.Text =
+            (todayStatistics.MovementRemindersIgnored + todayStatistics.SleepRemindersIgnored).ToString();
+        StatReminderRate.Text = $"{todayStatistics.ReminderConfirmationRate:F0}%";
 
-        ReminderStatsLabel.Text =
-            $"Reminder bestätigt: {todayStatistics.MovementRemindersConfirmed + todayStatistics.SleepRemindersConfirmed} · " +
-            $"ignoriert: {todayStatistics.MovementRemindersIgnored + todayStatistics.SleepRemindersIgnored} · " +
-            $"Bestätigungsrate: {todayStatistics.ReminderConfirmationRate:F0}%";
-
-        LimitStatsLabel.Text =
-            $"Zeitlimits eingehalten: {todayStatistics.LimitsKept} · " +
-            $"überschritten: {todayStatistics.LimitsExceeded} · " +
-            $"Einhaltungsrate: {todayStatistics.LimitKeptRate:F0}%";
+        StatLimitsKept.Text = todayStatistics.LimitsKept.ToString();
+        StatLimitsExceeded.Text = todayStatistics.LimitsExceeded.ToString();
+        StatLimitRate.Text = $"{todayStatistics.LimitKeptRate:F0}%";
     }
 
-    private static string FormatReminderDate(DateTime reminderTime, DateTime now)
+    // Kompaktes Badge-Format fuer den naechsten Reminder-Zeitpunkt.
+    private static string FormatReminderBadge(DateTime reminderTime, DateTime now)
     {
         if (reminderTime.Date == now.Date)
         {
-            return $"heute um {reminderTime:HH:mm} Uhr";
+            return $"heute {reminderTime:HH:mm}";
         }
 
         if (reminderTime.Date == now.Date.AddDays(1))
         {
-            return $"morgen um {reminderTime:HH:mm} Uhr";
+            return $"morgen {reminderTime:HH:mm}";
         }
 
-        return reminderTime.ToString("dd.MM.yyyy HH:mm");
+        return reminderTime.ToString("dd.MM. HH:mm");
     }
+
+    // Aktiver Reminder: Accent-Pille mit Zeit. Deaktiviert: neutrale "Aus"-Pille.
+    private static void SetReminderBadge(Border badge, Label label, bool enabled, string time)
+    {
+        if (enabled)
+        {
+            badge.BackgroundColor = GetColor("PrimaryDark");
+            label.TextColor = GetColor("OffBlack");
+            label.Text = time;
+        }
+        else
+        {
+            badge.BackgroundColor = GetColor("Gray600");
+            label.TextColor = GetColor("Gray200");
+            label.Text = "Aus";
+        }
+    }
+
+    private static Color GetColor(string key) =>
+        Application.Current?.Resources.TryGetValue(key, out var value) == true && value is Color color
+            ? color
+            : Colors.Transparent;
 
     private sealed class DashboardRuleItem
     {

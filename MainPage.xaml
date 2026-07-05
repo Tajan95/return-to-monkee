@@ -2,36 +2,109 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ReturnToMonkee.MainPage"
-             Title="Dashboard">
+             Title="Dashboard"
+             BackgroundColor="{AppThemeBinding Light={StaticResource WarmBackground}, Dark={StaticResource OffBlack}}">
+
+    <ContentPage.Resources>
+        <!-- Karten und Ueberschriften im App-Stil (warmes Beige / Salbei, Dark-first),
+             analog zu Statistik- und Regel-Seite. Alle Karten mit beiger Border. -->
+        <Style x:Key="DashCard" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray900}}" />
+            <Setter Property="Stroke" Value="{StaticResource WarmStroke}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+        </Style>
+
+        <Style x:Key="CardHeading" TargetType="Label">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+        </Style>
+
+        <Style x:Key="CardBody" TargetType="Label">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+        </Style>
+
+        <Style x:Key="CardMuted" TargetType="Label">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+        </Style>
+
+        <!-- Kennzahl-Kachel: dunkler/heller abgesetzt gegenueber der Karte, Wert farbig. -->
+        <Style x:Key="StatTile" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray950}}" />
+            <Setter Property="Stroke" Value="{StaticResource WarmStroke}" />
+            <Setter Property="StrokeThickness" Value="1" />
+            <Setter Property="Padding" Value="10,10" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 10" />
+        </Style>
+
+        <Style x:Key="TileCaption" TargetType="Label">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+        </Style>
+
+        <Style x:Key="TileValue" TargetType="Label">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+        </Style>
+
+        <!-- Pillen-Badge (z. B. naechster Reminder-Zeitpunkt). Farbe wird im Code je Zustand gesetzt. -->
+        <Style x:Key="Pill" TargetType="Border">
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 14" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="18">
+        <VerticalStackLayout Padding="24,28,24,24" Spacing="16">
 
-            <Label Text="Return to Monkee"
-                   FontSize="32"
-                   FontAttributes="Bold" />
-
-            <Label Text="Tagesstatus"
-                   FontSize="24"
-                   FontAttributes="Bold" />
+            <!-- Kopfbereich: Monkey + Titel -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                <Image Source="monkey_face_svgrepo.png"
+                       HeightRequest="52"
+                       WidthRequest="52"
+                       VerticalOptions="Center" />
+                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                    <Label Text="Return to Monkee"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                    <Label Text="Dein Tagesstatus"
+                           Style="{StaticResource CardMuted}" />
+                </VerticalStackLayout>
+            </Grid>
 
             <Button x:Name="RefreshButton"
                     Text="Dashboard aktualisieren"
-                    Clicked="OnRefreshClicked" />
+                    Clicked="OnRefreshClicked"
+                    HorizontalOptions="Fill"
+                    BackgroundColor="Transparent"
+                    BorderWidth="1"
+                    BorderColor="{StaticResource WarmStroke}"
+                    TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="FontAwesomeSolid"
+                                     Glyph="&#xf021;"
+                                     Size="14"
+                                     Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                </Button.ImageSource>
+            </Button>
 
-            <Border Stroke="LightGray"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12"
-                    Padding="16">
-
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Deine Ziele"
-                           FontSize="20"
-                           FontAttributes="Bold" />
+            <!-- Deine Ziele (FR-06) -->
+            <Border Style="{StaticResource DashCard}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Deine Ziele" Style="{StaticResource CardHeading}" />
 
                     <Label x:Name="GoalsEmptyLabel"
                            Text="Noch keine Ziele ausgewählt."
-                           TextColor="Gray" />
+                           Style="{StaticResource CardMuted}" />
 
                     <CollectionView x:Name="GoalsCollection">
                         <CollectionView.ItemTemplate>
@@ -51,6 +124,7 @@
                                     </Image>
                                     <Label Grid.Column="1"
                                            Text="{Binding Title}"
+                                           Style="{StaticResource CardBody}"
                                            FontSize="15"
                                            VerticalOptions="Center" />
                                 </Grid>
@@ -60,47 +134,60 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border Stroke="LightGray"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12"
-                    Padding="16">
-
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Aktive Regeln"
-                           FontSize="20"
-                           FontAttributes="Bold" />
+            <!-- Aktive Regeln -->
+            <Border Style="{StaticResource DashCard}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Aktive Regeln" Style="{StaticResource CardHeading}" />
 
                     <Label x:Name="ActiveRulesEmptyLabel"
                            Text="Keine aktiven Regeln gefunden."
-                           TextColor="Gray" />
+                           Style="{StaticResource CardMuted}" />
 
                     <CollectionView x:Name="ActiveRulesCollection">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border Stroke="LightGray"
+                                <Border BackgroundColor="{AppThemeBinding Light={StaticResource WarmSurfaceAlt}, Dark={StaticResource Gray950}}"
+                                        Stroke="{StaticResource WarmStroke}"
                                         StrokeThickness="1"
-                                        StrokeShape="RoundRectangle 8"
+                                        StrokeShape="RoundRectangle 10"
                                         Padding="12"
                                         Margin="0,4">
 
-                                    <Grid ColumnDefinitions="*,Auto"
-                                          RowDefinitions="Auto,Auto"
+                                    <Grid ColumnDefinitions="Auto,*,Auto"
                                           ColumnSpacing="12">
 
-                                        <Label Text="{Binding Title}"
-                                               FontAttributes="Bold"
-                                               FontSize="16" />
+                                        <Image Grid.RowSpan="2"
+                                               HeightRequest="20"
+                                               WidthRequest="20"
+                                               VerticalOptions="Start"
+                                               Margin="0,2,0,0">
+                                            <Image.Source>
+                                                <FontImageSource FontFamily="FontAwesomeSolid"
+                                                                 Glyph="&#xf017;"
+                                                                 Size="18"
+                                                                 Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                                            </Image.Source>
+                                        </Image>
 
-                                        <Label Grid.Column="1"
-                                               Text="{Binding Kind}"
-                                               FontSize="12"
-                                               TextColor="Gray" />
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding Title}"
+                                                   FontAttributes="Bold"
+                                                   FontSize="16"
+                                                   TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                                            <Label Text="{Binding Description}"
+                                                   FontSize="13"
+                                                   TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                                        </VerticalStackLayout>
 
-                                        <Label Grid.Row="1"
-                                               Grid.ColumnSpan="2"
-                                               Text="{Binding Description}"
-                                               FontSize="13"
-                                               TextColor="Gray" />
+                                        <Border Grid.Column="2"
+                                                Style="{StaticResource Pill}"
+                                                BackgroundColor="{AppThemeBinding Light={StaticResource WarmSelected}, Dark={StaticResource WarmSelected}}"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding Kind}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{StaticResource White}" />
+                                        </Border>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
@@ -109,47 +196,120 @@
                 </VerticalStackLayout>
             </Border>
 
-            <Border Stroke="LightGray"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12"
-                    Padding="16">
+            <!-- Nächste Reminder -->
+            <Border Style="{StaticResource DashCard}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Nächste Reminder" Style="{StaticResource CardHeading}" />
 
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Nächste Reminder"
-                           FontSize="20"
-                           FontAttributes="Bold" />
+                    <!-- Schlaf -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image HeightRequest="22" WidthRequest="22" VerticalOptions="Center">
+                            <Image.Source>
+                                <FontImageSource FontFamily="FontAwesomeSolid"
+                                                 Glyph="&#xf186;"
+                                                 Size="20"
+                                                 Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                            </Image.Source>
+                        </Image>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Schlafenszeit" Style="{StaticResource CardBody}" FontAttributes="Bold" />
+                            <Label x:Name="SleepReminderDetailLabel" Style="{StaticResource CardMuted}" />
+                        </VerticalStackLayout>
+                        <Border x:Name="SleepReminderBadge" Grid.Column="2" Style="{StaticResource Pill}">
+                            <Label x:Name="SleepReminderBadgeLabel" FontSize="13" FontAttributes="Bold" />
+                        </Border>
+                    </Grid>
 
-                    <Label x:Name="SleepReminderLabel"
-                           Text="Schlafenszeit wird geladen..." />
+                    <BoxView HeightRequest="1" Color="{StaticResource WarmStroke}" />
 
-                    <Label x:Name="MovementReminderLabel"
-                           Text="Bewegungserinnerung wird geladen..." />
+                    <!-- Bewegung -->
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Image HeightRequest="22" WidthRequest="22" VerticalOptions="Center">
+                            <Image.Source>
+                                <FontImageSource FontFamily="FontAwesomeSolid"
+                                                 Glyph="&#xf554;"
+                                                 Size="20"
+                                                 Color="{AppThemeBinding Light={StaticResource WarmAccent}, Dark={StaticResource PrimaryDark}}" />
+                            </Image.Source>
+                        </Image>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="Bewegung" Style="{StaticResource CardBody}" FontAttributes="Bold" />
+                            <Label x:Name="MovementReminderDetailLabel" Style="{StaticResource CardMuted}" />
+                        </VerticalStackLayout>
+                        <Border x:Name="MovementReminderBadge" Grid.Column="2" Style="{StaticResource Pill}">
+                            <Label x:Name="MovementReminderBadgeLabel" FontSize="13" FontAttributes="Bold" />
+                        </Border>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <Border Stroke="LightGray"
-                    StrokeThickness="1"
-                    StrokeShape="RoundRectangle 12"
-                    Padding="16">
+            <!-- Heutige Statistik -->
+            <Border Style="{StaticResource DashCard}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Heutige Statistik" Style="{StaticResource CardHeading}" />
 
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Heutige Statistik"
-                           FontSize="20"
-                           FontAttributes="Bold" />
+                    <!-- Reminder -->
+                    <Label Text="Reminder" Style="{StaticResource CardMuted}" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <Border Grid.Column="0" Style="{StaticResource StatTile}">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="✓ Bestätigt" Style="{StaticResource TileCaption}" />
+                                <Label x:Name="StatReminderConfirmed"
+                                       Style="{StaticResource TileValue}"
+                                       TextColor="{StaticResource WarmSelected}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource StatTile}">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="✕ Ignoriert" Style="{StaticResource TileCaption}" />
+                                <Label x:Name="StatReminderIgnored"
+                                       Style="{StaticResource TileValue}"
+                                       TextColor="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource StatTile}">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Quote" Style="{StaticResource TileCaption}" />
+                                <Label x:Name="StatReminderRate"
+                                       Style="{StaticResource TileValue}"
+                                       TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
 
-                    <Label x:Name="TodaySummaryLabel"
-                           Text="Statistik wird geladen..." />
-
-                    <Label x:Name="ReminderStatsLabel"
-                           TextColor="Gray" />
-
-                    <Label x:Name="LimitStatsLabel"
-                           TextColor="Gray" />
+                    <!-- Zeitlimits -->
+                    <Label Text="Zeitlimits" Style="{StaticResource CardMuted}" FontAttributes="Bold" />
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <Border Grid.Column="0" Style="{StaticResource StatTile}">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="✓ Eingehalten" Style="{StaticResource TileCaption}" />
+                                <Label x:Name="StatLimitsKept"
+                                       Style="{StaticResource TileValue}"
+                                       TextColor="{StaticResource WarmSelected}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource StatTile}">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="✕ Überschritten" Style="{StaticResource TileCaption}" />
+                                <Label x:Name="StatLimitsExceeded"
+                                       Style="{StaticResource TileValue}"
+                                       TextColor="{StaticResource WarmDanger}" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border Grid.Column="2" Style="{StaticResource StatTile}">
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="Quote" Style="{StaticResource TileCaption}" />
+                                <Label x:Name="StatLimitRate"
+                                       Style="{StaticResource TileValue}"
+                                       TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 
             <Label x:Name="ErrorLabel"
-                   TextColor="Red"
+                   TextColor="{StaticResource WarmDanger}"
                    IsVisible="False" />
 
         </VerticalStackLayout>
