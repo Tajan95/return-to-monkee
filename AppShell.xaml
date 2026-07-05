@@ -15,7 +15,9 @@
 	FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource WarmSurface}, Dark={StaticResource Gray950}}">
 
 	<Shell.Resources>
-		<!-- Flyout-Eintraege im App-Stil: transparent normal, Salbei ausgewaehlt -->
+		<!-- Flyout-Eintraege im App-Stil (v. a. Android): transparent normal, Salbei ausgewaehlt.
+		     Auf WinUI liefert das native NavigationViewItem-Chrome die volle Item-Breite/-Form
+		     fuer alle Zustaende (siehe Platforms/Windows/App.xaml). -->
 		<Style TargetType="Layout"
 			   ApplyToDerivedTypes="True"
 			   Class="FlyoutItemLayoutStyle">
@@ -65,38 +67,80 @@
 
 	<ShellContent
 		x:Name="HomeShellContent"
-		Title="Home"
+		Title="Dashboard"
 		Route="home"
-		ContentTemplate="{DataTemplate home:MainPage}" />
+		ContentTemplate="{DataTemplate home:MainPage}">
+		<ShellContent.Icon>
+			<FontImageSource FontFamily="FontAwesomeSolid"
+							 Glyph="{StaticResource IconGauge}"
+							 Size="18"
+							 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource White}}" />
+		</ShellContent.Icon>
+	</ShellContent>
 
 	<ShellContent
 		x:Name="RulesShellContent"
 		Title="Regeln"
 		Route="RulesPage"
-		ContentTemplate="{DataTemplate rules:RulesPage}" />
+		ContentTemplate="{DataTemplate rules:RulesPage}">
+		<ShellContent.Icon>
+			<FontImageSource FontFamily="FontAwesomeSolid"
+							 Glyph="{StaticResource IconClock}"
+							 Size="18"
+							 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource White}}" />
+		</ShellContent.Icon>
+	</ShellContent>
 
 	<ShellContent
 		x:Name="MovementReminderShellContent"
 		Title="Bewegung"
 		Route="MovementReminderPage"
-		ContentTemplate="{DataTemplate reminders:MovementReminderPage}" />
+		ContentTemplate="{DataTemplate reminders:MovementReminderPage}">
+		<ShellContent.Icon>
+			<FontImageSource FontFamily="FontAwesomeSolid"
+							 Glyph="{StaticResource IconPersonWalking}"
+							 Size="18"
+							 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource White}}" />
+		</ShellContent.Icon>
+	</ShellContent>
 
 	<ShellContent
 		x:Name="SleepReminderShellContent"
 		Title="Schlaf"
 		Route="SleepReminderPage"
-		ContentTemplate="{DataTemplate reminders:SleepReminderPage}" />
+		ContentTemplate="{DataTemplate reminders:SleepReminderPage}">
+		<ShellContent.Icon>
+			<FontImageSource FontFamily="FontAwesomeSolid"
+							 Glyph="{StaticResource IconMoon}"
+							 Size="18"
+							 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource White}}" />
+		</ShellContent.Icon>
+	</ShellContent>
 
-    <ShellContent
-    x:Name="StatisticsShellContent"
-    Title="Statistiken" 
-    Route="statistics" 
-    ContentTemplate="{DataTemplate statistics:StatisticsView}" />
+	<ShellContent
+		x:Name="StatisticsShellContent"
+		Title="Statistiken"
+		Route="statistics"
+		ContentTemplate="{DataTemplate statistics:StatisticsView}">
+		<ShellContent.Icon>
+			<FontImageSource FontFamily="FontAwesomeSolid"
+							 Glyph="{StaticResource IconChartLine}"
+							 Size="18"
+							 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource White}}" />
+		</ShellContent.Icon>
+	</ShellContent>
 
-    <ShellContent
+	<ShellContent
 		x:Name="SettingsShellContent"
 		Title="Einstellungen"
-		Route="SettingsPage" />
+		Route="SettingsPage">
+		<ShellContent.Icon>
+			<FontImageSource FontFamily="FontAwesomeSolid"
+							 Glyph="{StaticResource IconSettings}"
+							 Size="18"
+							 Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource White}}" />
+		</ShellContent.Icon>
+	</ShellContent>
 
 	<!-- Test-Feature: aus dem Menue ausgeblendet, bleibt aber als Route erreichbar.
 	     Bewusst als letzte ShellContent, damit sie nicht als Startseite aufblitzt. -->

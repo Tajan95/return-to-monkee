@@ -110,7 +110,7 @@ namespace ReturnToMonkee.Features.Rules
             {
                 item.IsTesting = true;
                 item.IsSoftInterventionVisible = true;
-                item.StatusMessage = "Zeitlimit-Ueberschreitung markiert.";
+                item.StatusMessage = "Wird gespeichert…";
 
                 var message = BuildTimeLimitInterventionMessage(item);
 
@@ -130,7 +130,7 @@ namespace ReturnToMonkee.Features.Rules
 
                 await notificationEventRepository.SaveAsync(notificationEvent, cancellationToken);
                 item.InterventionMessage = message;
-                item.StatusMessage = "Zeitlimit-Ueberschreitung gespeichert.";
+                item.StatusMessage = "Überschreitung gespeichert.";
             }
             catch (Exception ex)
             {
@@ -148,7 +148,7 @@ namespace ReturnToMonkee.Features.Rules
                 ? item.Title
                 : item.TargetApplication;
 
-            return $"Du hast dein Zeitlimit fuer {target} erreicht ({item.TimeLimitMinutes} Minuten). Was brauchst du gerade, bevor du weitermachst?";
+            return $"Zeitlimit für {target} erreicht ({item.TimeLimitMinutes} Min). Willst du wirklich weitermachen?";
         }
 
         private static Task ShowErrorAsync(string message)
@@ -184,6 +184,9 @@ namespace ReturnToMonkee.Features.Rules
             public int TimeLimitMinutes { get; set; }
             public string TargetApplication { get; set; } = string.Empty;
             public bool IsTimeLimitRule => Type == "TimeLimitRule";
+
+            // Kompaktes Limit-Badge fuer die Karte, z. B. "30 Min/Tag".
+            public string LimitBadge => $"{TimeLimitMinutes} Min/Tag";
 
             public bool IsEnabled
             {
