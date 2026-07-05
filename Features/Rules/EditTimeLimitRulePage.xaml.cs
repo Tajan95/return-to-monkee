@@ -6,30 +6,54 @@ namespace ReturnToMonkee.Features.Rules;
 
 public partial class EditTimeLimitRulePage : ContentPage
 {
+    private static readonly List<string> DefaultCategories = new()
+    {
+        "Social Media",
+        "Video/Streaming",
+        "Gaming",
+        "Sonstiges"
+    };
+
     private readonly ITimeLimitRuleRepository repository;
+    private readonly List<string> categories;
     private TimeLimitRule rule;
     private bool isNew;
+    private bool isClosing;
 
     public EditTimeLimitRulePage(ITimeLimitRuleRepository repository, TimeLimitRule rule = null)
     {
         InitializeComponent();
         this.repository = repository;
+        categories = new List<string>(DefaultCategories);
+        TargetApplicationPicker.ItemsSource = categories;
 
         if (rule == null)
         {
             this.rule = new TimeLimitRule { Id = Guid.NewGuid(), IsEnabled = true };
             isNew = true;
-            Title = "Neue Regel";
+            FormHeadingLabel.Text = "Neue Regel anlegen";
+            FormSubtitleLabel.Text = "Erstelle eine Regel, um für eine Aktivität ein tägliches Limit zu setzen.";
+            TargetApplicationPicker.SelectedItem = categories[0];
             DeleteButton.IsVisible = false;
         }
         else
         {
             this.rule = rule;
             isNew = false;
-            Title = "Regel bearbeiten";
+            FormHeadingLabel.Text = "Regel bearbeiten";
+            FormSubtitleLabel.Text = "Passe Kategorie, Limit und Status dieser Regel an.";
+            FormHeadingIcon.Glyph = "\uf303";
             DeleteButton.IsVisible = true;
 
-            TargetApplicationEntry.Text = rule.TargetApplication;
+            if (!string.IsNullOrWhiteSpace(rule.TargetApplication) &&
+                !categories.Contains(rule.TargetApplication))
+            {
+                categories.Add(rule.TargetApplication);
+                TargetApplicationPicker.ItemsSource = null;
+                TargetApplicationPicker.ItemsSource = categories;
+            }
+
+            TargetApplicationPicker.SelectedItem = rule.TargetApplication;
             TimeLimitEntry.Text = rule.TimeLimitMinutes.ToString();
             IsEnabledSwitch.IsToggled = rule.IsEnabled;
         }
@@ -37,7 +61,9 @@ public partial class EditTimeLimitRulePage : ContentPage
 
     private async void Save_Clicked(object sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(TargetApplicationEntry.Text))
+        var targetApplication = TargetApplicationPicker.SelectedItem as string;
+
+        if (string.IsNullOrWhiteSpace(targetApplication))
         {
             await DisplayAlert("Fehler", "Bitte eine Aktivität/Kategorie eingeben.", "OK");
             return;
@@ -49,9 +75,9 @@ public partial class EditTimeLimitRulePage : ContentPage
             return;
         }
 
-        rule.Title = $"{TargetApplicationEntry.Text} begrenzen";
-        rule.Description = $"Tägliches Zeitlimit für {TargetApplicationEntry.Text}: {minutes} Minuten";
-        rule.TargetApplication = TargetApplicationEntry.Text;
+        rule.Title = $"{targetApplication} begrenzen";
+        rule.Description = $"Tägliches Zeitlimit für {targetApplication}: {minutes} Minuten";
+        rule.TargetApplication = targetApplication;
         rule.TimeLimitMinutes = minutes;
         rule.IsEnabled = IsEnabledSwitch.IsToggled;
 
@@ -64,12 +90,12 @@ public partial class EditTimeLimitRulePage : ContentPage
             await repository.UpdateAsync(rule);
         }
 
-        await Navigation.PopModalAsync();
+        await CloseModalAsync();
     }
 
     private async void Cancel_Clicked(object sender, EventArgs e)
     {
-        await Navigation.PopModalAsync();
+        await CloseModalAsync();
     }
 
     private async void Delete_Clicked(object sender, EventArgs e)
@@ -80,7 +106,22 @@ public partial class EditTimeLimitRulePage : ContentPage
         if (confirm)
         {
             await repository.DeleteAsync(rule);
-            await Navigation.PopModalAsync();
+            await CloseModalAsync();
         }
+    }
+
+    private async Task CloseModalAsync()
+    {
+        if (isClosing)
+        {
+            return;
+        }
+
+        isClosing = true;
+        IsEnabledSwitch.Unfocus();
+        IsEnabledSwitch.IsEnabled = false;
+
+        await Task.Yield();
+        await Navigation.PopModalAsync();
     }
 }

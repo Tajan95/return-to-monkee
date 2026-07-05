@@ -2,25 +2,102 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ReturnToMonkee.Features.Rules.EditTimeLimitRulePage"
-             Title="Zeitlimit-Regel">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Abbrechen" Clicked="Cancel_Clicked" />
-        <ToolbarItem Text="Speichern" Clicked="Save_Clicked" />
-    </ContentPage.ToolbarItems>
-    <ScrollView Padding="16">
-        <VerticalStackLayout Spacing="16">
-            <Label Text="Aktivität / Kategorie:" FontAttributes="Bold" />
-            <Entry x:Name="TargetApplicationEntry" Placeholder="z. B. Social Media" />
+             Title="Regeln">
+    <Grid RowDefinitions="*,Auto" Padding="24,28,24,24" RowSpacing="14">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="16">
+                <VerticalStackLayout Spacing="10">
+                    <Image HeightRequest="34" WidthRequest="34" HorizontalOptions="Start">
+                        <Image.Source>
+                            <FontImageSource x:Name="FormHeadingIcon"
+                                             FontFamily="FontAwesomeSolid"
+                                             Glyph="&#xf067;"
+                                             Size="34"
+                                             Color="{AppThemeBinding Light={StaticResource WarmAccentDark}, Dark={StaticResource PrimaryDark}}" />
+                        </Image.Source>
+                    </Image>
+                    <Label x:Name="FormHeadingLabel"
+                           Text="Neue Regel anlegen"
+                           FontSize="26"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                    <Label x:Name="FormSubtitleLabel"
+                           Text="Erstelle eine Regel, um für eine Aktivität ein tägliches Limit zu setzen."
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                </VerticalStackLayout>
 
-            <Label Text="Zeitlimit (in Minuten):" FontAttributes="Bold" />
-            <Entry x:Name="TimeLimitEntry" Keyboard="Numeric" Placeholder="z. B. 30" />
+                <BoxView HeightRequest="1"
+                         Color="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}" />
 
-            <Grid ColumnDefinitions="*,Auto">
-                 <Label Text="Aktiv:" VerticalOptions="Center" FontAttributes="Bold" />
-                 <Switch x:Name="IsEnabledSwitch" Grid.Column="1" VerticalOptions="Center" />
-            </Grid>
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Regel Aktiv"
+                           FontSize="16"
+                           VerticalOptions="Center"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                    <Switch x:Name="IsEnabledSwitch"
+                            Grid.Column="1"
+                            VerticalOptions="Center"
+                            HorizontalOptions="End"
+                            OnColor="{StaticResource WarmSelected}" />
+                </Grid>
 
-            <Button x:Name="DeleteButton" Text="Regel löschen" BackgroundColor="Red" TextColor="White" Clicked="Delete_Clicked" IsVisible="False" Margin="0,32,0,0"/>
-        </VerticalStackLayout>
-    </ScrollView>
+                <BoxView HeightRequest="1"
+                         Color="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}" />
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Kategorie"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                    <Picker x:Name="TargetApplicationPicker" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Zeitlimit (in Minuten)"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource WarmMutedText}, Dark={StaticResource Gray200}}" />
+                    <Entry x:Name="TimeLimitEntry" Keyboard="Numeric" Placeholder="z. B. 30" />
+                </VerticalStackLayout>
+
+                <BoxView HeightRequest="1"
+                         Color="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray600}}" />
+
+                <Button x:Name="DeleteButton"
+                        Text="Regel löschen"
+                        BackgroundColor="{StaticResource WarmDanger}"
+                        TextColor="{StaticResource White}"
+                        Clicked="Delete_Clicked"
+                        IsVisible="False" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="14">
+            <Button Text="Abbrechen"
+                    Clicked="Cancel_Clicked"
+                    BackgroundColor="Transparent"
+                    BorderColor="{AppThemeBinding Light={StaticResource WarmStroke}, Dark={StaticResource Gray500}}"
+                    BorderWidth="1"
+                    TextColor="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="FontAwesomeSolid"
+                                     Glyph="&#xf00d;"
+                                     Size="14"
+                                     Color="{AppThemeBinding Light={StaticResource WarmText}, Dark={StaticResource White}}" />
+                </Button.ImageSource>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Text="Speichern"
+                    Clicked="Save_Clicked">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="FontAwesomeSolid"
+                                     Glyph="&#xf0c7;"
+                                     Size="14"
+                                     Color="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}" />
+                </Button.ImageSource>
+            </Button>
+        </Grid>
+    </Grid>
 </ContentPage>
